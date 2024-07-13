@@ -24,8 +24,8 @@
 ## 安装教程
 1. 下载本项目
 	```shell
-	git clone  ...
-	cd ..
+	git clone https://github.com/sMythicalBird/ZenlessZoneZero-Auto.git
+	cd ZenlessZoneZero-Auto
 	```
 2. 安装依赖
    * GPU版本
