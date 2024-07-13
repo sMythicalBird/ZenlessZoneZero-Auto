@@ -11,3 +11,4 @@ pynput
 pydirectinput-rgx
 pywin32
 pyyaml
+onnxruntime
