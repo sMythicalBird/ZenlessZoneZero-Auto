@@ -43,7 +43,7 @@ def grid_map_1():
         return
     if not info.mapWay:
         # 等待几秒再获取地图，防止刚进入地图动画未加载完成，这行不能再改了
-        time.sleep(3)
+        time.sleep(5)
         get_map(info, map_name)
 
     (mc, dirct) = info.mapWay[info.step]
