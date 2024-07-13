@@ -1,0 +1,13 @@
+paddlepaddle-gpu
+paddleocr==2.7.3
+numpy<2.0.0
+loguru
+opencv-python
+pillow
+pydantic
+requests
+tqdm
+pynput
+pydirectinput-rgx
+pywin32
+pyyaml

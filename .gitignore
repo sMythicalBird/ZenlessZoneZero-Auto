@@ -1,0 +1,19 @@
+test.*
+*.log
+**/test
+.idea
+# 数据集
+dataset
+# OCR模型
+utils/models
+*.pdiparams
+*.pdiparams.info
+*.pdmodel
+*.onnx
+**/models
+# yolo模块
+download
+yolo
+**/__pycache__
+**/py310
+config.yaml
