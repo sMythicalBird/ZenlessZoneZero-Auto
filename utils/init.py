@@ -7,15 +7,27 @@
 """
 import re
 import sys
-import time
 from ctypes import windll
 from pathlib import Path
-
+import os
+import ctypes
 import win32api
 import win32con
 import win32gui
 from loguru import logger
 
+
+def is_admin():
+    try:
+        return os.getuid() == 0
+    except AttributeError:
+        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+
+if not is_admin():
+    logger.error("请以管理员权限运行此程序")
+    input("按任意键退出...")
+    sys.exit(0)
 logger.debug("初始化utils模块中")
 RootPath = Path(__file__).parent.parent
 log_path = RootPath / "logs"
@@ -58,7 +70,10 @@ else:
     win32gui.MoveWindow(
         Hwnd, 0, 0, rect[2] - rect[0], rect[3] - rect[1], True
     )  # 设置窗口位置为0,0
-    time.sleep(1)  # 等待窗口移动完成
+    while True:
+        rect = win32gui.GetWindowRect(Hwnd)  # 获取窗口区域
+        if rect[0] == 0 and rect[1] == 0:
+            break
     left, top, right, bot = win32gui.GetClientRect(Hwnd)
     w = right - left
     h = bot - top

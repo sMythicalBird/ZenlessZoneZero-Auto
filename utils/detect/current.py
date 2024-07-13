@@ -17,9 +17,11 @@ model_path = RootPath / "download" / "current.onnx"
 # 判断能否使用GPU
 if "CUDAExecutionProvider" in rt.get_available_providers():
     provider = ["CUDAExecutionProvider"]
+elif "DmlExecutionProvider" in rt.get_available_providers():
+    provider = ["DmlExecutionProvider"]
 else:
     provider = ["CPUExecutionProvider"]
-logger.info(f"使用 {provider} 运行当前位置识别模型")
+logger.info(f"使用 {','.join(provider)} 运行当前位置识别模型")
 model = rt.InferenceSession(model_path, providers=provider)
 input_name = model.get_inputs()[0].name
 label_name = model.get_outputs()[0].name
@@ -31,12 +33,14 @@ input_width = input_shape[3]
 
 
 def find_current(
-    conf_threshold: float = 0.5, iou_threshold: float = 0.5
+        screen: np.ndarray = None,
+        conf_threshold: float = 0.5, iou_threshold: float = 0.5
 ) -> ImgPosition | None:
     """
     Find the current location.
     """
-    screen = screenshot()
+    if screen is None:
+        screen = screenshot()
     img_height, img_width = screen.shape[:2]
     screen = cv2.resize(screen, (input_width, input_height))
     screen = screen.transpose(2, 0, 1)
