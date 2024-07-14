@@ -29,30 +29,34 @@ QQ群`985508983`
 	git clone https://github.com/sMythicalBird/ZenlessZoneZero-Auto.git
 	cd ZenlessZoneZero-Auto
 	```
+	
 2. 安装依赖（如果电脑没有Python运行环境，请先阅读[如何安装Python](#Python环境安装说明)）
-   * GPU版本
+   
+   **！！！**GPU版本和CPU版本二选一
+   
+   * **GPU版本**
    
    > GPU版本使用前提是你的电脑上使用的是`Nvidia`显卡
    > 
    > CUDA版本请使用`11.8`，如果使用其他版本请参照[paddle安装文档](https://www.paddlepaddle.org.cn/install/quick)进行安装paddle
-   > 
+	> 
    >   
    如果你的电脑上没有安装`CUDA`、`CuDNN`，且不想安装`CUDA`、`CuDNN`，请使用以下命令进行安装`CUDA`、`CuDNN`依赖
-
+   
    ```shell
    pip install -r requirements-cuda.txt
-   ```
-   
-   在确保你的电脑上已经安装了`CUDA`、`CuDNN`的情况下或已经安装上述依赖后，再使用以下命令进行安装依赖
-
-	```shell
-	pip install -r requirements.txt
 	```
-
-   * CPU版本
-   
+	
+	在确保你的电脑上已经安装了`CUDA`、`CuDNN`的情况下或已经安装上述依赖后，再使用以下命令进行安装依赖
+	
 	```shell
-   pip install -r requirements-cpu.txt
+   pip install -r requirements.txt
+   ```
+	
+   * **CPU版本**
+	
+	```shell
+	pip install -r requirements-cpu.txt
 	```
 
 ## 使用说明
