@@ -17,3 +17,4 @@ yolo
 **/__pycache__
 **/py310
 config.yaml
+script
