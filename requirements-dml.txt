@@ -4,7 +4,7 @@ numpy<2.0.0
 loguru
 opencv-python
 pillow
-pydantic
+pydantic>2.0
 requests
 tqdm
 pynput
