@@ -9,6 +9,8 @@ from onnxruntime import InferenceSession
 import cv2
 import numpy as np
 
+from schema import ImgPosition
+
 
 class Model:
 
@@ -34,8 +36,6 @@ class Model:
             image_data: 预处理后的图像数据，准备好进行推理。
         """
 
-        # 将图像颜色空间从BGR转换为RGB
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         # 将图像调整为匹配输入形状(640,640,3)
         img = cv2.resize(img, (self.input_width, self.input_height))
 
@@ -51,7 +51,7 @@ class Model:
         # 返回预处理后的图像数据
         return image_data
 
-    def postprocess(self, input_image: np.ndarray, output: np.ndarray):
+    def postprocess(self, input_image: np.ndarray, output: np.ndarray) -> list[dict]:
         img_height, img_width = input_image.shape[:2]
         # 转置并压缩输出以匹配期望的形状：(8400, 84)
         outputs = np.transpose(np.squeeze(output[0]))
@@ -79,10 +79,10 @@ class Model:
                 # 从当前行提取边界框坐标
                 x, y, w, h = outputs[i][0], outputs[i][1], outputs[i][2], outputs[i][3]
                 # 计算边界框的缩放坐标
-                left = int((x - w / 2) * x_factor)
-                top = int((y - h / 2) * y_factor)
-                width = int(w * x_factor)
-                height = int(h * y_factor)
+                left = round((x - w / 2) * x_factor)
+                top = round((y - h / 2) * y_factor)
+                width = round(w * x_factor)
+                height = round(h * y_factor)
                 # 将类别ID、得分和边界框坐标添加到相应的列表中
                 class_ids.append(class_id)
                 scores.append(max_score)
@@ -100,18 +100,37 @@ class Model:
             box = boxes[i]
             score = scores[i]
             class_id = class_ids[i]
-            # 将边界框坐标转换为(x1, y1, x2, y2)格式
-            x1, y1, x2, y2 = box[0], box[1], box[0] + box[2], box[1] + box[3]
+            x1, y1, w, h = box
+            x, y = round(x1 + w // 2), round(y1 + h // 2)
             # 将检测结果添加到结果列表中
             results.append(
                 {
-                    "class_id": class_id,
-                    "score": score,
-                    "x1": x1,
-                    "y1": y1,
-                    "x2": x2,
-                    "y2": y2,
+                    "class": class_id,
+                    "conf": score,
+                    "x": x,
+                    "y": y,
+                    "w": w,
+                    "h": h,
                 }
             )
         # 返回修改后的输入图像
         return results
+
+    def max_box(self, input_image: np.ndarray, results: np.ndarray):
+        img_height, img_width = input_image.shape[:2]
+        outputs = np.transpose(np.squeeze(results[0]))
+        max_score = np.amax(outputs[:, 4:])
+        # 获取最高置信度的索引
+        max_index = np.argmax(outputs[:, 4:])
+        # 如果最高置信度大于等于阈值
+        if max_score >= self.conf_threshold:
+            # 获取最高置信度的类别ID
+            # 获取最高置信度的边界框坐标
+            x, y, w, h = outputs[max_index, :4]
+            # 将边界框坐标转换为原始图像的坐标
+            x1 = round((x - w / 2) * img_width / self.input_width)
+            y1 = round((y - h / 2) * img_height / self.input_height)
+            x2 = round((x + w / 2) * img_width / self.input_width)
+            y2 = round((y + h / 2) * img_height / self.input_height)
+            return ImgPosition(x1=x1, y1=y1, x2=x2, y2=y2, confidence=max_score)
+        return None

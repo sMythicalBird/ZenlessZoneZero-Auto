@@ -33,8 +33,7 @@ input_width = input_shape[3]
 
 
 def find_current(
-        screen: np.ndarray = None,
-        conf_threshold: float = 0.5, iou_threshold: float = 0.5
+    screen: np.ndarray = None, conf_threshold: float = 0.5, iou_threshold: float = 0.5
 ) -> ImgPosition | None:
     """
     Find the current location.
@@ -59,9 +58,9 @@ def find_current(
         # 获取最高置信度的边界框坐标
         x, y, w, h = outputs[max_index, :4]
         # 将边界框坐标转换为原始图像的坐标
-        x1 = int((x - w / 2) * img_width / input_width)
-        y1 = int((y - h / 2) * img_height / input_height)
-        x2 = int((x + w / 2) * img_width / input_width)
-        y2 = int((y + h / 2) * img_height / input_height)
+        x1 = round((x - w / 2) * img_width / input_width)
+        y1 = round((y - h / 2) * img_height / input_height)
+        x2 = round((x + w / 2) * img_width / input_width)
+        y2 = round((y + h / 2) * img_height / input_height)
         return ImgPosition(x1=x1, y1=y1, x2=x2, y2=y2, confidence=max_score)
     return None
