@@ -1,6 +1,6 @@
 #  绝区零 自动化框架 零号空洞
 
->> 当前项目处于开发阶段，正在开发零号空洞的自动化操作，可能会有很多问题，欢迎大家提出PR，一起完善这个项目。
+> 当前项目处于开发阶段，正在开发零号空洞的自动化操作，可能会有很多问题，欢迎大家提出PR，一起完善这个项目。
 
 
 ## 项目简介
@@ -73,14 +73,9 @@ QQ群`985508983`
 
 B站:https://www.bilibili.com/video/BV1hqb3eEEkh/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c
 
-## Python运行环境安装说明（小白版，请严格按照步骤操作）
-1. 首先下载[Windows installer (64-bit)](https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe)，或前往[Python Releases for Windows | Python.org](https://www.python.org/downloads/windows/)下载最新版。
-2. 运行安装包并成功安装后，后续操作都将在Windows Powershell中进行。在windows搜索栏（按键盘上的Win键呼出）搜索Windows Powershell，并点击“以管理员身份运行”。
-3. 打开解压后的ZenlessZoneZero-Auto文件夹，选择任意文件夹，点击右键-属性，查看并复制位置信息（一般格式为“C:\\Users\\...\\ZenlessZoneZero-Auto”，...是省略的路径）。在powershell中运行（粘贴并点击回车）
-``` shell
-	cd C:\\Users\\...\\ZenlessZoneZero-Auto
-```
-4. 继续[安装教程](#安装教程)第二步，所有的命令都继续在这个Powershell的界面中运行，如果重新打开需要重复一遍步骤3的cd指令。
+## 小白版的自动安装工具
+将本项目克隆到本地后，打开本项目的文件夹，**右键单击**install.bat，选择“以管理员身份运行”，之后按照脚本提示操作。
+请注意，在使用前需要将readme**完整**阅读一遍，特别是**安装依赖中的版本选择**与**常见问题**。
 
 ## 常见问题（及可能解决方法）
 1. 任何提示“无法将...项识别为...”的提示，如果是git则可以通过直接下载本项目压缩包的形式绕过指令行直接下载，或[下载并安装git](https://github.com/git-for-windows/git/releases/download/v2.45.2.windows.1/Git-2.45.2-64-bit.exe)。
