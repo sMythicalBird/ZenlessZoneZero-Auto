@@ -49,13 +49,13 @@ def bi_bfs(
         neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
         for x_n, y_n in neighbours:
             if 0 <= x_n < rows and 0 <= y_n < cols and visited[x_n][y_n] == step:
-                direction = "a"
+                direction = "w"
                 if x_n > x:
-                    direction = "d"
-                elif y_n < y:
-                    direction = "w"
-                elif y_n > y:
                     direction = "s"
+                elif y_n < y:
+                    direction = "a"
+                elif y_n > y:
+                    direction = "d"
                 res.append((matrix[x_n][y_n], direction))
                 x, y = x_n, y_n
                 break

@@ -22,6 +22,9 @@ logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 def get_map(info, m_name: str):
     if m_name == "旧都列车":
         map_info: MapInfo = get_map_info()
+
+        logger.debug(map_info)
+
         info.mapWay = auto_find_way(map_info)
         # print(info.mapWay)
     elif m_name == "施工废墟":
@@ -38,18 +41,19 @@ def grid_map_1():
     k = find_current()
     if not k:
         control.click(1000, 350)
-        # print("对话中")
         time.sleep(2)
         return
     if not info.mapWay:
         # 等待几秒再获取地图，防止刚进入地图动画未加载完成，这行不能再改了
         time.sleep(3)
         get_map(info, map_name)
-
+    if not info.mapWay:
+        return False
     (mc, dirct) = info.mapWay[info.step]
     # print("下一站,", mc.name)
     # 撞击次数和方向
     for i in range(mc.hit):
+        # logger.debug(f"按下 {dirct} 移动")
         press(dirct, duration=0.1)
         time.sleep(0.3)
     if mc.name == "普通敌人" or mc.name == "精英敌人":
