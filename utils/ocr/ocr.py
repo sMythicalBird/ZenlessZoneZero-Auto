@@ -19,7 +19,7 @@ models = {
     "ch_PP-OCRv4_rec_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_rec_infer.tar",
     "ch_PP-OCRv4_det_server_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_server_infer.tar",
     "ch_PP-OCRv4_det_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar",
-    "ch_ppocr_mobile_v2.0_cls": "https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar",
+    # "ch_ppocr_mobile_v2.0_cls": "https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar",
 }
 
 
@@ -72,10 +72,6 @@ class Ocr:
                     models["ch_PP-OCRv4_det_infer"],
                 )
             )
-        cls_model_dir = maybe_download(
-            ModelsPath / "ch_ppocr_mobile_v2.0_cls",
-            models["ch_ppocr_mobile_v2.0_cls"],
-        )
         self.interval = interval
         # 判断GPU是否可用
         use_gpu = is_compiled_with_cuda()
@@ -86,7 +82,6 @@ class Ocr:
             show_log=False,
             rec_model_dir=rec_model_dir,
             det_model_dir=det_model_dir,
-            cls_model_dir=cls_model_dir,
             return_word_box=return_word_box,
         )
         self.return_word_box = return_word_box
