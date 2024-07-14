@@ -14,7 +14,9 @@
 
 如果喜欢本项目，可右上角送作者一个`Star`
 
-如有疑问，可以提ISSUE或进QQ群`985508983`咨询。
+如有疑问，或者遇到bug，请到Issues提交问题，让遇到类似问题的朋友可以有地方找到相应的解决方案
+
+QQ群`985508983`
 
 ## 前置条件
 - 安装`Python3.10`以上版本
@@ -63,7 +65,9 @@
 	python main.py
 	```
 
+## 视频演示
 
+B站:https://www.bilibili.com/video/BV1hqb3eEEkh/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c
 
 ## 免责声明
 
