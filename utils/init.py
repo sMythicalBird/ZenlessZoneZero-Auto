@@ -63,6 +63,8 @@ OffsetX = 0
 OffsetY = 0
 Hwnd = win32gui.FindWindow("UnityWndClass", "绝区零")
 if Hwnd == 0:
+    Hwnd = win32gui.FindWindow("UnityWndClass", "ZenlessZoneZero")
+if Hwnd == 0:
     logger.error("未找到游戏窗口")
 else:
     # 将游戏窗口移动到屏幕左上角
