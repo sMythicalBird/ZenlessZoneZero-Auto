@@ -19,7 +19,7 @@ map_level = config.targetMap.Level
 logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
-def get_map(info, m_name: str):
+def get_map(m_name: str):
     if m_name == "旧都列车":
         map_info: MapInfo = get_map_info()
 
@@ -46,7 +46,7 @@ def grid_map_1():
     if not info.mapWay:
         # 等待几秒再获取地图，防止刚进入地图动画未加载完成，这行不能再改了
         time.sleep(3)
-        get_map(info, map_name)
+        get_map(map_name)
     if not info.mapWay:
         return False
     (mc, dirct) = info.mapWay[info.step]
