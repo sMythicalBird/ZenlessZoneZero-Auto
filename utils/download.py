@@ -22,8 +22,8 @@ def download_with_progressbar(url: str, save_path: Path):
     :param save_path:  保存路径
     :return:
     """
-    response = requests.get(url, stream=True)
     try:
+        response = requests.get(url, stream=True)
         if response.status_code != 200:
             raise Exception("下载失败！")
         total_size_in_bytes = int(response.headers.get("content-length", 1))
