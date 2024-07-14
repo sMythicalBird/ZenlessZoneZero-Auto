@@ -19,6 +19,7 @@ models = {
     "ch_PP-OCRv4_rec_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_rec_infer.tar",
     "ch_PP-OCRv4_det_server_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_server_infer.tar",
     "ch_PP-OCRv4_det_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar",
+    "ch_ppocr_mobile_v2.0_cls": "https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar",
 }
 
 
@@ -26,12 +27,12 @@ class Ocr:
     last_time = time.time()
 
     def __init__(
-        self,
-        rec_model_dir: str = None,
-        det_model_dir: str = None,
-        interval: float = 0,
-        server_model: bool = False,
-        return_word_box: bool = False,
+            self,
+            rec_model_dir: str = None,
+            det_model_dir: str = None,
+            interval: float = 0,
+            server_model: bool = False,
+            return_word_box: bool = False,
     ):
         """
         初始化OCR
@@ -52,24 +53,28 @@ class Ocr:
                 maybe_download(
                     ModelsPath / "ch_PP-OCRv4_rec_server_infer",
                     models["ch_PP-OCRv4_rec_server_infer"],
-                )
+                    )
                 if server_model  # 如果使用服务器模型
                 else maybe_download(
                     ModelsPath / "ch_PP-OCRv4_rec_infer",
                     models["ch_PP-OCRv4_rec_infer"],
-                )
+                    )
             )
         if det_model_dir is None:
             det_model_dir = (
                 maybe_download(
                     ModelsPath / "ch_PP-OCRv4_det_server_infer",
                     models["ch_PP-OCRv4_det_server_infer"],
-                )
+                    )
                 if server_model  # 如果使用服务器模型
                 else maybe_download(
                     ModelsPath / "ch_PP-OCRv4_det_infer",
                     models["ch_PP-OCRv4_det_infer"],
-                )
+                    )
+            )
+        cls_model_dir = maybe_download(
+            ModelsPath / "ch_ppocr_mobile_v2.0_cls",
+            models["ch_ppocr_mobile_v2.0_cls"],
             )
         self.interval = interval
         # 判断GPU是否可用
@@ -81,6 +86,7 @@ class Ocr:
             show_log=False,
             rec_model_dir=rec_model_dir,
             det_model_dir=det_model_dir,
+            cls_model_dir=cls_model_dir,
             return_word_box=return_word_box,
         )
         self.return_word_box = return_word_box
@@ -154,7 +160,7 @@ class Ocr:
         return self.ocr(img)
 
     def ocr_state(
-        self, img: np.ndarray, states: str | list[str] = "cn"
+            self, img: np.ndarray, states: str | list[str] = "cn"
     ) -> list[OcrResult]:
         """
         文字识别
@@ -184,14 +190,14 @@ class Ocr:
             col_num, word_list, word_col_list, state_list = result[1][2]
             cell_width = (bbox_x_end - bbox_x_start) / col_num  # 每列的宽度
             for word, word_col, state in zip(
-                word_list, word_col_list, state_list
+                    word_list, word_col_list, state_list
             ):  # 遍历识别的文字信息
                 if state not in states:  # 如果识别的文字类型不在指定的类型中，则跳过
                     continue
                 if len(word_col) > 1:
                     char_seq_length = (word_col[-1] - word_col[0] + 1) * cell_width
                     char_width = char_seq_length / (
-                        len(word_col) - 1
+                            len(word_col) - 1
                     )  # 如果文字列有多个，则计算文字宽度
                 else:
                     # 如果文字列只有一个，则直接计算文字宽度
@@ -199,11 +205,11 @@ class Ocr:
                 start_x = (word_col[0] + 0.5) * cell_width
                 end_x = (word_col[-1] + 0.5) * cell_width
                 cell_x_start = (
-                    max(int(start_x - char_width / 2), 0) + bbox_x_start
+                        max(int(start_x - char_width / 2), 0) + bbox_x_start
                 )  # 文字的左上角x坐标
                 cell_x_end = (
-                    min(int(end_x + char_width / 2), bbox_x_end - bbox_x_start)
-                    + bbox_x_start
+                        min(int(end_x + char_width / 2), bbox_x_end - bbox_x_start)
+                        + bbox_x_start
                 )
                 p = Position(
                     x1=cell_x_start,
@@ -252,8 +258,8 @@ def cal_ocr_word_box(rec_str: str, box: Position, rec_word_info: tuple):
             center_x = (center_idx + 0.5) * cell_width
             cell_x_start = max(int(center_x - avg_char_width / 2), 0) + bbox_x_start
             cell_x_end = (
-                min(int(center_x + avg_char_width / 2), bbox_x_end - bbox_x_start)
-                + bbox_x_start
+                    min(int(center_x + avg_char_width / 2), bbox_x_end - bbox_x_start)
+                    + bbox_x_start
             )
             p = Position(
                 x1=cell_x_start,
