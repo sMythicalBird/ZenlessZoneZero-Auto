@@ -32,9 +32,11 @@
    
    > GPU版本使用前提是你的电脑上使用的是`Nvidia`显卡
    > 
-   
+   > CUDA版本请使用`11.8`，如果使用其他版本请参照[paddle安装文档](https://www.paddlepaddle.org.cn/install/quick)进行安装paddle
+   > 
+   >   
    如果你的电脑上没有安装`CUDA`、`CuDNN`，且不想安装`CUDA`、`CuDNN`，请使用以下命令进行安装`CUDA`、`CuDNN`依赖
-	
+
    ```shell
    pip install -r requirements-cuda.txt
    ```
