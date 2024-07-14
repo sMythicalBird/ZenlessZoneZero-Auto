@@ -14,7 +14,7 @@
 
 如果喜欢本项目，可右上角送作者一个`Star`
 
-如有疑问，或者遇到bug，请到Issues提交问题，让遇到类似问题的朋友可以有地方找到相应的解决方案
+如有疑问，或者遇到bug，请到Issues提交问题，让遇到类似问题的朋友可以有地方找到相应的解决方案（[常见问题](#常见问题（及可能解决方法）)可能可以帮助解决部分疑惑）
 
 QQ群`985508983`
 
@@ -24,12 +24,12 @@ QQ群`985508983`
 - 脚本运行会占用键盘鼠标，在使用时不要操作键盘鼠标
 
 ## 安装教程
-1. 下载本项目
+1. 下载本项目（或通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压）
 	```shell
 	git clone https://github.com/sMythicalBird/ZenlessZoneZero-Auto.git
 	cd ZenlessZoneZero-Auto
 	```
-2. 安装依赖
+2. 安装依赖（如果电脑没有Python运行环境，请先阅读[如何安装Python](#Python环境安装说明)）
    * GPU版本
    
    > GPU版本使用前提是你的电脑上使用的是`Nvidia`显卡
@@ -68,6 +68,25 @@ QQ群`985508983`
 ## 视频演示
 
 B站:https://www.bilibili.com/video/BV1hqb3eEEkh/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c
+
+## Python运行环境安装说明（小白版，请严格按照步骤操作）
+1. 首先下载[Windows installer (64-bit)](https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe)，或前往[Python Releases for Windows | Python.org](https://www.python.org/downloads/windows/)下载最新版。
+2. 运行安装包并成功安装后，后续操作都将在Windows Powershell中进行。在windows搜索栏（按键盘上的Win键呼出）搜索Windows Powershell，并点击“以管理员身份运行”。
+3. 打开解压后的ZenlessZoneZero-Auto文件夹，选择任意文件夹，点击右键-属性，查看并复制位置信息（一般格式为“C:\\Users\\...\\ZenlessZoneZero-Auto”，...是省略的路径）。在powershell中运行（粘贴并点击回车）
+``` shell
+	cd C:\\Users\\...\\ZenlessZoneZero-Auto
+```
+4. 继续[安装教程](#安装教程)第二步，所有的命令都继续在这个Powershell的界面中运行，如果重新打开需要重复一遍步骤3的cd指令。
+
+## 常见问题（及可能解决方法）
+1. 任何提示“无法将...项识别为...”的提示，如果是git则可以通过直接下载本项目压缩包的形式绕过指令行直接下载，或[下载并安装git](https://github.com/git-for-windows/git/releases/download/v2.45.2.windows.1/Git-2.45.2-64-bit.exe)。
+2. 不知道指令在哪里输入的，或提示”No such file or directory“的，请查看[这里的第二步和第三步](#Python运行环境安装说明（小白版，请严格按照步骤操作）)。
+3. 任何含有“version”这个关键词的错误信息，尝试运行（可以根据需要只选择你安装了的依赖库）
+   ```shell
+	   pip install --upgrade -r requirements-cuda.txt
+	   pip install --upgrade -r requirements.txt
+	   pip install --upgrade -r requirements-cpu.txt
+   ```
 
 ## 免责声明
 
