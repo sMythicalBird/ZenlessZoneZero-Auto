@@ -12,3 +12,4 @@ pydirectinput-rgx
 pywin32
 pyyaml
 onnxruntime-gpu
+setuptools
