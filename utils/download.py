@@ -13,6 +13,7 @@ import requests
 from tqdm import tqdm
 
 from .init import logger, RootPath
+from .utils import retry
 
 
 def download_with_progressbar(url: str, save_path: Path):
@@ -50,6 +51,7 @@ DownLoadBaseUrl = "https://file.caiyun.fun/download/zzz/"
 FileListUrl = DownLoadBaseUrl + "filelist.txt"
 
 
+@retry(3)
 def check_file():
     """
     检查文件列表中的文件是否存在，不存在则下载

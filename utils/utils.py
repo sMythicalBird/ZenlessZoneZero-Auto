@@ -20,7 +20,6 @@ from loguru import logger
 
 from schema import ImgPosition, Position
 from .init import WidthRatio, HeightRatio, Hwnd, RealWidth, RealHeight
-from .ocr import Ocr
 
 
 def find_all_template(
@@ -209,7 +208,7 @@ def cv2_add_chinese_text(img, text, position, textColor=(0, 255, 0), textSize=30
 
 
 def wait_text(
-    ocr: Ocr,
+    ocr,
     text: str | Pattern = None,
     target_texts: list[str | Pattern] = None,
     timeout: int = 10,
@@ -219,7 +218,7 @@ def wait_text(
     等待指定文本出现
     :param text:  目标文本
     :param target_texts: 目标文本列表
-    :param ocr:  ocr对象
+    :param ocr:  Ocr对象
     :param region:  搜索区域
     :param timeout:  超时时间
     :return: Dict[str, Position] 字典的键为目标文本，值为位置
@@ -250,3 +249,23 @@ def wait_text(
             if not target_texts_copy:
                 return ocr_results
     return {}
+
+
+def retry(count: int = 3, interval: int = 1):
+    """
+    重试装饰器
+    """
+
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(count):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    logger.exception(e)
+                    time.sleep(interval)
+            return None
+
+        return wrapper
+
+    return decorator
