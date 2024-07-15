@@ -1,28 +1,57 @@
 @echo off
 :main
 title ZenlessZoneZero-Auto便捷安装脚本
-echo 请以管理员身份运行
 echo ZenlessZoneZero-Auto便捷安装脚本
+echo 请以管理员身份运行
 echo 在开始安装之前，请确认已阅读readme
 pause
-echo 是否安装python3.12.4?(如电脑中有高于此版本的python则不需要安装，如否或版本低于3.10请安装，低版本请卸载)
-echo 1.是
-echo 2.否
-echo 请输入你的选择：
-set /p ispython=
+goto :ispythoninstalled
 
-if "%ispython%"=="1" goto :installpython
-if "%ispython%"=="2" goto :whichversion
-goto :inputerror1
+:ispythoninstalled
+echo 正在检测python...
+setlocal
+where python >nul
+if %errorlevel% neq 0 (
+    echo Python未安装,正在安装...
+    goto :installpython
+)
+endlocal
+python --version | findstr /C:"Python" >nul
+if %errorlevel% neq 0 (
+    echo Python不正确,正在安装...
+    goto :installpython
+)
+for /f "tokens=2 delims= " %%a in ('python --version') do set version=%%a
+set major=%version:~0,1%
+set minor=%version:~2,2%
+if %major% gtr 3 (
+    goto :whichversion
+) else if %major% equ 3 (
+    if %minor% gtr 10 (
+        goto :whichversion
+    ) else if %minor% equ 10 (
+        goto :whichversion
+    )
+)
+goto :error1
 
 :installpython
+echo 有些杀毒软件会错误的拦截python安装，请注意。
+pause
 echo 开始安装！
 set url="https://mirrors.huaweicloud.com/python/3.12.4/python-3.12.4-amd64.exe"
 set localPath="%temp%\python.exe"
 
 certutil -urlcache -split -f "%url%" "%localPath%"
 start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python312"
-echo 安装完成！
+if exist "%ProgramFiles%\Python312\python.exe" (
+    echo 安装完成！
+) else (
+    echo 安装错误！正在重试中...
+    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="点击以安装"
+    echo 是否安装成功？如未成功请退出脚本并百度，成功请继续
+    pause
+)
 echo 升级pip中
 "%ProgramFiles%\Python312\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
 "%ProgramFiles%\Python312\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
@@ -31,6 +60,22 @@ pause
 goto :whichversion
 
 :whichversion
+cd /d "%~dp0"
+cls
+echo 正在检查pip是否存在...
+where pip >nul 2>&1
+if %errorlevel% equ 0 (
+    echo pip 已在PATH中找到，使用默认pip。
+    set pip_cmd="pip"
+) else (
+    echo pip 未在PATH中找到，尝试使用前面安装的pip。
+    set pip_cmd="%ProgramFiles%\Python312\Scripts\pip.exe"
+    if not exist "%pip_cmd%" (
+        echo 请检查Python安装。
+        pause
+        exit /b
+    )
+)
 cls
 echo 请查看readme,并选择你需要安装的版本
 echo 1.CUDA、CuDNN依赖与本项目GPU版本依赖
@@ -45,26 +90,28 @@ goto :inputerror2
 
 :installall
 echo 开始安装！
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements-cuda.txt
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements.txt
+%pip_cmd% install -r requirements-cuda.txt
+%pip_cmd% install -r requirements.txt
 echo 安装完成！
 goto :end
 
 :installgpu
 echo 开始安装！
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements.txt
+%pip_cmd% install -r requirements.txt
 echo 安装完成！
 goto :end
 
 :installcpu
 echo 开始安装！
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements-cpu.txt
+%pip_cmd% install -r requirements-cpu.txt
 echo 安装完成！
 goto :end
 
-:inputerror1
-echo 输入错误，请重新输入
-goto :main
+:error1
+echo python版本过低！
+echo 请完全卸载python后尝试安装。
+pause
+exit /b
 
 :inputerror2
 echo 输入错误，请重新输入
