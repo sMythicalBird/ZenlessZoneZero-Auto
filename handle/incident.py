@@ -101,12 +101,12 @@ def select_role():
 #     time.sleep(2)
 
 
-# # 8、资源回收小组
-# @task.page(name="资源回收小组", target_texts=["^离开$"])
-# def select_role(positions: Dict[str, Position]):
-#     pos = positions.get("^离开$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
+# 8、资源回收小组
+@task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
+def select_role(positions: Dict[str, Position]):
+    pos = positions.get("^让猫又选物资箱$")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
 
 
 # 10、调查协会支援站
