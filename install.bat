@@ -39,12 +39,12 @@ goto :error1
 echo 有些杀毒软件会错误的拦截python安装，请注意。
 pause
 echo 开始安装！
-set url="https://mirrors.huaweicloud.com/python/3.12.4/python-3.12.4-amd64.exe"
+set url="https://mirrors.huaweicloud.com/python/3.10.2/python-3.10.2-amd64.exe"
 set localPath="%temp%\python.exe"
 
 certutil -urlcache -split -f "%url%" "%localPath%"
-start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python312"
-if exist "%ProgramFiles%\Python312\python.exe" (
+start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python310"
+if exist "%ProgramFiles%\Python310\python.exe" (
     echo 安装完成！
 ) else (
     echo 安装错误！正在重试中...
@@ -53,9 +53,9 @@ if exist "%ProgramFiles%\Python312\python.exe" (
     pause
 )
 echo 升级pip中
-"%ProgramFiles%\Python312\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python312\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python312\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
 pause
 goto :whichversion
 
@@ -69,12 +69,7 @@ if %errorlevel% equ 0 (
     set pip_cmd="pip"
 ) else (
     echo pip 未在PATH中找到，尝试使用前面安装的pip。
-    set pip_cmd="%ProgramFiles%\Python312\Scripts\pip.exe"
-    if not exist "%pip_cmd%" (
-        echo 请检查Python安装。
-        pause
-        exit /b
-    )
+    set pip_cmd="%ProgramFiles%\Python310\Scripts\pip.exe"
 )
 cls
 echo 请查看readme,并选择你需要安装的版本
