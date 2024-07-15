@@ -13,7 +13,6 @@ import cv2
 from schema import MapComponent, MapInfo
 from utils import screenshot, RootPath
 from ..detect import Model, find_current
-from ..init import logger
 
 DownloadPath = RootPath / "download"  # 下载路径
 
@@ -22,7 +21,6 @@ DownloadPath = RootPath / "download"  # 下载路径
 components_model = InferenceSession(DownloadPath / "components_level.onnx")
 components_input_name = components_model.get_inputs()[0].name
 components_output_name = components_model.get_outputs()[0].name
-components = Model(components_model)
 
 television_model = InferenceSession(DownloadPath / "television.onnx")
 television_input_name = television_model.get_inputs()[0].name
