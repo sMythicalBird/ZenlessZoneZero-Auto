@@ -18,7 +18,7 @@ class MapComponent(BaseModel):
     confidence: float = Field(0, title="组件置信度")
     obstacle: bool = Field(True, title="是否为障碍物")
     hit: int = Field(1, title="需要的撞击次数")
-    weight: int = Field(1, title="权重")
+    weight: int = Field(0, title="权重")
 
 
 class MapInfo(BaseModel):

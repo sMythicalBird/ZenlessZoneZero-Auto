@@ -79,22 +79,30 @@ def component_class(screen: np.ndarray, x: int, y: int, w: int, h: int) -> MapCo
     )
 
 
-def get_map_info() -> MapInfo:
-    screen = screenshot()
-    current = find_current(screen)
-    if current is None:
+def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
+    """
+    获取当前地图信息
+    """
+    if screen is None:
+        screen = screenshot()
+    current = find_current(screen)  # 查找当前位置
+    if current is None:  # 如果未找到当前位置，则返回None
         return None
-    w, h = current.w, current.h
-    float_w, float_h = w * 1 / 2, h * 1 / 2
-
-    process_screen = television.preprocess(screen)
+    w, h = current.w, current.h  # 获取当前位置的宽高
+    float_w, float_h = w * 1 / 2, h * 1 / 2  # 计算浮动宽高
+    process_screen = television.preprocess(screen)  # 预处理屏幕图像
+    # 模型推理
     pred = television_model.run(
         [television_output_name], {television_input_name: process_screen}
     )
+    # 后处理
     outputs = television.postprocess(screen, pred)
-
+    # 筛选出 y 值大于 h 的输出
+    outputs = [output for output in outputs if output["y"] >= h]
+    # 按 x 坐标排序
     x_groups = []
     x_outputs = sorted(outputs, key=lambda item: item["x"])
+    # 遍历输出 对x坐标进行分组
     while x_outputs:
         output = x_outputs.pop(0)
         x = output["x"]
@@ -111,8 +119,10 @@ def get_map_info() -> MapInfo:
             )
         else:
             group["map_components"].append([output["y"], map_component])
+    # 按 y 坐标排序
     y_groups = []
     y_outputs = sorted(outputs, key=lambda item: item["y"])
+    # 遍历输出 对y坐标进行分组
     while y_outputs:
         output = y_outputs.pop(0)
         y = output["y"]
@@ -125,8 +135,10 @@ def get_map_info() -> MapInfo:
                     "max_y": y + float_h,
                 }
             )
+    # 构建地图信息
     size = (len(x_groups), len(y_groups))
     map_info = MapInfo(size=size, w=w, h=h)
+    # 遍历地图组件
     for y_group in y_groups:
         for x_group in x_groups:
             for mapComponent_y, map_component in x_group["map_components"]:
