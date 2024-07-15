@@ -6,6 +6,7 @@
 """
 import queue
 from typing import List, Tuple
+from itertools import groupby
 
 import numpy as np
 
@@ -68,15 +69,33 @@ def bi_bfs(
 def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     if isinstance(components, MapInfo):
         components: List[List[MapComponent]] = components.components
-    # 找到起点和终点
+    # 找到起点
     start: list[int] = [-1, -1]
     for i in range(len(components)):
         for j in range(len(components[i])):
             if components[i][j].name == "自身位置":
                 start = [i, j]
-    target: list[int] = [-1, -1]
-    for i in range(len(components)):
-        for j in range(len(components[i])):
-            if components[i][j].name == "目标位置":
-                target = [i, j]
-    return bi_bfs(components, start, target)
+    # 打平components
+    components_list: List[MapComponent] = [
+        component for line in components for component in line if not component.obstacle
+    ]
+    # 排序
+    components_list = sorted(components_list, key=lambda component: component.weight)
+    # 按照权重进行分组
+    components_group = groupby(components_list, key=lambda component: component.weight)
+
+    # 遍历分组
+    for key, group in components_group:
+        # 遍历每个分组 暂存结果
+        results = []
+        for target in group:
+            target: MapComponent
+            target_position = [target.x, target.y]
+            result = bi_bfs(components, start, target_position)
+            if result:
+                results.append(result)
+        # 按照路径长度排序
+        results = sorted(results, key=lambda x: len(x))
+        if results:
+            # 返回最短路径
+            return results[0]
