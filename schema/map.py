@@ -11,11 +11,9 @@ from pydantic import BaseModel, Field
 
 
 class MapComponent(BaseModel):
-    name: str = Field(title="组件名称")
     x: int = Field(title="组件在当前Map中的索引")
     y: int = Field(title="组件在当前Map中的索引")
     confidence: float = Field(0, title="组件置信度")
-    obstacle: bool = Field(True, title="是否为障碍物")
     weight: int = Field(0, title="权重")
 
 

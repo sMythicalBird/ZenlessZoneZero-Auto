@@ -76,7 +76,6 @@ def select_role(positions: Dict[str, Position]):
             time.sleep(2)
             if is_not_fight("Space"):
                 # 防止战斗结束动画放完刚好进入地图，提前走格子出现路径混乱
-                time.sleep(4)
                 break
         # 继续战斗
         # print("战斗中")

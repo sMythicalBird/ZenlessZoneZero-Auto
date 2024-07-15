@@ -6,8 +6,6 @@
 @author SuperLazyDog
 """
 
-import json
-
 import numpy as np
 from onnxruntime import InferenceSession
 import cv2
@@ -19,17 +17,9 @@ from ..init import logger
 
 DownloadPath = RootPath / "download"  # 下载路径
 
-# 加载地图组件标签
-with open(DownloadPath / "components.json", "r", encoding="utf-8") as f:
-    components_label: dict = json.load(f)
-    logger.debug("加载地图组件标签成功！")
 
-# 加载地图组件信息
-with open(DownloadPath / "components_info.json", "r", encoding="utf-8") as f:
-    components_info: dict = json.load(f)
-    logger.debug("加载地图组件信息成功！")
-
-components_model = InferenceSession(DownloadPath / "components.onnx")
+# components_model = InferenceSession(DownloadPath / "components.onnx")
+components_model = InferenceSession(DownloadPath / "components_level.onnx")
 components_input_name = components_model.get_inputs()[0].name
 components_output_name = components_model.get_outputs()[0].name
 components = Model(components_model)
@@ -66,16 +56,11 @@ def component_class(screen: np.ndarray, x: int, y: int, w: int, h: int) -> MapCo
     # 模型推理 输出每个组件的概率
     conf, index = infer_crop(crop)
     # 获取组件标签
-    label = components_label[str(index)]
-    component_info: dict = components_info.get(label, {})
     return MapComponent(
-        name=label,  # 组件名称
         x=x,  # 组件坐标
         y=y,  # 组件坐标
-        index=index,  # 组件类别索引
         confidence=conf,  # 组件置信度
-        obstacle=component_info.get("obstacle", True),  # 是否为障碍物
-        hit=component_info.get("hit", 1),  # 需要碰撞的次数
+        weight=index,  # 组件权重
     )
 
 
@@ -85,6 +70,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     """
     if screen is None:
         screen = screenshot()
+    screen_w = screen.shape[1]
     current = find_current(screen)  # 查找当前位置
     if current is None:  # 如果未找到当前位置，则返回None
         return None
@@ -98,8 +84,11 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     # 后处理
     outputs = television.postprocess(screen, pred)
     # 筛选出 y 值大于 h 的输出
-    outputs = [output for output in outputs if output["y"] >= h]
-    # 按 x 坐标排序
+    outputs = [
+        output
+        for output in outputs
+        if output["y"] >= h and w // 2 < output["x"] < screen_w - w // 2
+    ]  # 按 x 坐标排序
     x_groups = []
     x_outputs = sorted(outputs, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
@@ -143,5 +132,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         for x_group in x_groups:
             for mapComponent_y, map_component in x_group["map_components"]:
                 if y_group["min_y"] <= mapComponent_y < y_group["max_y"]:
+                    map_component.y = y_group["y"]
+                    map_component.x = x_group["x"]
                     map_info.components[y_group["y"]][x_group["x"]] = map_component
     return map_info

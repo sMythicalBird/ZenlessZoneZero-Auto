@@ -6,20 +6,36 @@
 @author SuperLazyDog
 """
 from datetime import datetime
-from typing import List, Tuple
+from typing import List
 from pydantic import BaseModel, Field
-from .map import MapComponent
+from enum import Enum
+
+
+class Dirct(Enum):
+    up = "w"
+    down = "s"
+    left = "a"
+    right = "d"
+
+    def __str__(self):
+        return self.value
+
+    # 取反
+    def reverse(self):
+        if self == Dirct.up:
+            return Dirct.down
+        if self == Dirct.down:
+            return Dirct.up
+        if self == Dirct.left:
+            return Dirct.right
+        if self == Dirct.right:
+            return Dirct.left
 
 
 class StatusInfo(BaseModel):
     currentPageName: str = Field("", title="当前页面名称")
-    step: int = Field(0, title="当前地图已走步数")
-    mapWay: List[Tuple[MapComponent, str]] = Field([], title="地图路径")
     lastMoveTime: datetime = Field(datetime.now(), title="上次移动时间")
-
-    def reset_way(self):
-        self.step = 0
-        self.mapWay = []
+    lastDirct: Dirct = Field("", title="上次移动方向")
 
 
 info = StatusInfo()
