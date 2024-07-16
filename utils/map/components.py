@@ -46,19 +46,28 @@ def infer_crop(crop):
     return conf, index
 
 
-def component_class(screen: np.ndarray, x: int, y: int, w: int, h: int) -> MapComponent:
-    x1, y1 = round(max(x - w / 2, 0)), round(max(y - h, 0))
-    x2, y2 = round(min(x + w / 2, screen.shape[1])), round(y)
-    crop = screen[y1:y2, x1:x2]
-    crop = preprocess_crop(crop)
-    # 模型推理 输出每个组件的概率
-    conf, index = infer_crop(crop)
-    # 获取组件标签
+def component_class(
+    screen: np.ndarray, x: int, y: int, w: int, h: int, label: int
+) -> MapComponent:
+    if label:
+        x1, y1 = round(max(x - w / 2, 0)), round(max(y - h, 0))
+        x2, y2 = round(min(x + w / 2, screen.shape[1])), round(y)
+        crop = screen[y1:y2, x1:x2]
+        crop = preprocess_crop(crop)
+        # 模型推理 输出每个组件的概率
+        conf, index = infer_crop(crop)
+        # 获取组件标签
+        return MapComponent(
+            x=x,  # 组件坐标
+            y=y,  # 组件坐标
+            confidence=conf,  # 组件置信度
+            weight=index,  # 组件权重
+        )
     return MapComponent(
-        x=x,  # 组件坐标
-        y=y,  # 组件坐标
-        confidence=conf,  # 组件置信度
-        weight=index,  # 组件权重
+        x=1,  # 组件坐标
+        y=1,  # 组件坐标
+        confidence=0,  # 组件置信度
+        weight=3,  # 组件权重
     )
 
 
@@ -104,38 +113,37 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                 {
                     "x": center_x - offset_x,
                     "y": center_y - offset_y,
+                    "label": False,  # 是否需要进行图片分类
                 }
             )
             outputs_real.append(
                 {
                     "x": center_x + offset_x,
                     "y": center_y - offset_y,
+                    "label": False,
                 }
             )
             outputs_real.append(
                 {
                     "x": center_x - offset_x,
                     "y": center_y + offset_y,
+                    "label": False,
                 }
             )
             outputs_real.append(
                 {
                     "x": center_x + offset_x,
                     "y": center_y + offset_y,
+                    "label": False,
                 }
             )
-    for each in outputs:
-        print(each)
-    print("---------------------------")
-    for each in outputs_real:
-        print(each)
     x_groups = []
     x_outputs = sorted(outputs_real, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
     while x_outputs:
         output = x_outputs.pop(0)
         x = output["x"]
-        map_component = component_class(screen, x, output["y"], w, h)
+        map_component = component_class(screen, x, output["y"], w, h, output["label"])
         group = x_groups[-1] if x_groups else None
         if group is None or group["max_x"] < x:
             x_groups.append(
