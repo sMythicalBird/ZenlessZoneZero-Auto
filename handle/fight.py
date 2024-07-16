@@ -12,7 +12,7 @@ from utils import control, screenshot, logger
 from utils.task import task
 from re import template
 from pydirectinput import press
-
+from utils import config
 
 def is_not_fight(text: str):
     text = template(text)
@@ -65,11 +65,11 @@ def select_role(positions: Dict[str, Position]):
     # 持续进行战斗，若两分钟后还在当前页面，则战斗地图需要跑图或者练度太低(练度低估计也已经寄了)，那就跑路
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
-        if fight_time > 120:
+        if fight_time > config.fightTime:
             control.esc()
             break
         logger.debug(
-            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{120 - fight_time:.2f}s",
+            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{config.fightTime - fight_time:.2f}s",
         )
         # 检查是否还在战斗,判断两次，防止因为战斗动画的原因产生误判退出
         if is_not_fight("Space"):

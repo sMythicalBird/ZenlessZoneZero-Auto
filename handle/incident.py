@@ -4,14 +4,13 @@
 @time:      2024/7/10 上午2:34
 @author:    sMythicalBird
 """
-
 import time
 from typing import Dict
 from schema import Position
 from utils import control, screenshot
 from utils.task import task
 from re import template
-
+from utils import config
 
 def get_pos(text: str):
     text = template(text)
@@ -227,3 +226,18 @@ def select_role(positions: Dict[str, Position]):
 def select_role(positions: Dict[str, Position]):
     pos = positions.get("^不感兴趣$")
     control.click(pos.x, pos.y)
+
+# 假面研究者
+@task.page(name="假面研究者", target_texts=["^拒绝他的好意$"])
+def select_role(positions: Dict[str, Position]):
+    pos = positions.get("^拒绝他的好意$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="零号业绩领取", target_texts=["^确认$","^零号业绩$"],priority=10)
+def select_role(positions: Dict[str, Position]):
+    pos = positions.get("^确认$")
+    control.click(pos.x, pos.y)
+    if not config.wholeCourse:
+        time.sleep(1)
+        control.esc()

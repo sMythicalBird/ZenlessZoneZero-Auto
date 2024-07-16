@@ -23,7 +23,6 @@ ZoneMap = {
 class TargetMap(BaseModel):
     zone: int = Field(1, ge=1, le=2)
     level: int = Field(1, ge=1, le=5)
-
     @property
     def Zone(self):
         return ZoneMap[self.zone]["name"]
@@ -35,3 +34,6 @@ class TargetMap(BaseModel):
 
 class Config(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
+    wholeCourse: bool = Field(False, description="是否打完全程")
+    fightTime: int = Field(150, description="最大战斗时间（单位秒）")
+    mapTime: int = Field(600, description="在地图内最大时间（单位秒）")
