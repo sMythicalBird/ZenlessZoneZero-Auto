@@ -33,7 +33,7 @@ def grid_map_1(screen: np.ndarray):
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
-        info.entryMapTime = datetime.now()
+        # info.entryMapTime = datetime.now()
         return
     control.scroll(-5)
     map_info = get_map_info(screen)

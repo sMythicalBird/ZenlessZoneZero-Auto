@@ -85,8 +85,14 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     outputs = [
         output
         for output in outputs
-        if output["y"] >= h // 2 and w // 2 < output["x"] < screen_w - w // 2
+        if output["y"] >= h // 2
+        and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
     ]  # 按 x 坐标排序
+    print(w)
+    print(h)
+    for each in outputs:
+        print(each)
+    input("loc")
     x_groups = []
     x_outputs = sorted(outputs, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
@@ -106,6 +112,9 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
             )
         else:
             group["map_components"].append([output["y"], map_component])
+    for each in outputs:
+        print(each)
+    input("x_group")
     # 按 y 坐标排序
     y_groups = []
     y_outputs = sorted(outputs, key=lambda item: item["y"])
@@ -122,6 +131,9 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                     "max_y": y + float_h,
                 }
             )
+    for each in y_outputs:
+        print(each)
+    input("y_groups")
     # 构建地图信息
     size = (len(x_groups), len(y_groups))
     map_info = MapInfo(size=size, w=w, h=h)
