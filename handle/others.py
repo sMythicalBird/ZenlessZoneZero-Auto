@@ -37,10 +37,10 @@ def grid_map_1(screen: np.ndarray):
     control.scroll(-5)
     if info.currentStage == 1:
         k = find_current()
-        control.move_at(k.x, k.y, 320, 540)
+        control.move_at(k.x, k.y, 360, 500)
     elif info.currentStage == 2:
         k = find_current()
-        control.move_at(k.x, k.y, 960, 540)
+        control.move_at(k.x, k.y, 900, 500)
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")

@@ -74,6 +74,7 @@ class Control:
         moveTo(x2, y2)
         time.sleep(0.1)
         mouseUp()
+        time.sleep(0.3)
 
     @staticmethod
     def esc():

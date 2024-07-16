@@ -89,3 +89,11 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^退出战斗$")
     control.click(pos.x, pos.y)
     time.sleep(2)
+
+
+# 打不过怪
+@task.page(name="打不过怪", target_texts=["^撤退$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^撤退$")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
