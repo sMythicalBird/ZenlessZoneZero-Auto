@@ -8,7 +8,16 @@
 import time
 from functools import wraps
 
-from pydirectinput import press, click, moveTo, mouseDown, mouseUp, keyDown, keyUp
+from pydirectinput import (
+    press,
+    click,
+    moveTo,
+    mouseDown,
+    mouseUp,
+    keyDown,
+    keyUp,
+    scroll,
+)
 
 from .init import OffsetX, OffsetY, WidthRatio, HeightRatio
 
@@ -75,6 +84,10 @@ class Control:
         time.sleep(t)
         keyUp("w")
         keyUp("shift")
+
+    @staticmethod
+    def scroll(clicks: int):
+        scroll(clicks)
 
 
 control = Control()

@@ -237,7 +237,7 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="零号业绩领取", target_texts=["^确认$", "^零号业绩$"], priority=10)
+@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)

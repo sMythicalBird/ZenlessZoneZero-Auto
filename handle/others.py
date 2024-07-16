@@ -35,7 +35,7 @@ def grid_map_1(screen: np.ndarray):
         control.esc()
         info.entryMapTime = datetime.now()
         return
-
+    control.scroll(-5)
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")
