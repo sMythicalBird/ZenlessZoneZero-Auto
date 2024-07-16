@@ -1,42 +1,82 @@
 @echo off
 :main
-title ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
-echo ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
-echo ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
-echo ÔÚ¿ªÊ¼°²×°Ö®Ç°£¬ÇëÈ·ÈÏÒÑÔÄ¶Áreadme
+title ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
+echo ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
+echo è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
+echo åœ¨å¼€å§‹å®‰è£…ä¹‹å‰ï¼Œè¯·ç¡®è®¤å·²é˜…è¯»readme
 pause
-echo ÊÇ·ñ°²×°python3.12.4?(ÈçµçÄÔÖĞÓĞ¸ßÓÚ´Ë°æ±¾µÄpythonÔò²»ĞèÒª°²×°£¬Èç·ñ»ò°æ±¾µÍÓÚ3.10Çë°²×°£¬µÍ°æ±¾ÇëĞ¶ÔØ)
-echo 1.ÊÇ
-echo 2.·ñ
-echo ÇëÊäÈëÄãµÄÑ¡Ôñ£º
-set /p ispython=
+goto :ispythoninstalled
 
-if "%ispython%"=="1" goto :installpython
-if "%ispython%"=="2" goto :whichversion
-goto :inputerror1
+:ispythoninstalled
+echo æ­£åœ¨æ£€æµ‹python...
+setlocal
+where python >nul
+if %errorlevel% neq 0 (
+    echo Pythonæœªå®‰è£…,æ­£åœ¨å®‰è£…...
+    goto :installpython
+)
+endlocal
+python --version | findstr /C:"Python" >nul
+if %errorlevel% neq 0 (
+    echo Pythonä¸æ­£ç¡®,æ­£åœ¨å®‰è£…...
+    goto :installpython
+)
+for /f "tokens=2 delims= " %%a in ('python --version') do set version=%%a
+set major=%version:~0,1%
+set minor=%version:~2,2%
+if %major% gtr 3 (
+    goto :whichversion
+) else if %major% equ 3 (
+    if %minor% gtr 10 (
+        goto :whichversion
+    ) else if %minor% equ 10 (
+        goto :whichversion
+    )
+)
+goto :error1
 
 :installpython
-echo ¿ªÊ¼°²×°£¡
-set url="https://mirrors.huaweicloud.com/python/3.12.4/python-3.12.4-amd64.exe"
+echo æœ‰äº›æ€æ¯’è½¯ä»¶ä¼šé”™è¯¯çš„æ‹¦æˆªpythonå®‰è£…ï¼Œè¯·æ³¨æ„ã€‚
+pause
+echo å¼€å§‹å®‰è£…ï¼
+set url="https://mirrors.huaweicloud.com/python/3.10.2/python-3.10.2-amd64.exe"
 set localPath="%temp%\python.exe"
 
 certutil -urlcache -split -f "%url%" "%localPath%"
-start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python312"
-echo °²×°Íê³É£¡
-echo Éı¼¶pipÖĞ
-"%ProgramFiles%\Python312\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python312\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python312\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
+start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python310"
+if exist "%ProgramFiles%\Python310\python.exe" (
+    echo å®‰è£…å®Œæˆï¼
+) else (
+    echo å®‰è£…é”™è¯¯ï¼æ­£åœ¨é‡è¯•ä¸­...
+    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="ç‚¹å‡»ä»¥å®‰è£…"
+    echo æ˜¯å¦å®‰è£…æˆåŠŸï¼Ÿå¦‚æœªæˆåŠŸè¯·é€€å‡ºè„šæœ¬å¹¶ç™¾åº¦ï¼ŒæˆåŠŸè¯·ç»§ç»­
+    pause
+)
+echo å‡çº§pipä¸­
+"%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
 pause
 goto :whichversion
 
 :whichversion
+cd /d "%~dp0"
 cls
-echo Çë²é¿´readme,²¢Ñ¡ÔñÄãĞèÒª°²×°µÄ°æ±¾
-echo 1.CUDA¡¢CuDNNÒÀÀµÓë±¾ÏîÄ¿GPU°æ±¾ÒÀÀµ
-echo 2.½ö°²×°GPU°æ±¾ÒÀÀµ
-echo 3.½ö°²×°CPU°æ±¾ÒÀÀµ
-echo ÇëÑ¡Ôñ£º
+echo æ­£åœ¨æ£€æŸ¥pipæ˜¯å¦å­˜åœ¨...
+where pip >nul 2>&1
+if %errorlevel% equ 0 (
+    echo pip å·²åœ¨PATHä¸­æ‰¾åˆ°ï¼Œä½¿ç”¨é»˜è®¤pipã€‚
+    set pip_cmd="pip"
+) else (
+    echo pip æœªåœ¨PATHä¸­æ‰¾åˆ°ï¼Œå°è¯•ä½¿ç”¨å‰é¢å®‰è£…çš„pipã€‚
+    set pip_cmd="%ProgramFiles%\Python310\Scripts\pip.exe"
+)
+cls
+echo è¯·æŸ¥çœ‹readme,å¹¶é€‰æ‹©ä½ éœ€è¦å®‰è£…çš„ç‰ˆæœ¬
+echo 1.CUDAã€CuDNNä¾èµ–ä¸æœ¬é¡¹ç›®GPUç‰ˆæœ¬ä¾èµ–
+echo 2.ä»…å®‰è£…GPUç‰ˆæœ¬ä¾èµ–
+echo 3.ä»…å®‰è£…CPUç‰ˆæœ¬ä¾èµ–
+echo è¯·é€‰æ‹©ï¼š
 set /p isversion=
 if "%isversion%"=="1" goto :installall
 if "%isversion%"=="2" goto :installgpu
@@ -44,32 +84,34 @@ if "%isversion%"=="3" goto :installcpu
 goto :inputerror2
 
 :installall
-echo ¿ªÊ¼°²×°£¡
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements-cuda.txt
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements.txt
-echo °²×°Íê³É£¡
+echo å¼€å§‹å®‰è£…ï¼
+%pip_cmd% install -r requirements-cuda.txt
+%pip_cmd% install -r requirements.txt
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
 :installgpu
-echo ¿ªÊ¼°²×°£¡
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements.txt
-echo °²×°Íê³É£¡
+echo å¼€å§‹å®‰è£…ï¼
+%pip_cmd% install -r requirements.txt
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
 :installcpu
-echo ¿ªÊ¼°²×°£¡
-"%ProgramFiles%\Python312\Scripts\pip" install -r %~dp0/requirements-cpu.txt
-echo °²×°Íê³É£¡
+echo å¼€å§‹å®‰è£…ï¼
+%pip_cmd% install -r requirements-cpu.txt
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
-:inputerror1
-echo ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë
-goto :main
+:error1
+echo pythonç‰ˆæœ¬è¿‡ä½ï¼
+echo è¯·å®Œå…¨å¸è½½pythonåå°è¯•å®‰è£…ã€‚
+pause
+exit /b
 
 :inputerror2
-echo ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë
+echo è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥
 goto :whichversion
 
 :end
-echo °²×°Íê³É£¬ÔËĞĞÇë²é¿´readme
+echo å®‰è£…å®Œæˆï¼Œè¿è¡Œè¯·æŸ¥çœ‹readme
 pause
