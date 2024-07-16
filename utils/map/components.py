@@ -47,8 +47,8 @@ def infer_crop(crop):
 
 
 def component_class(screen: np.ndarray, x: int, y: int, w: int, h: int) -> MapComponent:
-    x1, y1 = max(x - w // 2, 0), max(y - h, 0)
-    x2, y2 = min(x + w // 2, screen.shape[1]), y
+    x1, y1 = round(max(x - w / 2, 0)), round(max(y - h, 0))
+    x2, y2 = round(min(x + w / 2, screen.shape[1])), round(y)
     crop = screen[y1:y2, x1:x2]
     crop = preprocess_crop(crop)
     # 模型推理 输出每个组件的概率
@@ -88,13 +88,49 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         if output["y"] >= h // 2
         and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
     ]  # 按 x 坐标排序
-    print(w)
-    print(h)
+    # 2*2格子拆分
+    m_w = w * 1.5  # 切割2*2
+    outputs_real = []
+    for each in outputs:
+        if each["w"] < m_w:
+            outputs_real.append(each)
+        else:
+            # 计算中心点和小格子相对偏移量
+            center_x = each["x"]
+            center_y = each["y"] - h / 2
+            offset_x = each["w"] / 4
+            offset_y = h / 2
+            outputs_real.append(
+                {
+                    "x": center_x - offset_x,
+                    "y": center_y - offset_y,
+                }
+            )
+            outputs_real.append(
+                {
+                    "x": center_x + offset_x,
+                    "y": center_y - offset_y,
+                }
+            )
+            outputs_real.append(
+                {
+                    "x": center_x - offset_x,
+                    "y": center_y + offset_y,
+                }
+            )
+            outputs_real.append(
+                {
+                    "x": center_x + offset_x,
+                    "y": center_y + offset_y,
+                }
+            )
     for each in outputs:
         print(each)
-    input("loc")
+    print("---------------------------")
+    for each in outputs_real:
+        print(each)
     x_groups = []
-    x_outputs = sorted(outputs, key=lambda item: item["x"])
+    x_outputs = sorted(outputs_real, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
     while x_outputs:
         output = x_outputs.pop(0)
@@ -112,12 +148,9 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
             )
         else:
             group["map_components"].append([output["y"], map_component])
-    for each in outputs:
-        print(each)
-    input("x_group")
     # 按 y 坐标排序
     y_groups = []
-    y_outputs = sorted(outputs, key=lambda item: item["y"])
+    y_outputs = sorted(outputs_real, key=lambda item: item["y"])
     # 遍历输出 对y坐标进行分组
     while y_outputs:
         output = y_outputs.pop(0)
@@ -131,9 +164,6 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                     "max_y": y + float_h,
                 }
             )
-    for each in y_outputs:
-        print(each)
-    input("y_groups")
     # 构建地图信息
     size = (len(x_groups), len(y_groups))
     map_info = MapInfo(size=size, w=w, h=h)
