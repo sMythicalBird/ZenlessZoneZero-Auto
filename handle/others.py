@@ -8,10 +8,9 @@
 import time
 from datetime import datetime
 from typing import Dict
-
 import numpy as np
 from pydirectinput import press
-from schema import MapInfo, Position, info, sec_info, MapComponent
+from schema import  Position, info
 from utils import control, get_map_info, auto_find_way, config, logger
 from utils.task import task
 from utils.detect.current import find_current
@@ -30,6 +29,13 @@ def grid_map_1(screen: np.ndarray):
         control.click(1000, 350)
         time.sleep(1)
         return
+
+    if (datetime.now()-info.entryMapTime).total_seconds()>config.mapTime:
+        logger.debug("长时间处于地图中，退出地图")
+        control.esc()
+        info.entryMapTime = datetime.now()
+        return
+
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")
