@@ -47,8 +47,8 @@ def infer_crop(crop):
 
 
 def component_class(screen: np.ndarray, x: int, y: int, w: int, h: int) -> MapComponent:
-    x1, y1 = x - w // 2, y - h
-    x2, y2 = x + w // 2, y
+    x1, y1 = max(x - w // 2, 0), max(y - h, 0)
+    x2, y2 = min(x + w // 2, screen.shape[1]), y
     crop = screen[y1:y2, x1:x2]
     crop = preprocess_crop(crop)
     # 模型推理 输出每个组件的概率
@@ -85,7 +85,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     outputs = [
         output
         for output in outputs
-        if output["y"] >= h and w // 2 < output["x"] < screen_w - w // 2
+        if output["y"] >= h // 2 and w // 2 < output["x"] < screen_w - w // 2
     ]  # 按 x 坐标排序
     x_groups = []
     x_outputs = sorted(outputs, key=lambda item: item["x"])

@@ -32,9 +32,7 @@ input_height = input_shape[2]
 input_width = input_shape[3]
 
 
-def find_current(
-    screen: np.ndarray = None, conf_threshold: float = 0.5, iou_threshold: float = 0.5
-) -> ImgPosition | None:
+def find_current(screen: np.ndarray = None, conf_threshold: float = 0.5) -> ImgPosition | None:
     """
     Find the current location.
     """

@@ -221,3 +221,9 @@ def select_role(positions: Dict[str, Position]):
 def select_role(positions: Dict[str, Position]):
     pos = positions.get("^获得齿轮硬币$")
     control.click(pos.x, pos.y)
+
+# 不感兴趣 离开这里
+@task.page(name="不感兴趣", target_texts=["^不感兴趣$"])
+def select_role(positions: Dict[str, Position]):
+    pos = positions.get("^不感兴趣$")
+    control.click(pos.x, pos.y)

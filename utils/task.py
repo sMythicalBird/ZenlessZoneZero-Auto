@@ -73,7 +73,7 @@ class Page(BaseModel):
     condition: Callable[[], bool] = Field(
         lambda: True, title="条件函数"
     )  # 条件函数 默认值为lambda表达式 返回True
-    sleep: float = Field(0, title="页面操作函数执行后后等待时间，单位秒")
+    sleep: float = Field(1, title="页面操作函数执行后后等待时间，单位秒")
     priority: int = Field(5, title="页面优先级")
 
     def __init__(self, /, **data: Any):
@@ -219,7 +219,7 @@ class _Task(BaseModel):
         exclude_texts: List[TextMatch | str | Pattern] = None,
         exclude_images: List[ImageMatch | str | np.ndarray] = None,
         condition: Callable[[], bool] = lambda: True,
-        sleep: float = 0,
+        sleep: float = 1,
     ):
         """
         添加一个页面匹配任务 装饰器

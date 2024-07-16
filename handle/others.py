@@ -44,7 +44,6 @@ def grid_map_1(screen: np.ndarray):
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
 
-
 @task.page(name="选择角色", target_texts=["出战"])
 def select_role(positions: Dict[str, Position]):
     pos = positions.get("出战")
