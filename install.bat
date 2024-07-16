@@ -88,18 +88,30 @@ echo 开始安装！
 %pip_cmd% install -r requirements-cuda.txt
 %pip_cmd% install -r requirements.txt
 echo 安装完成！
-goto :end
+goto :installvc
 
 :installgpu
 echo 开始安装！
 %pip_cmd% install -r requirements.txt
 echo 安装完成！
-goto :end
+goto :installvc
 
 :installcpu
 echo 开始安装！
 %pip_cmd% install -r requirements-cpu.txt
 echo 安装完成！
+goto :installvc
+
+:installvc
+cls
+echo 安装VC运行库
+echo 请注意：安装VC运行库可能需要一段时间，请耐心等待。
+certutil -urlcache -split -f "https://aka.ms/vs/17/release/vc_redist.x64.exe" "%temp%\vc.exe"
+start /wait "" "%temp%\vc.exe" /install /quiet /norestart
+echo 安装完成！
+echo 如果启动脚本提示"动态链接库(DLL)初始化例程失败",请重新启动电脑尝试。
+echo 如果还是不行，请尝试重新安装onnxruntime。
+pause
 goto :end
 
 :error1
@@ -113,5 +125,6 @@ echo 输入错误，请重新输入
 goto :whichversion
 
 :end
+cls
 echo 安装完成，运行请查看readme
 pause
