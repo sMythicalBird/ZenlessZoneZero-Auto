@@ -36,8 +36,10 @@ class Control:
 
     def _pre(self, x, y):
         # x,y 进行缩放
-        x = x * WidthRatio
-        y = y * HeightRatio
+        # x = x * WidthRatio
+        # y = y * HeightRatio
+        x = x
+        y = y
         # x,y 进行偏移窗口边框偏移 x轴偏移量为 offset_x y轴偏移量为 offset_y
         # offset_y 包含了窗口标题栏的高度
         x += self.offset_x
