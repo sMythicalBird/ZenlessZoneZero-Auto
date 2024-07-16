@@ -29,13 +29,18 @@ def grid_map_1(screen: np.ndarray):
         control.click(1000, 350)
         time.sleep(1)
         return
-
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
         # info.entryMapTime = datetime.now()
         return
     control.scroll(-5)
+    if info.currentStage == 1:
+        k = find_current()
+        control.move_at(k.x, k.y, 320, 540)
+    elif info.currentStage == 2:
+        k = find_current()
+        control.move_at(k.x, k.y, 960, 540)
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")
@@ -46,7 +51,7 @@ def grid_map_1(screen: np.ndarray):
         return
     (mc, dirct) = mapWay[0]
     press(str(dirct), duration=0.1)
-    info.lastDirct = dirct
+    # info.lastDirct = dirct
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
 
@@ -57,6 +62,7 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
     info.entryMapTime = datetime.now()  # 进入地图时间
     info.fightCount += 1  # 战斗次数记录
+    info.currentStage = 0  # 进入战斗，无偏移
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 

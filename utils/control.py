@@ -66,6 +66,15 @@ class Control:
         x, y = self._pre(x, y)
         moveTo(x, y)
 
+    def move_at(self, x1, y1, x2, y2):
+        moveTo(x1, y1)
+        time.sleep(0.1)
+        mouseDown()
+        time.sleep(0.1)
+        moveTo(x2, y2)
+        time.sleep(0.1)
+        mouseUp()
+
     @staticmethod
     def esc():
         press("esc", duration=0.1)

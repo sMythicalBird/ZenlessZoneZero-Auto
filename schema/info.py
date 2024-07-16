@@ -35,9 +35,11 @@ class Dirct(Enum):
 class StatusInfo(BaseModel):
     currentPageName: str = Field("", title="当前页面名称")
     lastMoveTime: datetime = Field(datetime.now(), title="上次移动时间")
-    lastDirct: Dirct = Field("", title="上次移动方向")
     fightCount: int = Field(0, description="战斗次数记录")
     entryMapTime: datetime = Field(datetime.now(), title="进入地图时间")
+    currentStage: int = Field(
+        0, title="当前阶段"
+    )  # 0、无偏移     1、左下        2、右下
 
 
 info = StatusInfo()

@@ -6,7 +6,7 @@
 """
 import time
 from typing import Dict
-from schema import Position
+from schema import Position, info
 from utils import control, screenshot
 from utils.task import task
 from re import template
@@ -68,6 +68,7 @@ def action(positions: Dict[str, Position]):
 @task.page(name="目标位置", target_texts=["关键进展", "^确认继续$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
+    info.currentStage = 1
     control.click(pos.x, pos.y)
     # 进入战斗
 
@@ -241,6 +242,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
+    info.currentStage = 2
     if not config.wholeCourse:
         time.sleep(1)
         control.esc()
