@@ -56,6 +56,7 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("出战")
     control.click(pos.x, pos.y)
     info.entryMapTime = datetime.now()  # 进入地图时间
+    info.fightCount += 1  # 战斗次数记录
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 

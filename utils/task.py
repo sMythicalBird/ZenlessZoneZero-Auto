@@ -331,7 +331,7 @@ class _Task(BaseModel):
             match_page = page(img, ocr_results)  # 页面匹配
             if match_page:
                 info.currentPageName = page.name  # 设置当前页面名称
-                logger.debug(f"当前页面：{page.name}")
+                logger.debug(f"进入副本次数：{info.fightCount} 当前页面：{page.name}")
                 sig = inspect.signature(page.action)  # 获取页面操作函数参数
                 params = {}
                 for name, param in sig.parameters.items():
