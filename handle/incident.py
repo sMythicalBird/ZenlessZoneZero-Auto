@@ -246,7 +246,7 @@ def action(positions: Dict[str, Position]):
 def action():
     control.click(1210, 35)
 
-@task.page(name="邦布商人_鸣徽催化", target_texts=["^邦布催化","^可催化"])
+@task.page(name="邦布商人_鸣徽催化", target_texts=["^鸣徽催化","^可催化"])
 def action():
     control.click(1210, 35)
 
