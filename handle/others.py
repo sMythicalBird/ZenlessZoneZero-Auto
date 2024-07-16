@@ -45,7 +45,7 @@ def grid_map_1(screen: np.ndarray):
     info.lastMoveTime = datetime.now()
 
 @task.page(name="选择角色", target_texts=["出战"])
-def select_role(positions: Dict[str, Position]):
+def action(positions: Dict[str, Position]):
     pos = positions.get("出战")
     control.click(pos.x, pos.y)
     info.entryMapTime = datetime.now() # 进入地图时间

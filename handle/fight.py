@@ -57,7 +57,7 @@ def fight_login():
 
 # 战斗逻辑
 @task.page(name="战斗中", target_texts=["^Space$"])
-def select_role(positions: Dict[str, Position]):
+def action(positions: Dict[str, Position]):
     # 向前跑一会 触发战斗，如果未触发，则直接退出
     time.sleep(2)
     # print("前进")
@@ -84,7 +84,7 @@ def select_role(positions: Dict[str, Position]):
 
 # 打不过溜了
 @task.page(name="打不过跑路", target_texts=["^退出战斗$"])
-def select_role(positions: Dict[str, Position]):
+def action(positions: Dict[str, Position]):
     pos = positions.get("^退出战斗$")
     control.click(pos.x, pos.y)
     time.sleep(2)
