@@ -70,7 +70,7 @@ def action(positions: Dict[str, Position]):
             control.esc()
             break
         logger.debug(
-            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{config.fightTime - fight_time:.2f}s",
+            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{config.maxFightTime - fight_time:.2f}s",
         )
         # 检查是否还在战斗,判断两次，防止因为战斗动画的原因产生误判退出
         if is_not_fight("Space"):
