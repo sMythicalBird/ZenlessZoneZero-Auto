@@ -14,6 +14,7 @@ from re import template
 from pydirectinput import press
 from utils import config
 
+
 def is_not_fight(text: str):
     text = template(text)
     img = screenshot()  # 截图
@@ -65,7 +66,7 @@ def action(positions: Dict[str, Position]):
     # 持续进行战斗，若两分钟后还在当前页面，则战斗地图需要跑图或者练度太低(练度低估计也已经寄了)，那就跑路
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
-        if fight_time > config.fightTime:
+        if fight_time > config.maxFightTime:
             control.esc()
             break
         logger.debug(

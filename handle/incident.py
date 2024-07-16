@@ -12,6 +12,7 @@ from utils.task import task
 from re import template
 from utils import config
 
+
 def get_pos(text: str):
     text = template(text)
     img = screenshot()  # 截图
@@ -221,11 +222,13 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^获得齿轮硬币$")
     control.click(pos.x, pos.y)
 
+
 # 不感兴趣 离开这里
 @task.page(name="不感兴趣", target_texts=["^不感兴趣$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^不感兴趣$")
     control.click(pos.x, pos.y)
+
 
 # 假面研究者
 @task.page(name="假面研究者", target_texts=["^拒绝他的好意$"])
@@ -234,7 +237,7 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="零号业绩领取", target_texts=["^确认$","^零号业绩$"],priority=10)
+@task.page(name="零号业绩领取", target_texts=["^确认$", "^零号业绩$"], priority=10)
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
@@ -242,11 +245,12 @@ def action(positions: Dict[str, Position]):
         time.sleep(1)
         control.esc()
 
-@task.page(name="邦布商人_鸣徽交易", target_texts=["^鸣徽交易","^同类持有"])
+
+@task.page(name="邦布商人_鸣徽交易", target_texts=["^鸣徽交易", "^同类持有"])
 def action():
     control.click(1210, 35)
 
-@task.page(name="邦布商人_鸣徽催化", target_texts=["^鸣徽催化","^可催化"])
+
+@task.page(name="邦布商人_鸣徽催化", target_texts=["^鸣徽催化", "^可催化"])
 def action():
     control.click(1210, 35)
-

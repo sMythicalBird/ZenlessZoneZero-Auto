@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Dict
 import numpy as np
 from pydirectinput import press
-from schema import  Position, info
+from schema import Position, info
 from utils import control, get_map_info, auto_find_way, config, logger
 from utils.task import task
 from utils.detect.current import find_current
@@ -30,7 +30,7 @@ def grid_map_1(screen: np.ndarray):
         time.sleep(1)
         return
 
-    if (datetime.now()-info.entryMapTime).total_seconds()>config.mapTime:
+    if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
         info.entryMapTime = datetime.now()
@@ -50,11 +50,12 @@ def grid_map_1(screen: np.ndarray):
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
 
+
 @task.page(name="选择角色", target_texts=["出战"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("出战")
     control.click(pos.x, pos.y)
-    info.entryMapTime = datetime.now() # 进入地图时间
+    info.entryMapTime = datetime.now()  # 进入地图时间
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 
