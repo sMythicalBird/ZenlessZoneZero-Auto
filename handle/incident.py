@@ -337,6 +337,13 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+# 老练的调查员
+@task.page(name="老练的调查员", target_texts=["老练的调查员", "不用了"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("不用了")
+    control.click(pos.x, pos.y)
+
+
 # 好感度系列
 @task.page(name="好感度_艾莲", target_texts=["那休息一会儿$"])
 def action(positions: Dict[str, Position]):
