@@ -292,9 +292,8 @@ def action(screen: np.ndarray):
         logger.debug("进入特殊区域")
     control.press("space")
 
-    # 旧都往事系列
 
-
-@task.page(name="通用音频数据卡", target_texts=["^通用音频数据卡$"])
-def action(positions: Dict[str, Position]):
+# 旧都往事系列
+@task.page(name="旧都往事系列收集品", target_texts=["^收录至工作台$"])
+def action():
     control.click(80, 35)
