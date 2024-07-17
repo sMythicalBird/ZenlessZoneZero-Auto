@@ -1,24 +1,24 @@
 @echo off
 :main
-title ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
-echo ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
-echo è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
-echo åœ¨å¼€å§‹å®‰è£…ä¹‹å‰ï¼Œè¯·ç¡®è®¤å·²é˜…è¯»readme
+title ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
+echo ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
+echo ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
+echo ÔÚ¿ªÊ¼°²×°Ö®Ç°£¬ÇëÈ·ÈÏÒÑÔÄ¶Áreadme
 pause
 goto :ispythoninstalled
 
 :ispythoninstalled
-echo æ­£åœ¨æ£€æµ‹python...
+echo ÕıÔÚ¼ì²âpython...
 setlocal
 where python >nul
 if %errorlevel% neq 0 (
-    echo Pythonæœªå®‰è£…,æ­£åœ¨å®‰è£…...
+    echo PythonÎ´°²×°,ÕıÔÚ°²×°...
     goto :installpython
 )
 endlocal
 python --version | findstr /C:"Python" >nul
 if %errorlevel% neq 0 (
-    echo Pythonä¸æ­£ç¡®,æ­£åœ¨å®‰è£…...
+    echo Python²»ÕıÈ·,ÕıÔÚ°²×°...
     goto :installpython
 )
 for /f "tokens=2 delims= " %%a in ('python --version') do set version=%%a
@@ -36,23 +36,23 @@ if %major% gtr 3 (
 goto :error1
 
 :installpython
-echo æœ‰äº›æ€æ¯’è½¯ä»¶ä¼šé”™è¯¯çš„æ‹¦æˆªpythonå®‰è£…ï¼Œè¯·æ³¨æ„ã€‚
+echo ÓĞĞ©É±¶¾Èí¼ş»á´íÎóµÄÀ¹½Øpython°²×°£¬Çë×¢Òâ¡£
 pause
-echo å¼€å§‹å®‰è£…ï¼
+echo ¿ªÊ¼°²×°£¡
 set url="https://mirrors.huaweicloud.com/python/3.10.2/python-3.10.2-amd64.exe"
 set localPath="%temp%\python.exe"
 
 certutil -urlcache -split -f "%url%" "%localPath%"
 start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python310"
 if exist "%ProgramFiles%\Python310\python.exe" (
-    echo å®‰è£…å®Œæˆï¼
+    echo °²×°Íê³É£¡
 ) else (
-    echo å®‰è£…é”™è¯¯ï¼æ­£åœ¨é‡è¯•ä¸­...
-    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="ç‚¹å‡»ä»¥å®‰è£…"
-    echo æ˜¯å¦å®‰è£…æˆåŠŸï¼Ÿå¦‚æœªæˆåŠŸè¯·é€€å‡ºè„šæœ¬å¹¶ç™¾åº¦ï¼ŒæˆåŠŸè¯·ç»§ç»­
+    echo °²×°´íÎó£¡ÕıÔÚÖØÊÔÖĞ...
+    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="µã»÷ÒÔ°²×°"
+    echo ÊÇ·ñ°²×°³É¹¦£¿ÈçÎ´³É¹¦ÇëÍË³ö½Å±¾²¢°Ù¶È£¬³É¹¦Çë¼ÌĞø
     pause
 )
-echo å‡çº§pipä¸­
+echo Éı¼¶pipÖĞ
 "%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
 "%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
 "%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
@@ -62,21 +62,21 @@ goto :whichversion
 :whichversion
 cd /d "%~dp0"
 cls
-echo æ­£åœ¨æ£€æŸ¥pipæ˜¯å¦å­˜åœ¨...
+echo ÕıÔÚ¼ì²épipÊÇ·ñ´æÔÚ...
 where pip >nul 2>&1
 if %errorlevel% equ 0 (
-    echo pip å·²åœ¨PATHä¸­æ‰¾åˆ°ï¼Œä½¿ç”¨é»˜è®¤pipã€‚
+    echo pip ÒÑÔÚPATHÖĞÕÒµ½£¬Ê¹ÓÃÄ¬ÈÏpip¡£
     set pip_cmd="pip"
 ) else (
-    echo pip æœªåœ¨PATHä¸­æ‰¾åˆ°ï¼Œå°è¯•ä½¿ç”¨å‰é¢å®‰è£…çš„pipã€‚
+    echo pip Î´ÔÚPATHÖĞÕÒµ½£¬³¢ÊÔÊ¹ÓÃÇ°Ãæ°²×°µÄpip¡£
     set pip_cmd="%ProgramFiles%\Python310\Scripts\pip.exe"
 )
 cls
-echo è¯·æŸ¥çœ‹readme,å¹¶é€‰æ‹©ä½ éœ€è¦å®‰è£…çš„ç‰ˆæœ¬
-echo 1.CUDAã€CuDNNä¾èµ–ä¸æœ¬é¡¹ç›®GPUç‰ˆæœ¬ä¾èµ–
-echo 2.ä»…å®‰è£…GPUç‰ˆæœ¬ä¾èµ–
-echo 3.ä»…å®‰è£…CPUç‰ˆæœ¬ä¾èµ–
-echo è¯·é€‰æ‹©ï¼š
+echo Çë²é¿´readme,²¢Ñ¡ÔñÄãĞèÒª°²×°µÄ°æ±¾
+echo 1.CUDA¡¢CuDNNÒÀÀµÓë±¾ÏîÄ¿GPU°æ±¾ÒÀÀµ
+echo 2.½ö°²×°GPU°æ±¾ÒÀÀµ
+echo 3.½ö°²×°CPU°æ±¾ÒÀÀµ
+echo ÇëÑ¡Ôñ£º
 set /p isversion=
 if "%isversion%"=="1" goto :installall
 if "%isversion%"=="2" goto :installgpu
@@ -84,47 +84,47 @@ if "%isversion%"=="3" goto :installcpu
 goto :inputerror2
 
 :installall
-echo å¼€å§‹å®‰è£…ï¼
+echo ¿ªÊ¼°²×°£¡
 %pip_cmd% install -r requirements-cuda.txt
 %pip_cmd% install -r requirements.txt
-echo å®‰è£…å®Œæˆï¼
+echo °²×°Íê³É£¡
 goto :installvc
 
 :installgpu
-echo å¼€å§‹å®‰è£…ï¼
+echo ¿ªÊ¼°²×°£¡
 %pip_cmd% install -r requirements.txt
-echo å®‰è£…å®Œæˆï¼
+echo °²×°Íê³É£¡
 goto :installvc
 
 :installcpu
-echo å¼€å§‹å®‰è£…ï¼
+echo ¿ªÊ¼°²×°£¡
 %pip_cmd% install -r requirements-cpu.txt
-echo å®‰è£…å®Œæˆï¼
+echo °²×°Íê³É£¡
 goto :installvc
 
 :installvc
 cls
-echo å®‰è£…VCè¿è¡Œåº“
-echo è¯·æ³¨æ„ï¼šå®‰è£…VCè¿è¡Œåº“å¯èƒ½éœ€è¦ä¸€æ®µæ—¶é—´ï¼Œè¯·è€å¿ƒç­‰å¾…ã€‚
+echo °²×°VCÔËĞĞ¿â
+echo Çë×¢Òâ£º°²×°VCÔËĞĞ¿â¿ÉÄÜĞèÒªÒ»¶ÎÊ±¼ä£¬ÇëÄÍĞÄµÈ´ı¡£
 certutil -urlcache -split -f "https://aka.ms/vs/17/release/vc_redist.x64.exe" "%temp%\vc.exe"
 start /wait "" "%temp%\vc.exe" /install /quiet /norestart
-echo å®‰è£…å®Œæˆï¼
-echo å¦‚æœå¯åŠ¨è„šæœ¬æç¤º"åŠ¨æ€é“¾æ¥åº“(DLL)åˆå§‹åŒ–ä¾‹ç¨‹å¤±è´¥",è¯·é‡æ–°å¯åŠ¨ç”µè„‘å°è¯•ã€‚
-echo å¦‚æœè¿˜æ˜¯ä¸è¡Œï¼Œè¯·å°è¯•é‡æ–°å®‰è£…onnxruntimeã€‚
+echo °²×°Íê³É£¡
+echo Èç¹ûÆô¶¯½Å±¾ÌáÊ¾"¶¯Ì¬Á´½Ó¿â(DLL)³õÊ¼»¯Àı³ÌÊ§°Ü",ÇëÖØĞÂÆô¶¯µçÄÔ³¢ÊÔ¡£
+echo Èç¹û»¹ÊÇ²»ĞĞ£¬Çë³¢ÊÔÖØĞÂ°²×°onnxruntime¡£
 pause
 goto :end
 
 :error1
-echo pythonç‰ˆæœ¬è¿‡ä½ï¼
-echo è¯·å®Œå…¨å¸è½½pythonåå°è¯•å®‰è£…ã€‚
+echo python°æ±¾¹ıµÍ£¡
+echo ÇëÍêÈ«Ğ¶ÔØpythonºó³¢ÊÔ°²×°¡£
 pause
 exit /b
 
 :inputerror2
-echo è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥
+echo ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë
 goto :whichversion
 
 :end
 cls
-echo å®‰è£…å®Œæˆï¼Œè¿è¡Œè¯·æŸ¥çœ‹readme
+echo °²×°Íê³É£¬ÔËĞĞÇë²é¿´readme
 pause
