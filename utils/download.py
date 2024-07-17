@@ -23,6 +23,7 @@ def download_with_progressbar(url: str, save_path: Path):
     :param save_path:  保存路径
     :return:
     """
+    logger.debug(f"下载链接：{url}, 保存路径：{save_path}")
     try:
         response = requests.get(url, stream=True)
         if response.status_code != 200:
@@ -35,31 +36,25 @@ def download_with_progressbar(url: str, save_path: Path):
                 progress_bar.update(len(data))
                 file.write(data)
         progress_bar.close()
-    except Exception as e:
-        logger.exception(e)
-        logger.error("下载文件失败！请尝试手动下载！")
+    except:
+        logger.error("下载文件失败！可尝试手动下载！")
         logger.error("下载链接：" + url)
         modelsPath = save_path.parent
         logger.error(f"解压后保存路径：{modelsPath}")
-        sys.exit(0)
+        if save_path.exists():
+            save_path.unlink()
+        raise Exception("下载文件失败！")
 
 
 DownLoadPath = RootPath / "download"
 if not DownLoadPath.exists():
     DownLoadPath.mkdir()
-# DownLoadBaseUrl = "https://file.caiyun.fun/download/zzz/"
-DownLoadBaseUrl = "https://zzz.caiyun.fun/"
-FileListUrl = DownLoadBaseUrl + "filelist.txt"
+DownLoadBaseUrl = ["https://zzz.caiyun.fun/", "http://pan.caiyun.fun/1655577/zzz/"]
 
 
-@retry(3)
-def check_file():
-    """
-    检查文件列表中的文件是否存在，不存在则下载
-    :return:
-    """
-    logger.debug("开始检查文件！")
-    file_list = requests.get(FileListUrl).text.split("\n")
+def check_file(retry_count=0):
+    fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.txt"
+    file_list = requests.get(fileListUrl).text.split("\n")
     for file in file_list:
         file = file.strip()
         file_path = DownLoadPath / file
@@ -68,7 +63,9 @@ def check_file():
             # 获取文件最后修改时间
             file_time = file_path.stat().st_mtime
             # 获取网络文件最后修改时间
-            response = requests.head(DownLoadBaseUrl + file)
+            response = requests.head(
+                f"{DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)]}{file}"
+            )
             last_modified = response.headers.get("Last-Modified", None)
             if not last_modified:
                 raise Exception("获取文件最后修改时间失败！")
@@ -89,9 +86,28 @@ def check_file():
             need_download = True
         if need_download:
             logger.info(f"下载文件：{file}")
-            download_with_progressbar(DownLoadBaseUrl + file, file_path)
-
+            download_with_progressbar(
+                f"{DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)]}{file}",
+                file_path,
+            )
     logger.debug("文件检查完成！")
 
 
-check_file()
+def check_file_task():
+    """
+    检查文件列表中的文件是否存在，不存在则下载
+    :return:
+    """
+    retry_count = 0
+    for i in range(3):
+        try:
+            logger.debug("开始检查文件！")
+            check_file(retry_count)
+        except:
+            logger.exception("检查文件失败！")
+            retry_count += 1
+            continue
+        break
+
+
+check_file_task()

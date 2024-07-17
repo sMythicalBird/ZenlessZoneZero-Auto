@@ -104,14 +104,12 @@ def action():
 #     time.sleep(2)
 
 
-
 # 8、资源回收小组
 @task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
 def select_role(positions: Dict[str, Position]):
     pos = positions.get("^让猫又选物资箱$")
     control.click(pos.x, pos.y)
     time.sleep(2)
-
 
 
 # 10、调查协会支援站
@@ -250,6 +248,24 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+@task.page(name="假面研究者_物资", target_texts=["^拿点侵蚀物资$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^拿点侵蚀物资$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="假面研究者_降压", target_texts=["^做好降压准备$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^做好降压准备$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="假面研究者_催化", target_texts=["^帮我催化催化"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^帮我催化催化")
+    control.click(pos.x, pos.y)
+
+
 @task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
@@ -293,3 +309,16 @@ def action(screen: np.ndarray):
     else:
         logger.debug("进入特殊区域")
     control.press("space")
+
+
+# 旧都往事系列
+@task.page(name="旧都往事系列收集品", target_texts=["^收录至工作台$"])
+def action():
+    control.click(80, 35)
+
+
+# 怀斯塔学会的援助
+@task.page(name="怀斯塔学会的援助", target_texts=["^接受学会的好意$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^接受学会的好意$")
+    control.click(pos.x, pos.y)

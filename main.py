@@ -1,3 +1,11 @@
+print(
+    "\n --------------------------------------------------------------"
+    "\n     注意：此脚本为免费的开源软件，如果你是通过购买获得的，那么你受骗了！\n "
+    "--------------------------------------------------------------\n"
+)
+print(
+    "使用说明：\n   F10  恢复运行\n   F11  暂停运行\n   F12  结束运行\n"
+)
 from threading import Thread
 from pynput.keyboard import Key, Listener
 from utils.task import task

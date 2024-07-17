@@ -18,10 +18,18 @@ QQ群`985508983`
 
 ## 前置条件
 - 安装`Python3.10`以上版本
-- 游戏窗口请设置为`1280X720`分辨率，窗口模式
 - 脚本运行会占用键盘鼠标，在使用时不要操作键盘鼠标
 
+## 游戏设置说明(必须)
+
+1. 设置->输入->棋盘镜头移动速度->1
+
+2. 设置->画面->显示模式->1280*720窗口
+
+3. 设置->键鼠设置->角色切换下一位->Space
+
 ## 安装教程
+
 1. 下载本项目（或通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压）
 	```shell
 	git clone https://github.com/sMythicalBird/ZenlessZoneZero-Auto.git
@@ -61,28 +69,33 @@ QQ群`985508983`
 
 > 请先打开游戏，进入零号空洞界面后，再运行脚本
 > 
-1. 复制`config.example.yaml`文件为`config.yaml`文件
-	```shell
-	cp config.example.yaml config.yaml
-	```
+1. 将项目文件夹下的`config.example.yaml`复制一份重命名为`config.yaml`文件
 
-	参照`config.example.yaml`文件中的注释进行配置
+2. 参照`config.example.yaml`文件中的注释说明进行配置`config.yaml`文件的参数
 
-	```yaml
-	targetMap:
-    	zone: 1
-    	level: 1 
-	wholeCourse: false
-	maxFightTime: 150
-	maxMapTime: 900
-   ```
+  ```yaml
+  targetMap:
+   	zone: 1
+   	level: 1 
+  wholeCourse: false
+  maxFightTime: 150
+  maxMapTime: 900
+  ```
 
-2. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
-	```shell
-	python main.py
-	```
+3. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
+  ```shell
+  python main.py
+  ```
 
+## 快捷键说明
+
+  ```shell
+  F10  恢复运行
+  F11  暂停运行
+  F12  结束运行
+  ```
 ## 小白版的自动安装工具
+
 **注意**：
 >本工具使用`certutil`进行Python的下载，但`certutil`会被一些杀毒软件报毒，所以该工具有可能并未如预期工作。
 >所以，如果在运行本工具时出现"拒绝访问""找不到文件"等字样，您可以：
@@ -110,17 +123,21 @@ QQ群`985508983`
 2. 不知道指令在哪里输入的，或提示”No such file or directory“的，请查看[这里的第二步和第三步](#Python运行环境安装说明（小白版，请严格按照步骤操作）)。
 3. 任何含有“version”这个关键词的错误信息，尝试运行
    * **GPU版本**
+     
        ```shell
        pip install --upgrade -r requirements-cuda.txt
        pip install --upgrade -r requirements.txt
        ```
    * **CPU版本**
+     
        ```shell
        pip install -r requirements-cpu.txt
        ```
 4. 含有“动态链接库(DLL)初始化例程失败。”的错误信息，请尝试下载并安装[vc运行库](https://aka.ms/vs/17/release/vc_redist.x64.exe)
     如果不起作用，可以尝试运行:
+   
    * **GPU版本**
+     
      ```shell
      pip uninstall onnxruntime-gpu
      pip install onnxruntime-gpu
