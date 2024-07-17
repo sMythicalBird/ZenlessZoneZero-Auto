@@ -359,7 +359,13 @@ def action(positions: Dict[str, Position]):
 
 
 # 好感度系列
-@task.page(name="好感度_艾莲", target_texts=["那休息一会儿$"])
+@task.page(name="好感度_艾莲1", target_texts=["那休息一会儿$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("那休息一会儿$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="好感度_艾莲2", target_texts=["休息长一点也是为了更好地工作$", "醒醒"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("醒醒")
     control.click(pos.x, pos.y)
