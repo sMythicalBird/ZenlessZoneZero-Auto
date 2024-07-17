@@ -14,7 +14,5 @@
 from .incident import *
 from .fight import *
 from .others import *
-from .secretpath import *
-from .specialarea import *
 
 __all__ = []
