@@ -31,7 +31,7 @@ label_name = model.get_outputs()[0].name
 input_shape = model.get_inputs()[0].shape
 input_height = input_shape[2]
 input_width = input_shape[3]
-letterbox = LetterBox((input_width, input_height))
+letterbox = LetterBox((input_height, input_width))
 
 
 def find_current(
@@ -47,11 +47,11 @@ def find_current(
     scale_ratio_h = img_height / input_height
     scale_ratio = max(scale_ratio_w, scale_ratio_h)  # 实际缩放比例
     # 偏移量
-    padw, padh = 0, 0
+    pad_w, pad_h = 0, 0
     if scale_ratio_w < scale_ratio_h:
-        padw = (input_width - input_width * img_width / img_height) / 2
+        pad_w = (input_width - input_width * img_width / img_height) / 2
     elif scale_ratio_w > scale_ratio_h:
-        padh = (input_height - input_height * img_height / img_width) / 2
+        pad_h = (input_height - input_height * img_height / img_width) / 2
     screen = letterbox(image=screen)
     screen = screen.transpose(2, 0, 1)
     screen = screen[np.newaxis, ...].astype(np.float32)
@@ -69,9 +69,9 @@ def find_current(
         # 获取最高置信度的边界框坐标
         x, y, w, h = outputs[max_index, :4]
         # 将边界框坐标转换为原始图像的坐标
-        x1 = round((x - w / 2 - padw) * scale_ratio)
-        y1 = round((y - h / 2 - padh) * scale_ratio)
-        x2 = round((x + w / 2 - padw) * scale_ratio)
-        y2 = round((y + h / 2 - padh) * scale_ratio)
+        x1 = round((x - w / 2 - pad_w) * scale_ratio)
+        y1 = round((y - h / 2 - pad_h) * scale_ratio)
+        x2 = round((x + w / 2 - pad_w) * scale_ratio)
+        y2 = round((y + h / 2 - pad_h) * scale_ratio)
         return ImgPosition(x1=x1, y1=y1, x2=x2, y2=y2, confidence=max_score)
     return None

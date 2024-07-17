@@ -133,6 +133,9 @@ class Model:
         self.input_height = input_shape[2]
         self.input_width = input_shape[3]
         self.letterbox = LetterBox((self.input_height, self.input_width))
+        self.pad_w = 0
+        self.pad_h = 0
+        self.scale_ratio = 0
 
     def preprocess(self, img: np.ndarray):
         """
@@ -142,8 +145,22 @@ class Model:
         """
 
         # 将图像调整为匹配输入形状(640,640,3)
+        img_height, img_width = img.shape[:2]  # 获取输入图片形状
         img = self.letterbox(image=img)
-
+        scale_ratio_w = img_width / self.input_width
+        scale_ratio_h = img_height / self.input_height
+        self.scale_ratio = max(scale_ratio_w, scale_ratio_h)  # 实际缩放比例
+        # 当前偏移量
+        self.pad_w = 0  # 重置一次
+        self.pad_h = 0
+        if scale_ratio_w < scale_ratio_h:
+            self.pad_w = (
+                self.input_width - self.input_width * img_width / img_height
+            ) / 2
+        elif scale_ratio_w > scale_ratio_h:
+            self.pad_h = (
+                self.input_height - self.input_height * img_height / img_width
+            ) / 2
         # 将图像数据除以255.0进行归一化
         image_data = np.array(img) / 255.0
 
@@ -166,9 +183,9 @@ class Model:
         boxes = []
         scores = []
         class_ids = []
-        # 计算边界框坐标的比例因子
-        x_factor = img_width / self.input_width
-        y_factor = img_height / self.input_height
+        # # 计算边界框坐标的比例因子
+        # x_factor = img_width / self.input_width
+        # y_factor = img_height / self.input_height
 
         # 遍历输出数组的每一行
         for i in range(rows):
@@ -184,10 +201,10 @@ class Model:
                 # 从当前行提取边界框坐标
                 x, y, w, h = outputs[i][0], outputs[i][1], outputs[i][2], outputs[i][3]
                 # 计算边界框的缩放坐标
-                left = round((x - w / 2) * x_factor)
-                top = round((y - h / 2) * y_factor)
-                width = round(w * x_factor)
-                height = round(h * y_factor)
+                left = round((x - w / 2 - self.pad_w) * self.scale_ratio)
+                top = round((y - h / 2 - self.pad_h) * self.scale_ratio)
+                width = round(w * self.scale_ratio)
+                height = round(h * self.scale_ratio)
                 # 将类别ID、得分和边界框坐标添加到相应的列表中
                 class_ids.append(class_id)
                 scores.append(max_score)

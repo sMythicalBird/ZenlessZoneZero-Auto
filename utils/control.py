@@ -17,6 +17,7 @@ from pydirectinput import (
     keyDown,
     keyUp,
     scroll,
+    moveRel,
 )
 
 from .init import OffsetX, OffsetY, WidthRatio, HeightRatio
@@ -98,6 +99,10 @@ class Control:
     @staticmethod
     def scroll(clicks: int):
         scroll(clicks)
+
+    @staticmethod
+    def move_rel(x, y):
+        moveRel(x, y, relative=True)
 
 
 control = Control()
