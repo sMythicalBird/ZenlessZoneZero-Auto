@@ -20,7 +20,12 @@ logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
 # 进入地图读取信息
-@task.page(name="地图层数", priority=0, target_texts=["背包", "^当前层数"])
+@task.page(
+    name="地图层数",
+    priority=0,
+    target_texts=["背包", "^当前层数"],
+    exclude_texts=["特殊区域"],
+)
 def grid_map_1(screen: np.ndarray):
     # 判断是否在进入事件对话，检查是否可以找到自身位置
     k = find_current()

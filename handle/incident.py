@@ -268,18 +268,26 @@ def action():
     control.click(1210, 35)
 
 
-@task.page(name="进入特殊区域", target_texts=["进入特殊区域", "区域代号"])
+@task.page(name="进入特殊区域", target_texts=["特殊区域"])
 def action(screen: np.ndarray):
-    special_areas = ["0020"]
-    special_areas = map(lambda x: template(x), special_areas)
+    special_areas = ["0044"]
+    special_areas = list(map(lambda x: template(x), special_areas))
     ocr_results = task.ocr(screen)
+    need_exit = False
     for ocr_result in ocr_results:
         for special_area in special_areas:
             if special_area.search(ocr_result.text):
-                logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
-                for i in range(10):
-                    control.press("space")
-                    time.sleep(0.2)
-                time.sleep(3)
-                control.esc()
+                need_exit = True
+                break
+        if need_exit:
+            break
+    if need_exit:
+        logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
+        for i in range(10):
+            control.press("space")
+            time.sleep(0.2)
+        time.sleep(3)
+        control.esc()
+    else:
+        logger.debug("进入特殊区域")
     control.press("space")
