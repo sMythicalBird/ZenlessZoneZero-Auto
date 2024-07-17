@@ -8,7 +8,17 @@
 import time
 from functools import wraps
 
-from pydirectinput import press, click, moveTo, mouseDown, mouseUp, keyDown, keyUp
+from pydirectinput import (
+    press,
+    click,
+    moveTo,
+    mouseDown,
+    mouseUp,
+    keyDown,
+    keyUp,
+    scroll,
+    moveRel,
+)
 
 from .init import OffsetX, OffsetY, WidthRatio, HeightRatio
 
@@ -36,8 +46,10 @@ class Control:
 
     def _pre(self, x, y):
         # x,y 进行缩放
-        x = x * WidthRatio
-        y = y * HeightRatio
+        # x = x * WidthRatio
+        # y = y * HeightRatio
+        x = x
+        y = y
         # x,y 进行偏移窗口边框偏移 x轴偏移量为 offset_x y轴偏移量为 offset_y
         # offset_y 包含了窗口标题栏的高度
         x += self.offset_x
@@ -54,6 +66,16 @@ class Control:
     def move_to(self, x, y):
         x, y = self._pre(x, y)
         moveTo(x, y)
+
+    def move_at(self, x1, y1, x2, y2):
+        moveTo(x1, y1)
+        time.sleep(0.1)
+        mouseDown()
+        time.sleep(0.1)
+        moveTo(x2, y2)
+        time.sleep(0.1)
+        mouseUp()
+        time.sleep(0.3)
 
     @staticmethod
     def esc():
@@ -73,6 +95,18 @@ class Control:
         time.sleep(t)
         keyUp("w")
         keyUp("shift")
+
+    @staticmethod
+    def scroll(clicks: int):
+        scroll(clicks)
+
+    @staticmethod
+    def move_rel(x, y):
+        moveRel(x, y, relative=True)
+
+    @staticmethod
+    def press(key, duration=0.1):
+        press(key, duration=duration)
 
 
 control = Control()

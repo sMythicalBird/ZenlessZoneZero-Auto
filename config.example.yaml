@@ -11,3 +11,6 @@
 targetMap:
     level: 1 # 默认区域 1: 旧都列车 当前仅支持 1: 旧都列车
     zone: 1 # 默认等级 1: 外围  当前仅支持 1: 外围
+wholeCourse: True # 是否打完全程
+maxFightTime: 150 # 最大战斗时间
+maxMapTime: 900 # 在地图内最大时间
