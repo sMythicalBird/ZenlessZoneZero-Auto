@@ -8,9 +8,12 @@
 import onnxruntime as rt
 from schema import ImgPosition
 from ..utils import screenshot
-import cv2
 import numpy as np
 from ..init import RootPath, logger
+from .utils import LetterBox
+
+
+letterbox = LetterBox((640, 640))
 
 model_path = RootPath / "download" / "current.onnx"
 
@@ -32,14 +35,16 @@ input_height = input_shape[2]
 input_width = input_shape[3]
 
 
-def find_current(screen: np.ndarray = None, conf_threshold: float = 0.5) -> ImgPosition | None:
+def find_current(
+    screen: np.ndarray = None, conf_threshold: float = 0.5
+) -> ImgPosition | None:
     """
     Find the current location.
     """
     if screen is None:
         screen = screenshot()
     img_height, img_width = screen.shape[:2]
-    screen = cv2.resize(screen, (input_width, input_height))
+    screen = letterbox(image=screen)
     screen = screen.transpose(2, 0, 1)
     screen = screen[np.newaxis, ...].astype(np.float32)
     screen /= 255.0

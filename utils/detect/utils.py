@@ -12,6 +12,110 @@ import numpy as np
 from schema import ImgPosition
 
 
+def _update_labels(labels, ratio, padw, padh):
+    """Update labels."""
+    labels["instances"].convert_bbox(format="xyxy")
+    labels["instances"].denormalize(*labels["img"].shape[:2][::-1])
+    labels["instances"].scale(*ratio)
+    labels["instances"].add_padding(padw, padh)
+    return labels
+
+
+class LetterBox:
+    """
+    Resize image and padding for detection, instance segmentation, pose.
+    """
+
+    def __init__(
+        self,
+        new_shape=(640, 640),
+        auto=False,
+        scaleFill=False,
+        scaleup=True,
+        center=True,
+        stride=32,
+    ):
+        """初始化LetterBox对象，指定特定参数。
+
+        参数:
+            new_shape(tuple): 指定输出图像的新尺寸，默认为(640, 640)。
+            auto(bool): 是否自动调整图像尺寸，默认为False。
+            scaleFill(bool): 是否根据新尺寸缩放填充图像，默认为False。
+            scaleup(bool): 是否允许图像尺寸放大，默认为True。
+            center(bool): 是否将图像居中，默认为True。
+            stride(int): 步长，默认为32。
+        """
+        self.new_shape = new_shape
+        self.auto = auto
+        self.scaleFill = scaleFill
+        self.scaleup = scaleup
+        self.stride = stride
+        self.center = center  # 是否将图像放在中间或左上角
+
+    def __call__(self, labels=None, image=None):
+        """对输入的labels和image添加边框，并返回更新后的labels和image。
+
+        Args:
+            labels (dict, optional): 输入的标签信息，包括img和其他相关信息，默认为None.
+            image (ndarray, optional): 输入的图像，默认为None.
+
+        Returns:
+            dict or ndarray: 更新后的labels或image.
+
+        """
+        if labels is None:
+            labels = {}
+
+        img = labels.get("img") if image is None else image
+        shape = img.shape[:2]  # 当前形状 [高度, 宽度]
+        new_shape = labels.pop("rect_shape", self.new_shape)
+        if isinstance(new_shape, int):
+            new_shape = (new_shape, new_shape)
+
+        # 缩放比例 (新 / 旧)
+        r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+        if not self.scaleup:  # 仅缩小，不放大 (以获得更好的验证mAP)
+            r = min(r, 1.0)
+
+        # 计算填充
+        ratio = r, r  # 宽度，高度比例
+        new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+        dw, dh = (
+            new_shape[1] - new_unpad[0],
+            new_shape[0] - new_unpad[1],
+        )  # 填充的宽度，高度
+        if self.auto:  # 最小矩形
+            dw, dh = np.mod(dw, self.stride), np.mod(
+                dh, self.stride
+            )  # 填充的宽度，高度
+        elif self.scaleFill:  # 拉伸
+            dw, dh = 0.0, 0.0
+            new_unpad = (new_shape[1], new_shape[0])
+            ratio = new_shape[1] / shape[1], new_shape[0] / shape[0]  # 宽度，高度比例
+
+        if self.center:
+            dw /= 2  # 将填充分为两侧
+            dh /= 2
+
+        if shape[::-1] != new_unpad:  # 调整大小
+            img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+        top, bottom = int(round(dh - 0.1)) if self.center else 0, int(round(dh + 0.1))
+        left, right = int(round(dw - 0.1)) if self.center else 0, int(round(dw + 0.1))
+        img = cv2.copyMakeBorder(
+            img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=(114, 114, 114)
+        )  # 添加边框
+        if labels.get("ratio_pad"):
+            labels["ratio_pad"] = (labels["ratio_pad"], (left, top))  # 用于评估
+
+        if len(labels):
+            labels = _update_labels(labels, ratio, dw, dh)
+            labels["img"] = img
+            labels["resized_shape"] = new_shape
+            return labels
+        else:
+            return img
+
+
 class Model:
 
     def __init__(
@@ -28,6 +132,7 @@ class Model:
         input_shape = model.get_inputs()[0].shape
         self.input_height = input_shape[2]
         self.input_width = input_shape[3]
+        self.letterbox = LetterBox((self.input_height, self.input_width))
 
     def preprocess(self, img: np.ndarray):
         """
@@ -37,7 +142,7 @@ class Model:
         """
 
         # 将图像调整为匹配输入形状(640,640,3)
-        img = cv2.resize(img, (self.input_width, self.input_height))
+        img = self.letterbox(image=img)
 
         # 将图像数据除以255.0进行归一化
         image_data = np.array(img) / 255.0
