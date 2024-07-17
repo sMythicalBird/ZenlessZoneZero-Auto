@@ -61,22 +61,19 @@ QQ群`985508983`
 
 > 请先打开游戏，进入零号空洞界面后，再运行脚本
 > 
-1. 复制`config.example.yaml`文件为`config.yaml`文件
-	```shell
-	cp config.example.yaml config.yaml
-	```
-
-	参照`config.example.yaml`文件中的注释进行配置
-
+1. 将项目文件夹下的`config.example.yaml`复制一份重命名为`config.yaml`文件
+	
+1. 参照`config.example.yaml`文件中的注释说明进行配置`config.yaml`文件的参数
+	
 	```yaml
 	targetMap:
-    	zone: 1
-    	level: 1 
+	 	zone: 1
+	 	level: 1 
 	wholeCourse: false
-	maxFightTime: 150
-	maxMapTime: 900
-   ```
-
+   maxFightTime: 150
+   maxMapTime: 900
+	```
+	
 2. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
 	```shell
 	python main.py
@@ -110,17 +107,21 @@ QQ群`985508983`
 2. 不知道指令在哪里输入的，或提示”No such file or directory“的，请查看[这里的第二步和第三步](#Python运行环境安装说明（小白版，请严格按照步骤操作）)。
 3. 任何含有“version”这个关键词的错误信息，尝试运行
    * **GPU版本**
+     
        ```shell
        pip install --upgrade -r requirements-cuda.txt
        pip install --upgrade -r requirements.txt
        ```
    * **CPU版本**
+     
        ```shell
        pip install -r requirements-cpu.txt
        ```
 4. 含有“动态链接库(DLL)初始化例程失败。”的错误信息，请尝试下载并安装[vc运行库](https://aka.ms/vs/17/release/vc_redist.x64.exe)
     如果不起作用，可以尝试运行:
+   
    * **GPU版本**
+     
      ```shell
      pip uninstall onnxruntime-gpu
      pip install onnxruntime-gpu
