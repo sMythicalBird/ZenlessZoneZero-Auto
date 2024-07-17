@@ -50,6 +50,8 @@ def grid_map_1(screen: np.ndarray):
         logger.debug("未找到路径")
         return
     (mc, dirct) = mapWay[0]
+    if mc.weight == 5:  # 拿完零号业绩到传送点
+        info.currentStage = 0
     press(str(dirct), duration=0.1)
     # info.lastDirct = dirct
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
