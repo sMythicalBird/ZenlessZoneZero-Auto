@@ -62,24 +62,33 @@ QQ群`985508983`
 > 请先打开游戏，进入零号空洞界面后，再运行脚本
 > 
 1. 将项目文件夹下的`config.example.yaml`复制一份重命名为`config.yaml`文件
-	
-1. 参照`config.example.yaml`文件中的注释说明进行配置`config.yaml`文件的参数
-	
-	```yaml
-	targetMap:
-	 	zone: 1
-	 	level: 1 
-	wholeCourse: false
-   maxFightTime: 150
-   maxMapTime: 900
-	```
-	
-2. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
-	```shell
-	python main.py
-	```
+
+2. 参照`config.example.yaml`文件中的注释说明进行配置`config.yaml`文件的参数
+
+  ```yaml
+  targetMap:
+   	zone: 1
+   	level: 1 
+  wholeCourse: false
+  maxFightTime: 150
+  maxMapTime: 900
+  ```
+
+3. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
+  ```shell
+  python main.py
+  ```
+
+4. 快捷键说明
+  ```shell
+  F10  恢复运行
+  F11  暂停运行
+  F12  结束运行
+  ```
+
 
 ## 小白版的自动安装工具
+
 **注意**：
 >本工具使用`certutil`进行Python的下载，但`certutil`会被一些杀毒软件报毒，所以该工具有可能并未如预期工作。
 >所以，如果在运行本工具时出现"拒绝访问""找不到文件"等字样，您可以：
