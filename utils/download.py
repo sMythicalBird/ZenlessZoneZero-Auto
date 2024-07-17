@@ -88,8 +88,8 @@ def check_file():
         else:
             need_download = True
         if need_download:
-            download_with_progressbar(DownLoadBaseUrl + file, file_path)
             logger.info(f"下载文件：{file}")
+            download_with_progressbar(DownLoadBaseUrl + file, file_path)
 
     logger.debug("文件检查完成！")
 
