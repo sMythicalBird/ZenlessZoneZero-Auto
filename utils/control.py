@@ -104,5 +104,9 @@ class Control:
     def move_rel(x, y):
         moveRel(x, y, relative=True)
 
+    @staticmethod
+    def press(key, duration=0.1):
+        press(key, duration=duration)
+
 
 control = Control()

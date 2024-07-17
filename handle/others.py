@@ -9,7 +9,6 @@ import time
 from datetime import datetime
 from typing import Dict
 import numpy as np
-from pydirectinput import press
 from schema import Position, info
 from utils import control, get_map_info, auto_find_way, config, logger
 from utils.task import task
@@ -26,7 +25,7 @@ def grid_map_1(screen: np.ndarray):
     # 判断是否在进入事件对话，检查是否可以找到自身位置
     k = find_current()
     if not k:
-        control.click(1000, 350)
+        control.press("space")
         time.sleep(1)
         return
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
@@ -52,7 +51,7 @@ def grid_map_1(screen: np.ndarray):
     (mc, dirct) = mapWay[0]
     if mc.weight == 5:  # 拿完零号业绩到传送点
         info.currentStage = 0
-    press(str(dirct), duration=0.1)
+    control.press(str(dirct), duration=0.1)
     # info.lastDirct = dirct
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()

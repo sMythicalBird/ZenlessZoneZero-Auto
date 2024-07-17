@@ -10,7 +10,6 @@ import time
 from pathlib import Path
 from re import Pattern, template
 from typing import List, Optional, Callable, Any, Dict, Union
-from copy import deepcopy
 import numpy as np
 from PIL import Image
 from pydantic import BaseModel, Field, ConfigDict
@@ -338,7 +337,7 @@ class _Task(BaseModel):
                     if param.annotation == Dict[str, Position]:
                         params[name] = page.matchPositions  # 设置匹配位置
                     if param.annotation == np.ndarray:
-                        params[name] = deepcopy(img)  # 深拷贝图片
+                        params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
                 if page.sleep:
                     time.sleep(page.sleep)

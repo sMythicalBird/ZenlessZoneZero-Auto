@@ -6,8 +6,11 @@
 """
 import time
 from typing import Dict
+
+import numpy as np
+
 from schema import Position, info
-from utils import control, screenshot
+from utils import control, screenshot, logger
 from utils.task import task
 from re import template
 from utils import config
@@ -263,3 +266,20 @@ def action():
 @task.page(name="邦布商人_鸣徽催化", target_texts=["^鸣徽催化", "^可催化"])
 def action():
     control.click(1210, 35)
+
+
+@task.page(name="进入特殊区域", target_texts=["进入特殊区域", "区域代号"])
+def action(screen: np.ndarray):
+    special_areas = ["0020"]
+    special_areas = map(lambda x: template(x), special_areas)
+    ocr_results = task.ocr(screen)
+    for ocr_result in ocr_results:
+        for special_area in special_areas:
+            if special_area.search(ocr_result.text):
+                logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
+                for i in range(10):
+                    control.press("space")
+                    time.sleep(0.2)
+                time.sleep(3)
+                control.esc()
+    control.press("space")
