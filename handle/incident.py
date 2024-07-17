@@ -44,6 +44,13 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+# 清除侵蚀效果
+@task.page(name="清楚侵蚀效果", target_texts=["^清除$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^清除$")
+    control.click(pos.x, pos.y)
+
+
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
 @task.page(name="选择_鸣徽或邦布", priority=4, target_texts=["同类持有", "^选择$"])
 def action(positions: Dict[str, Position]):
