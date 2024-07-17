@@ -322,3 +322,23 @@ def action():
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接受学会的好意$")
     control.click(pos.x, pos.y)
+
+
+# 安全车厢
+@task.page(name="安全车厢_休息", target_texts=["^在列车中歇一歇$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^在列车中歇一歇$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="安全车厢_修理", priority=4, target_texts=["^就修一下大门吧$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^就修一下大门吧$")
+    control.click(pos.x, pos.y)
+
+
+# 好感度系列
+@task.page(name="好感度_艾莲", target_texts=["那休息一会儿$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("那休息一会儿$")
+    control.click(pos.x, pos.y)
