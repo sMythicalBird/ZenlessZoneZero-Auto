@@ -23,6 +23,7 @@ def download_with_progressbar(url: str, save_path: Path):
     :param save_path:  保存路径
     :return:
     """
+    logger.debug(f"下载链接：{url}, 保存路径：{save_path}")
     try:
         response = requests.get(url, stream=True)
         if response.status_code != 200:
