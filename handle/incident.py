@@ -104,14 +104,12 @@ def action():
 #     time.sleep(2)
 
 
-
 # 8、资源回收小组
 @task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
 def select_role(positions: Dict[str, Position]):
     pos = positions.get("^让猫又选物资箱$")
     control.click(pos.x, pos.y)
     time.sleep(2)
-
 
 
 # 10、调查协会支援站
@@ -293,3 +291,10 @@ def action(screen: np.ndarray):
     else:
         logger.debug("进入特殊区域")
     control.press("space")
+
+    # 旧都往事系列
+
+
+@task.page(name="通用音频数据卡", target_texts=["^通用音频数据卡$"])
+def action(positions: Dict[str, Position]):
+    control.click(80, 35)
