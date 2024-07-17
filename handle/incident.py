@@ -344,6 +344,20 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+# 治安局预备队
+@task.page(name="治安局预备队", target_texts=["治安局预备队", "^只要绝对安全的物资$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^只要绝对安全的物资$")
+    control.click(pos.x, pos.y)
+
+
+# 邦布的秘宝
+@task.page(name="邦布的秘宝", target_texts=["邦布的秘宝", "^人为财死"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^人为财死")
+    control.click(pos.x, pos.y)
+
+
 # 好感度系列
 @task.page(name="好感度_艾莲", target_texts=["那休息一会儿$"])
 def action(positions: Dict[str, Position]):
