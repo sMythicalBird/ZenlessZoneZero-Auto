@@ -10,7 +10,6 @@ import time
 from pathlib import Path
 from re import Pattern, template
 from typing import List, Optional, Callable, Any, Dict, Union
-from copy import deepcopy
 import numpy as np
 from PIL import Image
 from pydantic import BaseModel, Field, ConfigDict
@@ -73,7 +72,7 @@ class Page(BaseModel):
     condition: Callable[[], bool] = Field(
         lambda: True, title="条件函数"
     )  # 条件函数 默认值为lambda表达式 返回True
-    sleep: float = Field(2, title="页面操作函数执行后后等待时间，单位秒")
+    sleep: float = Field(1, title="页面操作函数执行后后等待时间，单位秒")
     priority: int = Field(5, title="页面优先级")
 
     def __init__(self, /, **data: Any):
@@ -219,7 +218,7 @@ class _Task(BaseModel):
         exclude_texts: List[TextMatch | str | Pattern] = None,
         exclude_images: List[ImageMatch | str | np.ndarray] = None,
         condition: Callable[[], bool] = lambda: True,
-        sleep: float = 2,
+        sleep: float = 1,
     ):
         """
         添加一个页面匹配任务 装饰器
@@ -331,14 +330,14 @@ class _Task(BaseModel):
             match_page = page(img, ocr_results)  # 页面匹配
             if match_page:
                 info.currentPageName = page.name  # 设置当前页面名称
-                logger.debug(f"当前页面：{page.name}")
+                logger.debug(f"进入副本次数：{info.fightCount} 当前页面：{page.name}")
                 sig = inspect.signature(page.action)  # 获取页面操作函数参数
                 params = {}
                 for name, param in sig.parameters.items():
                     if param.annotation == Dict[str, Position]:
                         params[name] = page.matchPositions  # 设置匹配位置
                     if param.annotation == np.ndarray:
-                        params[name] = deepcopy(img)  # 深拷贝图片
+                        params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
                 if page.sleep:
                     time.sleep(page.sleep)

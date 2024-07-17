@@ -1,24 +1,24 @@
 @echo off
 :main
-title ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
-echo ZenlessZoneZero-Auto±ã½İ°²×°½Å±¾
-echo ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
-echo ÔÚ¿ªÊ¼°²×°Ö®Ç°£¬ÇëÈ·ÈÏÒÑÔÄ¶Áreadme
+title ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
+echo ZenlessZoneZero-Autoä¾¿æ·å®‰è£…è„šæœ¬
+echo è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
+echo åœ¨å¼€å§‹å®‰è£…ä¹‹å‰ï¼Œè¯·ç¡®è®¤å·²é˜…è¯»readme
 pause
 goto :ispythoninstalled
 
 :ispythoninstalled
-echo ÕıÔÚ¼ì²âpython...
+echo æ­£åœ¨æ£€æµ‹python...
 setlocal
 where python >nul
 if %errorlevel% neq 0 (
-    echo PythonÎ´°²×°,ÕıÔÚ°²×°...
+    echo Pythonæœªå®‰è£…,æ­£åœ¨å®‰è£…...
     goto :installpython
 )
 endlocal
 python --version | findstr /C:"Python" >nul
 if %errorlevel% neq 0 (
-    echo Python²»ÕıÈ·,ÕıÔÚ°²×°...
+    echo Pythonä¸æ­£ç¡®,æ­£åœ¨å®‰è£…...
     goto :installpython
 )
 for /f "tokens=2 delims= " %%a in ('python --version') do set version=%%a
@@ -36,23 +36,23 @@ if %major% gtr 3 (
 goto :error1
 
 :installpython
-echo ÓĞĞ©É±¶¾Èí¼ş»á´íÎóµÄÀ¹½Øpython°²×°£¬Çë×¢Òâ¡£
+echo æœ‰äº›æ€æ¯’è½¯ä»¶ä¼šé”™è¯¯çš„æ‹¦æˆªpythonå®‰è£…ï¼Œè¯·æ³¨æ„ã€‚
 pause
-echo ¿ªÊ¼°²×°£¡
+echo å¼€å§‹å®‰è£…ï¼
 set url="https://mirrors.huaweicloud.com/python/3.10.2/python-3.10.2-amd64.exe"
 set localPath="%temp%\python.exe"
 
 certutil -urlcache -split -f "%url%" "%localPath%"
 start /wait "" "%localPath%" /quiet InstallAllUsers=1 PrependPath=1 DefaultAllUsersTargetDir="%ProgramFiles%\Python310"
 if exist "%ProgramFiles%\Python310\python.exe" (
-    echo °²×°Íê³É£¡
+    echo å®‰è£…å®Œæˆï¼
 ) else (
-    echo °²×°´íÎó£¡ÕıÔÚÖØÊÔÖĞ...
-    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="µã»÷ÒÔ°²×°"
-    echo ÊÇ·ñ°²×°³É¹¦£¿ÈçÎ´³É¹¦ÇëÍË³ö½Å±¾²¢°Ù¶È£¬³É¹¦Çë¼ÌĞø
+    echo å®‰è£…é”™è¯¯ï¼æ­£åœ¨é‡è¯•ä¸­...
+    start /wait "" "%localPath%" InstallAllUsers=1 PrependPath=1 SimpleInstall=1 SimpleInstallDescription="ç‚¹å‡»ä»¥å®‰è£…"
+    echo æ˜¯å¦å®‰è£…æˆåŠŸï¼Ÿå¦‚æœªæˆåŠŸè¯·é€€å‡ºè„šæœ¬å¹¶ç™¾åº¦ï¼ŒæˆåŠŸè¯·ç»§ç»­
     pause
 )
-echo Éı¼¶pipÖĞ
+echo å‡çº§pipä¸­
 "%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
 "%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
 "%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
@@ -62,21 +62,21 @@ goto :whichversion
 :whichversion
 cd /d "%~dp0"
 cls
-echo ÕıÔÚ¼ì²épipÊÇ·ñ´æÔÚ...
+echo æ­£åœ¨æ£€æŸ¥pipæ˜¯å¦å­˜åœ¨...
 where pip >nul 2>&1
 if %errorlevel% equ 0 (
-    echo pip ÒÑÔÚPATHÖĞÕÒµ½£¬Ê¹ÓÃÄ¬ÈÏpip¡£
+    echo pip å·²åœ¨PATHä¸­æ‰¾åˆ°ï¼Œä½¿ç”¨é»˜è®¤pipã€‚
     set pip_cmd="pip"
 ) else (
-    echo pip Î´ÔÚPATHÖĞÕÒµ½£¬³¢ÊÔÊ¹ÓÃÇ°Ãæ°²×°µÄpip¡£
+    echo pip æœªåœ¨PATHä¸­æ‰¾åˆ°ï¼Œå°è¯•ä½¿ç”¨å‰é¢å®‰è£…çš„pipã€‚
     set pip_cmd="%ProgramFiles%\Python310\Scripts\pip.exe"
 )
 cls
-echo Çë²é¿´readme,²¢Ñ¡ÔñÄãĞèÒª°²×°µÄ°æ±¾
-echo 1.CUDA¡¢CuDNNÒÀÀµÓë±¾ÏîÄ¿GPU°æ±¾ÒÀÀµ
-echo 2.½ö°²×°GPU°æ±¾ÒÀÀµ
-echo 3.½ö°²×°CPU°æ±¾ÒÀÀµ
-echo ÇëÑ¡Ôñ£º
+echo è¯·æŸ¥çœ‹readme,å¹¶é€‰æ‹©ä½ éœ€è¦å®‰è£…çš„ç‰ˆæœ¬
+echo 1.CUDAã€CuDNNä¾èµ–ä¸æœ¬é¡¹ç›®GPUç‰ˆæœ¬ä¾èµ–
+echo 2.ä»…å®‰è£…GPUç‰ˆæœ¬ä¾èµ–
+echo 3.ä»…å®‰è£…CPUç‰ˆæœ¬ä¾èµ–
+echo è¯·é€‰æ‹©ï¼š
 set /p isversion=
 if "%isversion%"=="1" goto :installall
 if "%isversion%"=="2" goto :installgpu
@@ -84,34 +84,34 @@ if "%isversion%"=="3" goto :installcpu
 goto :inputerror2
 
 :installall
-echo ¿ªÊ¼°²×°£¡
+echo å¼€å§‹å®‰è£…ï¼
 %pip_cmd% install -r requirements-cuda.txt
 %pip_cmd% install -r requirements.txt
-echo °²×°Íê³É£¡
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
 :installgpu
-echo ¿ªÊ¼°²×°£¡
+echo å¼€å§‹å®‰è£…ï¼
 %pip_cmd% install -r requirements.txt
-echo °²×°Íê³É£¡
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
 :installcpu
-echo ¿ªÊ¼°²×°£¡
+echo å¼€å§‹å®‰è£…ï¼
 %pip_cmd% install -r requirements-cpu.txt
-echo °²×°Íê³É£¡
+echo å®‰è£…å®Œæˆï¼
 goto :end
 
 :error1
-echo python°æ±¾¹ıµÍ£¡
-echo ÇëÍêÈ«Ğ¶ÔØpythonºó³¢ÊÔ°²×°¡£
+echo pythonç‰ˆæœ¬è¿‡ä½ï¼
+echo è¯·å®Œå…¨å¸è½½pythonåå°è¯•å®‰è£…ã€‚
 pause
 exit /b
 
 :inputerror2
-echo ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë
+echo è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥
 goto :whichversion
 
 :end
-echo °²×°Íê³É£¬ÔËĞĞÇë²é¿´readme
+echo å®‰è£…å®Œæˆï¼Œè¿è¡Œè¯·æŸ¥çœ‹readme
 pause
