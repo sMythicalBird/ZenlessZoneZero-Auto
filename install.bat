@@ -53,9 +53,9 @@ if exist "%ProgramFiles%\Python310\python.exe" (
     pause
 )
 echo Éý¼¶pipÖÐ
-"%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://mirrors.aliyun.com/pypi/simple
-"%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://mirrors.aliyun.com/pypi/simple
+"%ProgramFiles%\Python310\python" -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+"%ProgramFiles%\Python310\Scripts\pip" install setuptools -i https://pypi.tuna.tsinghua.edu.cn/simple
+"%ProgramFiles%\Python310\Scripts\pip" config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pause
 goto :whichversion
 

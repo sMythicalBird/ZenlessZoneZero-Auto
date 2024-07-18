@@ -66,6 +66,7 @@ if Hwnd == 0:
     Hwnd = win32gui.FindWindow("UnityWndClass", "ZenlessZoneZero")
 if Hwnd == 0:
     logger.error("未找到游戏窗口")
+    wait_exit()
 else:
     # 将游戏窗口移动到屏幕左上角
     rect = win32gui.GetWindowRect(Hwnd)  # 获取窗口区域

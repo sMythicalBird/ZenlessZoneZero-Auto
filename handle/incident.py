@@ -322,3 +322,50 @@ def action():
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接受学会的好意$")
     control.click(pos.x, pos.y)
+
+
+# 安全车厢
+@task.page(name="安全车厢_休息", target_texts=["^在列车中歇一歇$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^在列车中歇一歇$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="安全车厢_修理", priority=4, target_texts=["^就修一下大门吧$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^就修一下大门吧$")
+    control.click(pos.x, pos.y)
+
+
+# 老练的调查员
+@task.page(name="老练的调查员", target_texts=["老练的调查员", "不用了"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("不用了")
+    control.click(pos.x, pos.y)
+
+
+# 治安局预备队
+@task.page(name="治安局预备队", target_texts=["治安局预备队", "^只要绝对安全的物资$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^只要绝对安全的物资$")
+    control.click(pos.x, pos.y)
+
+
+# 邦布的秘宝
+@task.page(name="邦布的秘宝", target_texts=["邦布的秘宝", "^人为财死"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^人为财死")
+    control.click(pos.x, pos.y)
+
+
+# 好感度系列
+@task.page(name="好感度_艾莲1", target_texts=["那休息一会儿$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("那休息一会儿$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="好感度_艾莲2", target_texts=["休息长一点也是为了更好地工作$", "醒醒"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("醒醒")
+    control.click(pos.x, pos.y)
