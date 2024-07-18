@@ -40,22 +40,7 @@ class StatusInfo(BaseModel):
     currentStage: int = Field(
         0, title="当前阶段"
     )  # 0、无偏移     1、左下        2、右下
+    TV_visited = Field(False, title="TV是否被访问过")
 
 
 info = StatusInfo()
-
-
-class Second_MapInfo(BaseModel):
-    currentPageName: str = Field("", title="当前页面名称")
-    step: int = Field(0, title="当前地图已走步数")
-    mapWay: List[str] = Field([], title="地图路径")
-
-    def reset_way(self):
-        self.step = 0
-        self.mapWay = []
-
-    def get_way(self):
-        self.mapWay = ["w", "d", "w", "d", "w", "d", "d", "w"]
-
-
-sec_info = Second_MapInfo()
