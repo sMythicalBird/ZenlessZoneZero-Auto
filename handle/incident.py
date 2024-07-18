@@ -369,3 +369,15 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("醒醒")
     control.click(pos.x, pos.y)
+
+
+@task.page(name="好感度_猫又1", target_texts=["捕猎游戏", "^出发寻找猫又$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^出发寻找猫又$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="好感度_格莉丝1", target_texts=["^心灵充电$", "^下不为例"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^下不为例")
+    control.click(pos.x, pos.y)
