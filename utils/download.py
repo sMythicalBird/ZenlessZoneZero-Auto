@@ -49,7 +49,7 @@ def download_with_progressbar(url: str, save_path: Path):
 DownLoadPath = RootPath / "download"
 if not DownLoadPath.exists():
     DownLoadPath.mkdir()
-DownLoadBaseUrl = ["https://zzz.caiyun.fun/", "http://pan.caiyun.fun/1655577/zzz/"]
+DownLoadBaseUrl = ["https://zzz.caiyun.fun/","https://download.caiyun.fun/" ,"http://pan.caiyun.fun/1655577/zzz/"]
 
 
 def check_file(retry_count=0):

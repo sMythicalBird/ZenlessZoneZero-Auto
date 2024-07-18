@@ -20,7 +20,7 @@ from pydirectinput import (
     moveRel,
 )
 
-from .init import OffsetX, OffsetY, WidthRatio, HeightRatio
+from .init import OffsetX, OffsetY
 
 
 def reset_mouse(x=0, y=0):

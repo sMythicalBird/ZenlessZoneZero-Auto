@@ -19,7 +19,7 @@ from PIL import Image, ImageFont, ImageDraw
 from loguru import logger
 
 from schema import ImgPosition, Position
-from .init import WidthRatio, HeightRatio, Hwnd, RealWidth, RealHeight
+from .init import Hwnd, RealWidth, RealHeight
 
 
 def find_all_template(
@@ -58,9 +58,9 @@ def find_all_template(
         x, y = 0, 0
 
     if w_ratio is None:
-        w_ratio = WidthRatio
+        w_ratio = 1
     if h_ratio is None:
-        h_ratio = HeightRatio
+        h_ratio = 1
 
     # 如果提供了缩放比例参数，则对模板进行缩放
     if w_ratio != 1 or h_ratio != 1:

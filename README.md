@@ -2,8 +2,21 @@
 
 > 当前项目处于开发阶段，正在开发零号空洞的自动化操作，可能会有很多问题，欢迎大家提出PR，一起完善这个项目。
 
+## 目录：
+1. [项目简介](#项目简介)
+2. [前置条件](#前置条件)
+3. [安装教程](#安装教程)
+4. [使用说明](#使用说明)
+5. [快捷键说明](#快捷键说明)
+6. [小白版的自动安装工具](#小白版的自动安装工具)
+7. [Python运行环境安装说明（小白版，请严格按照步骤操作）](#Python运行环境安装说明（小白版，请严格按照步骤操作）)
+8. [常见问题（及可能解决方法）](#常见问题（及可能解决方法）)
+9. [后台运行](#后台运行)
+10. [免责声明](#免责声明)
+
 
 ## 项目简介
+
 绝区零 零号空洞自动化框架是一个基于`Python3.10`的自动化框架
 
 本项目基于图像识别，不涉及任何游戏内部数据的修改，不会对游戏内部数据造成任何影响。本项目的当前目标是可以让玩家从每周长时间的零号空洞材料刷取中解放出来，只需要在电脑上挂着就可以自动完成。本项目后续也会继续考虑增加其他自动化操作，帮助玩家做到日常托管。
@@ -72,16 +85,14 @@ QQ群`985508983`
 1. 将项目文件夹下的`config.example.yaml`复制一份重命名为`config.yaml`文件
 
 2. 参照`config.example.yaml`文件中的注释说明进行配置`config.yaml`文件的参数
-
-  ```yaml
-  targetMap:
-   	zone: 1
-   	level: 1 
-  wholeCourse: false
-  maxFightTime: 150
-  maxMapTime: 900
-  ```
-
+	```yaml
+	targetMap:
+		zone: 1
+		level: 1 
+	wholeCourse: false
+	maxFightTime: 150
+	maxMapTime: 900
+	```
 3. 以管理员权限打开shell后运行`main.py`文件（脚本必须以管理员权限运行）
   ```shell
   python main.py
@@ -147,6 +158,13 @@ QQ群`985508983`
      pip uninstall onnxruntime
      pip install onnxruntime
      ```
+     
+## 后台运行
+后台运行的功能实现是通过新建另外的用户，然后新用户远程桌面连接到本地，在远程桌面运行脚本。
+
+非Server版本的Windows系统默认是不支持多用户同时远程桌面的，所以需要进行一些设置，具体设置方法请参考
+
+[Windows多用户同时远程本地桌面](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/wiki/Windows%E5%A4%9A%E7%94%A8%E6%88%B7%E5%90%8C%E6%97%B6%E8%BF%9C%E7%A8%8B%E6%9C%AC%E5%9C%B0%E6%A1%8C%E9%9D%A2)
 
 ## 免责声明
 

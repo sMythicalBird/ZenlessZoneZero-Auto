@@ -46,6 +46,8 @@ class ImageMatch(BaseModel):
                     self.image += ".png"
                 self.image = RootPath / "download" / self.image
         if isinstance(self.image, Path):
+            if not self.image.exists():
+                raise FileNotFoundError(f"图片路径不存在：{self.image}")
             self.name = self.name or self.image.stem
             self.image = np.array(Image.open(self.image))
 
