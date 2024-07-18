@@ -55,12 +55,19 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
 def action():
     time.sleep(1)
     screen = screenshot()  # 截图
-    is_match = False
-    for option_image_match in OptionImageMatch:
-        if find_template(screen, option_image_match):
-            is_match = True
-            break
-    if is_match:
+    if any(
+        find_template(screen, option_image_match)
+        for option_image_match in OptionImageMatch
+    ):
+        return
+    exclude_texts = ["特殊区域"]
+    exclude_texts = list(map(lambda x: template(x), exclude_texts))
+    results = task.ocr(screen)
+    if any(
+        exclude_text.search(result.text)
+        for exclude_text in exclude_texts
+        for result in results
+    ):
         return
     for y in range(640, 319, -40):
         control.click(1050, y)
