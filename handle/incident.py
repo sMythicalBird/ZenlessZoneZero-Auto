@@ -357,19 +357,6 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 安全车厢
-@task.page(name="安全车厢_休息", target_texts=["^在列车中歇一歇$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^在列车中歇一歇$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="安全车厢_修理", priority=4, target_texts=["^就修一下大门吧$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^就修一下大门吧$")
-    control.click(pos.x, pos.y)
-
-
 # 老练的调查员
 @task.page(name="老练的调查员", target_texts=["老练的调查员", "不用了"])
 def action(positions: Dict[str, Position]):
