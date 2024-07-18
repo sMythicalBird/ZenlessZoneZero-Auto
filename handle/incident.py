@@ -40,7 +40,7 @@ DownloadPath: Path = RootPath + "/download"
 OptionImgPath = [
     image_path
     for image_path in DownloadPath.glob("*.png")
-    if "option" in image_path.stem
+    if "option" in image_path.stem or image_path.stem == "red_exit"
 ]
 OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImgPath]
 
