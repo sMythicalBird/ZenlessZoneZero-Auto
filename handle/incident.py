@@ -10,8 +10,10 @@ from typing import Dict
 import numpy as np
 
 from schema import Position, info
-from utils import control, screenshot, logger
-from utils.task import task
+from utils import control, screenshot, logger, RootPath
+from pathlib import Path
+from utils.task import task, ImageMatch, find_template
+from PIL import Image
 from re import template
 from utils import config
 
@@ -34,14 +36,32 @@ def get_pos(text: str):
     return positions
 
 
+DownloadPath: Path = RootPath + "/download"
+OptionImgPath = [
+    image_path
+    for image_path in DownloadPath.glob("*.png")
+    if "option" in image_path.stem
+]
+OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImgPath]
+
+
 # 通用事件点击 优先级最低
 @task.page(
-    name="电视光点",
+    name="通用点击事件",
     priority=1,
     target_texts=["背包", "^当前层数"],
     target_image="tv_spot.png",
 )
 def action():
+    time.sleep(1)
+    screen = screenshot()  # 截图
+    is_match = False
+    for option_image_match in OptionImageMatch:
+        if find_template(screen, option_image_match):
+            is_match = True
+            break
+    if is_match:
+        return
     for y in range(640, 319, -40):
         control.click(1050, y)
         time.sleep(0.1)
