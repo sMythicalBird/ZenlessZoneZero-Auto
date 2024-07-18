@@ -36,7 +36,7 @@ def get_pos(text: str):
     return positions
 
 
-DownloadPath: Path = RootPath + "/download"
+DownloadPath: Path = RootPath / "download"
 OptionImgPath = [
     image_path
     for image_path in DownloadPath.glob("*.png")
