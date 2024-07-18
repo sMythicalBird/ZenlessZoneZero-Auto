@@ -31,7 +31,6 @@ def grid_map(screen: np.ndarray):
     k = find_current()
     if not k:
         control.press("space")
-        time.sleep(1)
         return
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
