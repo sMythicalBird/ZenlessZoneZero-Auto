@@ -40,7 +40,6 @@ class StatusInfo(BaseModel):
     currentStage: int = Field(
         0, title="当前阶段"
     )  # 0、无偏移     1、左下        2、右下
-    TV_visited = Field(False, title="TV是否被访问过")
 
 
 info = StatusInfo()
