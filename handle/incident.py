@@ -34,6 +34,19 @@ def get_pos(text: str):
     return positions
 
 
+# 通用事件点击 优先级最低
+@task.page(
+    name="电视光点",
+    priority=1,
+    target_texts=["背包", "^当前层数"],
+    target_image="tv_spot.png",
+)
+def action():
+    for y in range(640, 319, -40):
+        control.click(1050, y)
+        time.sleep(0.1)
+
+
 # 遇到确定就点击
 @task.page(name="确定操作", target_texts=["^确定$"])
 def action(positions: Dict[str, Position]):
@@ -358,26 +371,8 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 好感度系列
-@task.page(name="好感度_艾莲1", target_texts=["那休息一会儿$"])
+# 异化检疫门
+@task.page(name="异化检疫门", target_texts=["异化检疫门", "^强行闯入"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("那休息一会儿$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="好感度_艾莲2", target_texts=["休息长一点也是为了更好地工作$", "醒醒"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("醒醒")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="好感度_猫又1", target_texts=["捕猎游戏", "^出发寻找猫又$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^出发寻找猫又$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="好感度_格莉丝1", target_texts=["^心灵充电$", "^下不为例"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^下不为例")
+    pos = positions.get("^强行闯入")
     control.click(pos.x, pos.y)
