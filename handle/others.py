@@ -26,7 +26,7 @@ logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
     target_texts=["背包", "^当前层数"],
     exclude_texts=["特殊区域"],
 )
-def grid_map_1(screen: np.ndarray):
+def grid_map(screen: np.ndarray):
     # 判断是否在进入事件对话，检查是否可以找到自身位置
     k = find_current()
     if not k:
@@ -39,11 +39,9 @@ def grid_map_1(screen: np.ndarray):
         # info.entryMapTime = datetime.now()
         return
     control.scroll(-5)
-    if info.currentStage == 1:
-        k = find_current()
+    if info.currentStage == 1 and (k := find_current()):
         control.move_at(k.x, k.y, 360, 500)
-    elif info.currentStage == 2:
-        k = find_current()
+    elif info.currentStage == 2 and (k := find_current()):
         control.move_at(k.x, k.y, 900, 500)
     map_info = get_map_info(screen)
     if not map_info:
