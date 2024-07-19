@@ -15,7 +15,9 @@ if nvidia_path.exists():
         bin_path = bin_path / "bin"
         if bin_path.is_dir() and str(bin_path) not in current_path:
             current_path = str(bin_path) + os.pathsep + current_path
-os.environ["PATH"] = current_path
+os.environ["PATH"] = current_path  # 重设 PATH 环境变量
+sys.path.append(str(Path(__file__).parent))  # 将当前目录添加到 sys.path 中
+
 print(
     "\n --------------------------------------------------------------"
     "\n     注意：此脚本为免费的开源软件，如果你是通过购买获得的，那么你受骗了！\n "

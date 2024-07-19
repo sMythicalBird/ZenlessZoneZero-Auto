@@ -1,4 +1,9 @@
-paddlepaddle
+# This file uses CUDA to accelerate paddleocr, and onnxruntime uses directml to accelerate. It is specially used for start.exe scripts.
+nvidia-cuda-runtime-cu11
+nvidia-cudnn-cu11==8.9.5.29
+nvidia-cublas-cu11
+nvidia-cuda-nvrtc-cu11
+paddlepaddle-gpu
 paddleocr==2.7.3
 numpy<2.0.0
 loguru
