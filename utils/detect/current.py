@@ -5,25 +5,18 @@
 @time: 2024/7/11 下午6:59
 @author SuperLazyDog
 """
-import onnxruntime as rt
+from onnxruntime import InferenceSession
 from schema import ImgPosition
 from ..utils import screenshot
 import numpy as np
-from ..init import RootPath, logger
+from ..init import RootPath, logger, Provider
 from .utils import LetterBox
 
 
 model_path = RootPath / "download" / "current.onnx"
 
-# 判断能否使用GPU
-if "CUDAExecutionProvider" in rt.get_available_providers():
-    provider = ["CUDAExecutionProvider"]
-elif "DmlExecutionProvider" in rt.get_available_providers():
-    provider = ["DmlExecutionProvider"]
-else:
-    provider = ["CPUExecutionProvider"]
-logger.info(f"使用 {','.join(provider)} 运行当前位置识别模型")
-model = rt.InferenceSession(model_path, providers=provider)
+logger.info(f"使用 {','.join(Provider)} 运行当前位置识别模型")
+model = InferenceSession(model_path, providers=Provider)
 input_name = model.get_inputs()[0].name
 label_name = model.get_outputs()[0].name
 

@@ -15,6 +15,7 @@ import win32api
 import win32con
 import win32gui
 from loguru import logger
+import onnxruntime as rt
 
 
 def is_admin():
@@ -100,3 +101,11 @@ else:
     )
     logger.info(f"宽度缩放比例为{WidthRatio},高度缩放比例为{HeightRatio}")
     logger.info(f"菜单栏高度为{menu_height},左上角偏移量为({OffsetX},{OffsetY})")
+
+# 判断能否使用GPU
+if "CUDAExecutionProvider" in rt.get_available_providers():
+    Provider = ["CUDAExecutionProvider"]
+elif "DmlExecutionProvider" in rt.get_available_providers():
+    Provider = ["DmlExecutionProvider"]
+else:
+    Provider = ["CPUExecutionProvider"]
