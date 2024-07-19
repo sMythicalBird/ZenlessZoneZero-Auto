@@ -124,9 +124,14 @@ def action(positions: Dict[str, Position]):
 
 
 # 5、邦布商人
-@task.page(name="邦布商人", target_texts=["^欢迎光临"])
+@task.page(name="邦布商人", target_texts=["^鸣徽交易$"])
 def action():
     control.click(1210, 35)
+
+
+# @task.page(name="邦布商人", target_texts=["^鸣徽催化$"])
+# def action():
+#     control.click(1210, 35)
 
 
 # # 6、防卫军后勤站
