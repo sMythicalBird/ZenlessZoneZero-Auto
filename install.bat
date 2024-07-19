@@ -73,22 +73,14 @@ if %errorlevel% equ 0 (
 )
 cls
 echo 请查看readme,并选择你需要安装的版本
-echo 1.CUDA、CuDNN依赖与本项目GPU版本依赖
-echo 2.仅安装GPU版本依赖
-echo 3.仅安装CPU版本依赖
+echo 1.仅安装GPU版本依赖
+echo 2.仅安装CPU版本依赖
 echo 请选择：
 set /p isversion=
-if "%isversion%"=="1" goto :installall
-if "%isversion%"=="2" goto :installgpu
-if "%isversion%"=="3" goto :installcpu
+if "%isversion%"=="1" goto :installgpu
+if "%isversion%"=="2" goto :installcpu
 goto :inputerror2
 
-:installall
-echo 开始安装！
-%pip_cmd% install -r requirements-cuda.txt
-%pip_cmd% install -r requirements.txt
-echo 安装完成！
-goto :installvc
 
 :installgpu
 echo 开始安装！
