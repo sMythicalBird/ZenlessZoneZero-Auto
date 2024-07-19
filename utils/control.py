@@ -18,9 +18,12 @@ from pydirectinput import (
     keyUp,
     scroll,
     moveRel,
+    FAILSAFE,
 )
 
 from .init import OffsetX, OffsetY
+
+FAILSAFE = False
 
 
 def reset_mouse(x=0, y=0):
@@ -58,7 +61,12 @@ class Control:
 
     @reset_mouse()
     def click(
-        self, x, y, clicks: int = 2, interval: float = 0.1, duration: float = 0.1
+        self,
+        x: int,
+        y: int,
+        clicks: int = 2,
+        interval: float = 0.1,
+        duration: float = 0.1,
     ):
         x, y = self._pre(x, y)
         click(x, y, clicks=clicks, interval=interval, duration=duration)
@@ -67,7 +75,8 @@ class Control:
         x, y = self._pre(x, y)
         moveTo(x, y)
 
-    def move_at(self, x1, y1, x2, y2):
+    @staticmethod
+    def move_at(x1, y1, x2, y2):
         moveTo(x1, y1)
         time.sleep(0.1)
         mouseDown()
