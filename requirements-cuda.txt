@@ -1,4 +1,0 @@
-nvidia-cuda-runtime-cu11
-nvidia-cudnn-cu11==8.9.5.29
-nvidia-cublas-cu11
-nvidia-cuda-nvrtc-cu11
