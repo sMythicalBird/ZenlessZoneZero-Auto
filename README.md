@@ -95,14 +95,11 @@ python main.py
 
 1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
 2. 在云盘下载对应的环境压缩包(已打包好所有依赖)
-
-**！！！**GPU版和CPU版二选一，选择GPU的前提是你电脑上使用的是`Nvidia`显卡
-
-​		GPU环境链接:
-
-​		CPU环境链接:
-
-3. 将下载好的环境变量解压到项目目录下(ZenlessZoneZero-Auto)
+	>  GPU版和CPU版二选一，选择GPU的前提是你电脑上使用的是`Nvidia`显卡
+   
+	GPU环境链接:
+	CPU环境链接:
+3. 将下载好的环境解压到项目目录下(ZenlessZoneZero-Auto)
 
 4. 在项目目录下运行
 
