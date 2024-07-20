@@ -40,6 +40,10 @@ QQ群`985508983`
 
 目前脚本适配性最好的地图是旧都列车，自动刷取建议选择旧都列车，低难本基本测试没问题，刷取每周五次委托奖励和零号业绩基本够用了。高难度副本不建议使用，开发者练度不够打不过，数据集不全，模型识别可能会有问题，等后面开发者等级高了会继续进行测试。
 
+[视频演示：零号空洞通关](https://www.bilibili.com/video/BV1Vb421J7Fb/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c)
+
+[视频演示：零号业绩速刷](https://www.bilibili.com/video/BV1wm42137QH/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c)
+
 #### 2、游戏内设置说明(下面几项严格按照要求来)
 
 1. 设置->输入->棋盘镜头移动速度->1
@@ -83,7 +87,9 @@ python main.py
    
    **！！！** GPU版本和CPU版本二选一，GPU版本使用前提是你的电脑上使用的是`Nvidia`显卡
    
-   详细安装链接:[Conda环境配置说明](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/wiki/Conda环境配置说明)
+   详细安装教程:[Conda环境配置说明](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/wiki/Conda环境配置说明)
+
+   安装视频演示:[Conda环境配置演示](https://www.bilibili.com/video/BV1FS421d7rK/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c)
 
 3. 环境配置好后，输入
 
@@ -93,6 +99,7 @@ python main.py
 
 ## 安装教程(纯小白，或依赖懒得自己动手配置)
 
+演示视频：[start一键安装启动](https://www.bilibili.com/video/BV1VU411S7Z5/?vd_source=6d82d7bb6e48d85193e2bb7c16eaa41c)
 1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
 2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-PP1WA.html)
 3. 将下载好的启动器放置到项目目录下(ZenlessZoneZero-Auto)
