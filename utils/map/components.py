@@ -20,13 +20,13 @@ DownloadPath = RootPath / "download"  # 下载路径
 
 # components_model = InferenceSession(DownloadPath / "components.onnx")
 components_model = InferenceSession(
-    DownloadPath / "components_level.onnx", providers=Provider
+    str(DownloadPath / "components_level.onnx"), providers=Provider
 )
 components_input_name = components_model.get_inputs()[0].name
 components_output_name = components_model.get_outputs()[0].name
 
 television_model = InferenceSession(
-    DownloadPath / "television.onnx", providers=Provider
+    str(DownloadPath / "television.onnx"), providers=Provider
 )
 television_input_name = television_model.get_inputs()[0].name
 television_output_name = television_model.get_outputs()[0].name

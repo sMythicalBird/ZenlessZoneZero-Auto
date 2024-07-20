@@ -16,7 +16,7 @@ from .utils import LetterBox
 model_path = RootPath / "download" / "current.onnx"
 
 logger.info(f"使用 {','.join(Provider)} 运行当前位置识别模型")
-model = InferenceSession(model_path, providers=Provider)
+model = InferenceSession(str(model_path), providers=Provider)
 input_name = model.get_inputs()[0].name
 label_name = model.get_outputs()[0].name
 
