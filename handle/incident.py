@@ -123,10 +123,10 @@ def action(positions: Dict[str, Position]):
     # 进入战斗
 
 
-# 5、邦布商人
-@task.page(name="邦布商人", target_texts=["^鸣徽交易$"])
-def action():
-    control.click(1210, 35)
+# # 5、邦布商人
+# @task.page(name="邦布商人", target_texts=["^鸣徽交易$"])
+# def action():
+#     control.click(1210, 35)
 
 
 # @task.page(name="邦布商人", target_texts=["^鸣徽催化$"])
