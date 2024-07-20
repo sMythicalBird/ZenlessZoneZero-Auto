@@ -359,7 +359,7 @@ class _Task(BaseModel):
         """
         self._pages = sorted(self._pages, key=lambda x: x.priority, reverse=True)
         self._running = True  # 设置运行状态为True
-        self._pause = False
+        # self._pause = False
         while self._running:  # 当运行状态为True时循环
             if self._pause:
                 logger.info("执行等待")
