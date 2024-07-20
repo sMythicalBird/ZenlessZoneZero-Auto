@@ -10,10 +10,11 @@
 2. [使用说明](#使用说明(前置条件))
 3. [安装教程](#安装教程)
 4. [安装教程-懒人版](#安装教程(纯小白，或依赖懒得自己动手配置))
-5. [快捷键说明](#快捷键说明)
-6. [事件BUG说明](#事件BUG说明)
-7. [后台运行](#后台运行)
-8. [免责声明](#免责声明)
+5. [运行报错解决办法](#运行报错解决办法)
+6. [快捷键说明](#快捷键说明)
+7. [事件BUG说明](#事件BUG说明)
+8. [后台运行](#后台运行)
+9. [免责声明](#免责声明)
 
 
 
@@ -107,6 +108,19 @@ python main.py
 5. 第一次运行时请等待一段时间，等待Python环境安装
 6. 选择1安装环境需要的依赖(第一次运行时选择，安装完依赖就不需要再选了)
 7. 选择2运行脚本(第一次运行需要下载模型文件，需要等待一段时间)
+
+## 运行报错解决办法
+
+1、出现`ImportError: DLl load failed while importing onnxruntime_pybindl1_state:动态链接库(DLL)初始化例程失败`，
+
+如果之前安装过CUDA
+
+```
+pip uninstall onnxruntime-gpu
+pip install onnxruntime-gpu=1.17
+```
+
+如果没安装过CUDA，或者更换onnxruntime-gpu版本无效，则更新[Microsoft Visual C++ 可再发行程序包]( https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ## 快捷键说明
 
