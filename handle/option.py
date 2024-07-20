@@ -36,7 +36,8 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="选项_金色收益", priority=3, target_image="option_golden_benefit.png")
+# 由于现在不会购买东西，所有金币收益很低
+@task.page(name="选项_金色收益", priority=2, target_image="option_golden_benefit.png")
 def action(positions: Dict[str, Position]):
     pos = positions.get("option_golden_benefit")
     control.click(pos.x, pos.y)

@@ -103,15 +103,20 @@ def check_file_task():
     :return:
     """
     retry_count = 0
+    check_success = False
     for i in range(3):
         try:
             logger.debug("开始检查文件！")
             check_file(retry_count)
+            check_success = True
+            break
         except:
             logger.exception("检查文件失败！")
             retry_count += 1
             continue
-        break
+    if not check_success:
+        logger.error("检查文件失败！请检查网络连接后重新启动！")
+        sys.exit(1)
 
 
 check_file_task()
