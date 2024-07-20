@@ -94,7 +94,7 @@ python main.py
 ## 安装教程(纯小白，或依赖懒得自己动手配置)
 
 1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
-2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-mP1WA.html)
+2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-PP1WA.html)
 3. 将下载好的启动器放置到项目目录下(ZenlessZoneZero-Auto)
 4. 在项目目录下以管理员权限运行`start.exe`
 5. 第一次运行时请等待一段时间，等待Python环境安装
