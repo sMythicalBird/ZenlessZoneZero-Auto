@@ -395,3 +395,10 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^强行闯入")
     control.click(pos.x, pos.y)
+
+
+# 抵押欠款
+@task.page(name="抵押欠款", target_texts=["^抵押欠款$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^抵押欠款$")
+    control.click(pos.x, pos.y)
