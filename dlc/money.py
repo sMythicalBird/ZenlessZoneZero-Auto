@@ -5,11 +5,14 @@
 @author:    sMythicalBird
 """
 import time
+import numpy as np
 from typing import Dict
 from schema import Position
-from utils import control, screenshot
+from utils import control, screenshot, RootPath
 from utils.task import task
+from pathlib import Path
 from re import template
+from PIL import Image
 from pydirectinput import (
     press,
     click,
@@ -24,23 +27,27 @@ from pydirectinput import (
 
 fflag = 0
 
+# DownloadPath: Path = RootPath / "download"
+# OptionImgPath = ["dlc_video"]
+# OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImgPath]
 
-# def get_pos(text: str):
-#     text = template(text)
-#     img = screenshot()  # 截图
-#     ocr_Results = task.ocr(img)  # OCR识别
-#     # print(ocr_Results)
-#     positions = []
-#     for ocr_result in ocr_Results:
-#         if text.search(ocr_result.text):
-#             # print(ocr_result)
-#             positions.append(
-#                 [
-#                     (ocr_result.position[0] + ocr_result.position[2]) / 2,
-#                     (ocr_result.position[1] + ocr_result.position[3]) / 2,
-#                 ]
-#             )
-#     return positions
+
+def get_pos(text: str):
+    text = template(text)
+    img = screenshot()  # 截图
+    ocr_Results = task.ocr(img)  # OCR识别
+    # print(ocr_Results)
+    positions = []
+    for ocr_result in ocr_Results:
+        if text.search(ocr_result.text):
+            # print(ocr_result)
+            positions.append(
+                [
+                    (ocr_result.position[0] + ocr_result.position[2]) / 2,
+                    (ocr_result.position[1] + ocr_result.position[3]) / 2,
+                ]
+            )
+    return positions
 
 
 def money_fight():
@@ -103,10 +110,15 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+@task.page(name="选择关卡_滚动", priority=2, target_texts=["关键敌情", "委托详情"])
+def action():
+    time.sleep(0.3)
+    control.move_at(1000, 500, 1000, 200)
+
+
 @task.page(name="出战", target_texts=["^出战$"])
 def action(positions: Dict[str, Position]):
     global fflag
-    # time.sleep(0.3)
     pos = positions.get("^出战$")
     control.click(pos.x, pos.y)
     fflag = 0
@@ -140,11 +152,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-
-
-@task.page(name="主界面", target_texts=["^影像档案架$"])
-def action():
-    time.sleep(0.5)
+    time.sleep(1.2)
     moveRel(400, 0, relative=True)
     time.sleep(0.5)
     press("w", duration=0.2)
@@ -157,6 +165,33 @@ def action():
     time.sleep(0.5)
     press("w", duration=0.6)
     time.sleep(0.3)
+    press("f", duration=0.1)
+    time.sleep(1)
+    pos = get_pos("^战斗委托$")
+    if pos:
+        control.click(pos[0][0], pos[0][1])
+        time.sleep(0.1)
+        control.click(pos[0][0], pos[0][1])
+    else:
+        press("m", duration=0.1)
+
+
+@task.page(name="选择地图", target_texts=["^影像档案架$", "柜台"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^影像档案架$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="主界面", priority=2, target_image="dlc_video.png")
+def action():
+    moveRel(500, 0, relative=True)
+    time.sleep(0.5)
+    press("w", duration=1)
+    time.sleep(0.5)
+    moveRel(-330, 0, relative=True)
+    time.sleep(0.5)
+    press("w", duration=1.3)
+    time.sleep(0.5)
     press("f", duration=0.1)
 
 
