@@ -10,10 +10,11 @@
 2. [使用说明](#使用说明(前置条件))
 3. [安装教程](#安装教程)
 4. [安装教程-懒人版](#安装教程(纯小白，或依赖懒得自己动手配置))
-5. [快捷键说明](#快捷键说明)
-6. [事件BUG说明](#事件BUG说明)
-7. [后台运行](#后台运行)
-8. [免责声明](#免责声明)
+5. [运行报错解决办法](#运行报错解决办法)
+6. [快捷键说明](#快捷键说明)
+7. [事件BUG说明](#事件BUG说明)
+8. [后台运行](#后台运行)
+9. [免责声明](#免责声明)
 
 
 
@@ -40,11 +41,15 @@ QQ群`985508983`
 
 目前脚本适配性最好的地图是旧都列车，自动刷取建议选择旧都列车，低难本基本测试没问题，刷取每周五次委托奖励和零号业绩基本够用了。高难度副本不建议使用，开发者练度不够打不过，数据集不全，模型识别可能会有问题，等后面开发者等级高了会继续进行测试。
 
+[视频演示：零号空洞通关](https://www.bilibili.com/video/BV1Vb421J7Fb)
+
+[视频演示：零号业绩速刷](https://www.bilibili.com/video/BV1wm42137QH)
+
 #### 2、游戏内设置说明(下面几项严格按照要求来)
 
 1. 设置->输入->棋盘镜头移动速度->1
 2. 设置->画面->显示模式->1280*720窗口
-3. 设置->键鼠设置->角色切换下一位->Space
+3. 设置->键鼠设置->角色切换下一位->Space(战斗场景下的切人按键必须是Space)
 4. 脚本运行会占用键盘鼠标，在使用时不要操作键盘鼠标
 5. 脚本运行前游戏界面置于零号空洞副本选择界面
 
@@ -83,7 +88,9 @@ python main.py
    
    **！！！** GPU版本和CPU版本二选一，GPU版本使用前提是你的电脑上使用的是`Nvidia`显卡
    
-   详细安装链接:[Conda环境配置说明](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/wiki/Conda环境配置说明)
+   详细安装教程:[Conda环境配置说明](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/wiki/Conda环境配置说明)
+
+   安装视频演示:[Conda环境配置演示](https://www.bilibili.com/video/BV1FS421d7rK)
 
 3. 环境配置好后，输入
 
@@ -93,11 +100,27 @@ python main.py
 
 ## 安装教程(纯小白，或依赖懒得自己动手配置)
 
+演示视频：[start一键安装启动](https://www.bilibili.com/video/BV1VU411S7Z5)
 1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
 2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-PP1WA.html)
 3. 将下载好的启动器放置到项目目录下(ZenlessZoneZero-Auto)
 4. 在项目目录下以管理员权限运行`start.exe`
 5. 第一次运行时请等待一段时间，等待Python环境安装
+6. 选择1安装环境需要的依赖(第一次运行时选择，安装完依赖就不需要再选了)
+7. 选择2运行脚本(第一次运行需要下载模型文件，需要等待一段时间)
+
+## 运行报错解决办法
+
+1、出现`ImportError: DLl load failed while importing onnxruntime_pybindl1_state:动态链接库(DLL)初始化例程失败`，
+
+如果之前安装过CUDA
+
+```
+pip uninstall onnxruntime-gpu
+pip install onnxruntime-gpu=1.17
+```
+
+如果没安装过CUDA，或者更换onnxruntime-gpu版本无效，则更新[Microsoft Visual C++ 可再发行程序包]( https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ## 快捷键说明
 
