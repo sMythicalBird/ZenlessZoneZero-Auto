@@ -17,11 +17,15 @@ ZoneMap = {
         "name": "施工废墟",
         "level": {1: "前线", 2: "内部", 3: "腹地", 4: "核心"},
     },
+    3: {
+        "name": "巨厦",
+        "level": {1: "内部", 2: "腹地", 3: "核心"},
+    },
 }
 
 
 class TargetMap(BaseModel):
-    zone: int = Field(1, ge=1, le=2)
+    zone: int = Field(1, ge=1, le=3)
     level: int = Field(1, ge=1, le=5)
 
     @property
