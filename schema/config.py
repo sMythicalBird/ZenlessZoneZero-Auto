@@ -38,3 +38,4 @@ class Config(BaseModel):
     wholeCourse: bool = Field(False, description="是否打完全程")
     maxFightTime: int = Field(150, description="最大战斗时间（单位秒）")
     maxMapTime: int = Field(15 * 60, description="在地图内最大时间（单位秒）")
+    useGpu: bool = Field(True, description="是否使用GPU")

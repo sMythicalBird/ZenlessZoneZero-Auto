@@ -58,7 +58,7 @@ DownLoadBaseUrl = [
 
 def check_file(retry_count=0):
     fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.json"
-    file_list = requests.get(fileListUrl).json()
+    file_list = requests.get(fileListUrl, timeout=3).json()
     for item in file_list:
         file = item["name"].strip()
         file_md5 = item["md5"].strip()
