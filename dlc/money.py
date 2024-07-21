@@ -9,7 +9,7 @@ import numpy as np
 from typing import Dict
 from schema import Position
 from utils import control, screenshot, RootPath
-from utils.task import task
+from utils.task import task, ImageMatch
 from pathlib import Path
 from re import template
 from PIL import Image
@@ -26,10 +26,6 @@ from pydirectinput import (
 )
 
 fflag = 0
-
-# DownloadPath: Path = RootPath / "download"
-# OptionImgPath = ["dlc_video"]
-# OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImgPath]
 
 
 def get_pos(text: str):
@@ -51,7 +47,7 @@ def get_pos(text: str):
 
 
 def money_fight():
-    moveRel(110, 0, relative=True)
+    moveRel(250, 0, relative=True)
     time.sleep(0.3)
     keyDown("w")
     keyDown("shift")
@@ -65,9 +61,8 @@ def money_fight():
 
 def money_go(t1: float, t2: float, t3: int):
     time.sleep(t1)
-    keyDown("d")
+    moveRel(-250, 0, relative=True)
     time.sleep(t2)
-    keyUp("d")
     for i in range(t3):
         time.sleep(0.1)
         press("f", duration=0.1)
@@ -79,10 +74,11 @@ def money_go(t1: float, t2: float, t3: int):
 @task.page(name="战斗中", target_texts=["^Space$"])
 def action():
     global fflag
+    time.sleep(0.3)
     # 击碎箱子
     money_fight()
     # 交付任务
-    money_go(3.2, 0.5, 5)
+    money_go(3.2, 0.8, 5)
     fflag = 1
     for i in range(5):
         control.click(1020, 440)
@@ -102,7 +98,6 @@ def action(positions: Dict[str, Position]):
 # 选择关卡
 @task.page(name="选择关卡", target_texts=["真·拿命验收$", "^下一步$"])
 def action(positions: Dict[str, Position]):
-    time.sleep(0.3)
     pos = positions.get("真·拿命验收$")
     control.click(pos.x, pos.y)
     time.sleep(0.5)
@@ -148,32 +143,40 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+def move1():
+    moveRel(600, 0, relative=True)
+    time.sleep(0.5)
+    keyDown("w")
+    time.sleep(0.18)
+    moveRel(500, 0, relative=True)
+    time.sleep(0.7)
+    moveRel(-500, 0, relative=True)
+    time.sleep(0.3)
+    keyUp("w")
+    time.sleep(0.3)
+    press("f", duration=0.1)
+
+
+def move2():
+    moveRel(1000, 0, relative=True)
+    time.sleep(0.1)
+    keyDown("w")
+    time.sleep(1)
+    moveRel(-500, 0, relative=True)
+    time.sleep(1.8)
+    keyUp("w")
+    time.sleep(0.3)
+    press("f", duration=0.1)
+
+
+mflag = 1
+
+
 @task.page(name="休息_离开", target_texts=["^离开$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    time.sleep(1.2)
-    moveRel(400, 0, relative=True)
-    time.sleep(0.5)
-    press("w", duration=0.2)
-    time.sleep(0.5)
-    moveRel(380, 0, relative=True)
-    time.sleep(0.5)
-    press("w", duration=0.8)
-    time.sleep(0.5)
-    moveRel(-400, 0, relative=True)
-    time.sleep(0.5)
-    press("w", duration=0.6)
-    time.sleep(0.3)
-    press("f", duration=0.1)
     time.sleep(1)
-    pos = get_pos("^战斗委托$")
-    if pos:
-        control.click(pos[0][0], pos[0][1])
-        time.sleep(0.1)
-        control.click(pos[0][0], pos[0][1])
-    else:
-        press("m", duration=0.1)
 
 
 @task.page(name="选择地图", target_texts=["^影像档案架$", "柜台"])
@@ -182,17 +185,28 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="主界面", priority=2, target_image="dlc_video.png")
+@task.page(
+    name="主界面",
+    priority=2,
+    target_image=ImageMatch(image="dlc_video.png", confidence=0.9),
+)
 def action():
-    moveRel(500, 0, relative=True)
-    time.sleep(0.5)
-    press("w", duration=1)
-    time.sleep(0.5)
-    moveRel(-330, 0, relative=True)
-    time.sleep(0.5)
-    press("w", duration=1.3)
-    time.sleep(0.5)
-    press("f", duration=0.1)
+    global mflag
+    time.sleep(2)
+    if mflag:
+        move1()
+    else:
+        move2()
+    time.sleep(1)
+    pos = get_pos("^战斗委托$")
+    if pos:
+        mflag = 1
+        control.click(pos[0][0], pos[0][1])
+        time.sleep(0.1)
+        control.click(pos[0][0], pos[0][1])
+    else:
+        mflag = 0
+        press("m", duration=0.1)
 
 
 @task.page(name="可能对话", priority=0)
@@ -200,4 +214,4 @@ def action():
     global fflag
     if fflag:
         press("space", duration=0.1)
-    time.sleep(0.2)
+    time.sleep(0.1)

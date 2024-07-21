@@ -129,26 +129,6 @@ def action(positions: Dict[str, Position]):
 #     control.click(1210, 35)
 
 
-# @task.page(name="邦布商人", target_texts=["^鸣徽催化$"])
-# def action():
-#     control.click(1210, 35)
-
-
-# # 6、防卫军后勤站
-# @task.page(name="防卫军后勤站", target_texts=["防卫军后勤站$", "^离开$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^离开$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-
-
-# @task.page(name="防卫军后勤站_对话", target_texts=["防卫军后勤站$"])
-# def action():
-#     # 点击对话
-#     control.click(1000, 350)
-#     time.sleep(2)
-
-
 # 8、资源回收小组
 @task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
 def select_role(positions: Dict[str, Position]):
@@ -198,34 +178,10 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y + 70)
 
 
-# 选择类
-# @task.page(name="鸣徽_选择", target_texts=["同类持有", "^选择$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^选择$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-
-
 @task.page(name="催化", target_texts=["同类持有", "^催化$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^催化$")
     control.click(pos.x, pos.y)
-
-
-# # 21、侵蚀扭蛋机
-# @task.page(name="侵蚀扭蛋机", target_texts=["古怪装置", "^离开$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^离开$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-
-
-# # 118、助战邦布
-# @task.page(name="助战邦布", target_texts=["^助战邦布$", "^选择$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^选择$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
 
 
 # 下面为其他地图新增
@@ -391,8 +347,11 @@ def action(positions: Dict[str, Position]):
 
 
 # 异化检疫门
-@task.page(name="异化检疫门", target_texts=["异化检疫门", "^强行闯入"])
+@task.page(name="异化检疫门", target_texts=["异化检疫门", "^强行闯入", "接受检疫扫描"])
 def action(positions: Dict[str, Position]):
+    pos = positions.get("接受检疫扫描")
+    control.click(pos.x, pos.y)
+    time.sleep(0.2)
     pos = positions.get("^强行闯入")
     control.click(pos.x, pos.y)
 
