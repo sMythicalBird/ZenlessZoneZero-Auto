@@ -11,7 +11,7 @@ from pathlib import Path
 
 import requests
 from tqdm import tqdm
-
+from hashlib import md5
 from .init import logger, RootPath
 from .utils import retry
 
@@ -57,36 +57,19 @@ DownLoadBaseUrl = [
 
 
 def check_file(retry_count=0):
-    fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.txt"
-    file_list = requests.get(fileListUrl).text.split("\n")
-    for file in file_list:
-        file = file.strip()
+    fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.json"
+    file_list = requests.get(fileListUrl).json()
+    for item in file_list:
+        file = item["name"].strip()
+        file_md5 = item["md5"].strip()
         file_path = DownLoadPath / file
         need_download = False
-        if file_path.exists():
-            # 获取文件最后修改时间
-            file_time = file_path.stat().st_mtime
-            # 获取网络文件最后修改时间
-            response = requests.head(
-                f"{DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)]}{file}"
-            )
-            last_modified = response.headers.get("Last-Modified", None)
-            if not last_modified:
-                raise Exception("获取文件最后修改时间失败！")
-            last_modified = (
-                last_modified.strip() + "+00:00"
-                if last_modified.strip().endswith("GMT")
-                else last_modified.strip()
-            )
-            # 转换时间格式
-            last_modified = time.strptime(last_modified, "%a, %d %b %Y %H:%M:%S %Z%z")
-            # 转换为时间戳
-            last_modified = time.mktime(last_modified)
-            # 判断是否需要下载
-            if last_modified > file_time:
-                need_download = True
-                logger.info(f"文件：{file} 需要更新！")
-        else:
+        # 文件不存在或者文件md5不一致
+        if (
+            not file_path.exists()
+            or md5(file_path.read_bytes()).hexdigest() != file_md5
+        ):
+            file_path.unlink(missing_ok=True)
             need_download = True
         if need_download:
             logger.info(f"下载文件：{file}")
