@@ -361,3 +361,10 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^抵押欠款$")
     control.click(pos.x, pos.y)
+
+
+# 助战邦布已满 请选择要交换的邦布
+@task.page(name="助战邦布已满", target_texts=["^交换$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^交换$")
+    control.click(pos.x, pos.y)
