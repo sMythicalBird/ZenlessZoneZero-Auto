@@ -117,7 +117,7 @@ python main.py
 
 ```
 pip uninstall onnxruntime-gpu
-pip install onnxruntime-gpu=1.17
+pip install onnxruntime-gpu==1.17
 ```
 
 如果没安装过CUDA，或者更换onnxruntime-gpu版本无效，则更新[Microsoft Visual C++ 可再发行程序包]( https://aka.ms/vs/17/release/vc_redist.x64.exe)
