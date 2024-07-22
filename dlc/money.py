@@ -185,6 +185,16 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+# 领取月卡
+@task.page(name="月卡", target_texts=["今日到账"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("今日到账")
+    control.click(pos.x, pos.y)
+    time.sleep(1)
+    press("esc", duration=0.1)
+    time.sleep(1)
+
+
 @task.page(
     name="主界面",
     priority=2,
