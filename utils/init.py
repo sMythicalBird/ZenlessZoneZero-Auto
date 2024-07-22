@@ -89,17 +89,16 @@ else:
     except Exception as e:
         logger.exception(e)
         wait_exit()
-    WidthRatio = w / 1280 * ScaleFactor
-    HeightRatio = h / 720 * ScaleFactor
-    RealWidth = int(w * ScaleFactor)
-    RealHeight = int(h * ScaleFactor)
+    RealWidth = round(w * ScaleFactor)
+    RealHeight = round(h * ScaleFactor)
     menu_height = win32api.GetSystemMetrics(win32con.SM_CYSIZE)
-    OffsetX = (rect[2] - w) / 2
-    OffsetY = (rect[3] - menu_height - h - 1) / 2 + menu_height + 1
+    RealRight = round((rect[2] - rect[0]) * ScaleFactor)
+    RealBot = round((rect[3] - rect[1]) * ScaleFactor)
+    OffsetX = (RealRight - RealWidth) / 2
+    OffsetY = (RealBot - menu_height - RealHeight - 1) / 2 + menu_height + 1
     logger.info(
         f"游戏窗口宽度为{w}，高度为{h},缩放因子为{ScaleFactor},实际宽度为{RealWidth},实际高度为{RealHeight}"
     )
-    logger.info(f"宽度缩放比例为{WidthRatio},高度缩放比例为{HeightRatio}")
     logger.info(f"菜单栏高度为{menu_height},左上角偏移量为({OffsetX},{OffsetY})")
 
 # 判断能否使用GPU

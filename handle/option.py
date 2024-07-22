@@ -6,14 +6,17 @@
 @author SuperLazyDog
 """
 from typing import Dict
-
 from schema import Position
 from utils import control
-from utils.task import task
+from utils.task import task, ImageMatch
 
 
 # 增加邦布商人等事件的红叉选择
-@task.page(name="红叉离开事件", priority=5, target_image="red_exit.png")
+@task.page(
+    name="红叉离开事件",
+    priority=5,
+    target_image=ImageMatch(image="red_exit.png", confidence=0.9),
+)
 def action(positions: Dict[str, Position]):
     pos = positions.get("red_exit")
     control.click(pos.x, pos.y)
