@@ -35,7 +35,7 @@ class ImageMatch(BaseModel):
     name: str | None = Field(None, title="图片匹配名称")
     image: str | Path | np.ndarray = Field(title="图片")
     position: Position | None = Field(None, title="限定图片范围，(x1, y1, x2, y2)")
-    confidence: float = Field(0.97, title="图片置信度", ge=0, le=1)
+    confidence: float = Field(0.95, title="图片置信度", ge=0, le=1)
 
     def __init__(self, /, **data: Any):
         super().__init__(**data)

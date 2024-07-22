@@ -8,13 +8,10 @@
 from .download import check_file
 from .init import (
     logger,
-    WidthRatio,
-    HeightRatio,
     RootPath,
     RealWidth,
     RealHeight,
     Hwnd,
-    ScaleFactor,
 )
 from .utils import *
 from .control import control
@@ -23,13 +20,10 @@ from .config import config
 
 __all__ = [
     "logger",
-    "WidthRatio",
-    "HeightRatio",
     "RootPath",
     "RealWidth",
     "RealHeight",
     "Hwnd",
-    "ScaleFactor",
     "find_template",
     "screenshot",
     "control",
