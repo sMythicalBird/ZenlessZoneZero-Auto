@@ -39,7 +39,7 @@ class TargetMap(BaseModel):
 
 class Config(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
-    modeSelect: bool = Field(2, description="模式选择")
+    modeSelect: int = Field(2, description="模式选择")
     maxFightTime: int = Field(150, description="最大战斗时间（单位秒）")
     maxMapTime: int = Field(15 * 60, description="在地图内最大时间（单位秒）")
     hasBoom: bool = Field(False, description="是否有炸弹")

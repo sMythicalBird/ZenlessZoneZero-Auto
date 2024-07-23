@@ -31,7 +31,6 @@ television_model = InferenceSession(
 television_input_name = television_model.get_inputs()[0].name
 television_output_name = television_model.get_outputs()[0].name
 television = Model(television_model, iou_threshold=0.1)
-
 with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
     components_label = yaml.safe_load(f)
 # 零号业绩模式，改变权重
@@ -76,11 +75,11 @@ def component_class(
         conf, index = infer_crop(crop)
         # 获取组件标签
         return MapComponent(
-            name=components_label[index]["name"],
+            name=components_label[str(index)]["name"],
             x=x,  # 组件坐标
             y=y,  # 组件坐标
             confidence=conf,  # 组件置信度
-            weight=components_label[index]["weight"],  # 组件权重
+            weight=components_label[str(index)]["weight"],  # 组件权重
         )
     return MapComponent(
         name="double",  # 组件名称
