@@ -386,8 +386,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    time.sleep(2)
-    control.press("esc")
+    info.exit_flag = True  # 存完钱准备离开
 
 
 # 零号业绩
@@ -395,7 +394,4 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
-    info.currentStage = 2
-    if not config.wholeCourse:
-        time.sleep(1)
-        control.esc()
+    info.exit_flag = True  # 拿完业绩准备离开

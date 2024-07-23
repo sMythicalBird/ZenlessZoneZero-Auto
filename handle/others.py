@@ -32,6 +32,10 @@ def grid_map(screen: np.ndarray):
     if not k:  # 不在地图中
         control.press("space")
         return
+    # 检查离开标志
+    if info.exit_flag:
+        control.esc()
+        return
     # 超过地图最大时间
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
@@ -90,7 +94,8 @@ def action(positions: Dict[str, Position]):
     info.entryMapTime = datetime.now()  # 进入地图时间
     info.fightCount += 1  # 战斗次数记录
     info.currentStage = 0  # 进入战斗，无偏移
-    info.hasBoom = config.hasBoom
+    info.hasBoom = config.hasBoom  # 是否有炸弹
+    info.exit_flag = False  # 离开标志
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 

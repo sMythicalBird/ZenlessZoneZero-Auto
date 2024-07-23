@@ -16,4 +16,5 @@ targetMap:
 modeSelect: 1               # 模式选择 1: 全通关  2: 刷零号业绩  3：零号银行
 maxFightTime: 150           # 最大战斗时间，单场战斗时间默认为150s，超过150s会重开(部分战斗场景需要跑图，目前还没进行相关处理，遇到这种情况会退掉重开)
 maxMapTime: 900             # 在地图内最大时间默认为900s，超过最大时间未通关地图会重开
+hasBoom: False              # 是否解锁炸弹
 useGpu: True                # 是否使用GPU，默认True, 使用GPU会加速模型训练,如果改为False，会强制使用CPU进行OCR识别

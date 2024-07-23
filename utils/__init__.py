@@ -13,10 +13,10 @@ from .init import (
     RealHeight,
     Hwnd,
 )
+from .config import config
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way
-from .config import config
 
 __all__ = [
     "logger",

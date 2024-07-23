@@ -41,6 +41,7 @@ class StatusInfo(BaseModel):
         0, title="当前阶段"
     )  # 0、无偏移     1、左下        2、右下
     hasBoom: bool = Field(False, title="是否有炸弹")
+    exit_flag: bool = Field(False, title="是否退出")
 
 
 info = StatusInfo()
