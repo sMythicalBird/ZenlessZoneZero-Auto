@@ -368,3 +368,28 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^交换$")
     control.click(pos.x, pos.y)
+
+
+# 零号银行
+@task.page(name="零号银行_存款", target_texts=["^存款$", "^零号银行$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^存款$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="零号银行_存压力", target_texts=["接受压力债务", "^零号银行$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^存款$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(
+    name="零号银行_存压力",
+    priority=10,
+    target_texts=["还可存款0次", "^零号银行$", "^离开$"],
+)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
+    control.press("esc")
