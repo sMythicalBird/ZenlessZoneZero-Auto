@@ -164,18 +164,21 @@ def action(positions: Dict[str, Position]):
 
 
 # 11、呼叫增援，接应和入队分别处理，对话交给地图处理
-# @task.page(name="呼叫增援_接应", target_texts=["呼叫增援", "^接应支援代理人$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^接应支援代理人$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-#
-#
-# @task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^2号位$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
+@task.page(name="呼叫增援_接应", target_texts=["呼叫增援", "^接应支援代理人$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^接应支援代理人$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^2号位$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="呼叫增援_对话", target_texts=["^呼叫增援"])
+def action():
+    control.press("space", duration=0.1)
 
 
 @task.page(name="呼叫增援_不增援", target_texts=["呼叫增援", "^接应支援代理人$"])
