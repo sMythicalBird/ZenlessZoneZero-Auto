@@ -124,9 +124,12 @@ def action(positions: Dict[str, Position]):
 @task.page(name="目标位置", target_texts=["关键进展", "^确认继续$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
-    info.currentStage = 1
     control.click(pos.x, pos.y)
     # 进入战斗
+    if config.wholeCourse:
+        info.currentStage = 5  # 向下拖拽
+    else:
+        info.currentStage = 1  # 右下
 
 
 # 8、资源回收小组

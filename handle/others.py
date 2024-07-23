@@ -41,12 +41,16 @@ def grid_map(screen: np.ndarray):
     # 全通和零号业绩拆开做
     # 零号业绩相关的判断
     # 旧都列车地图需要移动，其他地图不需要
-    if map_name == "旧都列车" and config.wholeCourse == False:
-        if info.currentStage == 1 and (k := find_current()):
-            control.move_at(k.x, k.y, 360, 500)
-        # 不在往上走了
-        # elif info.currentStage == 2 and (k := find_current()):
-        #     control.move_at(k.x, k.y, 900, 500)
+    if map_name == "旧都列车":
+        if config.wholeCourse == False:
+            if info.currentStage == 1 and (k := find_current()):
+                control.move_at(k.x, k.y, 360, 500)
+            # 不在往上走了
+            # elif info.currentStage == 2 and (k := find_current()):
+            #     control.move_at(k.x, k.y, 900, 500)
+        else:  # 向下拖拽
+            if info.currentStage == 5 and (k := find_current()):
+                control.move_at(k.x, k.y, 640, 500)
     # 获取地图信息
     map_info = get_map_info(screen)
     if not map_info:
@@ -65,6 +69,9 @@ def grid_map(screen: np.ndarray):
         control.press("r", duration=0.1)
         time.sleep(1)
         return
+    # 传送点，暂时离开，boss站,将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
+    if mc.weight == 5:
+        info.currentStage = 0
     # if map_name == "旧都列车" and config.wholeCourse == False:
     #     if mc.weight == 5:  # 拿完零号业绩到传送点
     #         info.currentStage = 0
