@@ -126,10 +126,12 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
     control.click(pos.x, pos.y)
     # 进入战斗
-    if config.wholeCourse:
+    if config.modeSelect == 1:
         info.currentStage = 5  # 向下拖拽
-    else:
-        info.currentStage = 1  # 右下
+    elif config.modeSelect == 2:
+        info.currentStage = 1  # 左下拖
+    elif config.modeSelect == 3:
+        info.currentStage = 2  # 右下拖
 
 
 # 8、资源回收小组
@@ -270,16 +272,6 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认$")
-    control.click(pos.x, pos.y)
-    info.currentStage = 2
-    if not config.wholeCourse:
-        time.sleep(1)
-        control.esc()
-
-
 @task.page(name="邦布商人_鸣徽交易", target_texts=["^鸣徽交易", "^同类持有"])
 def action():
     control.click(1210, 35)
@@ -396,3 +388,14 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
     time.sleep(2)
     control.press("esc")
+
+
+# 零号业绩
+@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确认$")
+    control.click(pos.x, pos.y)
+    info.currentStage = 2
+    if not config.wholeCourse:
+        time.sleep(1)
+        control.esc()

@@ -40,17 +40,15 @@ def grid_map(screen: np.ndarray):
     control.scroll(-5)
     # 全通和零号业绩拆开做
     # 零号业绩相关的判断
-    # 旧都列车地图需要移动，其他地图不需要
+    # 旧都列车地图需要移动，其他地图不需要拖动
     if map_name == "旧都列车":
-        if config.wholeCourse == False:
-            if info.currentStage == 1 and (k := find_current()):
-                control.move_at(k.x, k.y, 360, 500)
-            # 不在往上走了
-            # elif info.currentStage == 2 and (k := find_current()):
-            #     control.move_at(k.x, k.y, 900, 500)
-        else:  # 向下拖拽
-            if info.currentStage == 5 and (k := find_current()):
-                control.move_at(k.x, k.y, 640, 500)
+        if info.currentStage == 1 and (k := find_current()):  # 左下拖拿业绩
+            control.move_at(k.x, k.y, 360, 500)
+        # 不在往上走了
+        elif info.currentStage == 2 and (k := find_current()):  # 右下拖拿银行
+            control.move_at(k.x, k.y, 900, 500)
+        elif info.currentStage == 5 and (k := find_current()):  # 向下拖去传送点
+            control.move_at(k.x, k.y, 640, 500)
     # 获取地图信息
     map_info = get_map_info(screen)
     if not map_info:
@@ -64,21 +62,25 @@ def grid_map(screen: np.ndarray):
         return
     (mc, dirct) = mapWay[0]  # 去除下一个地图位置
     # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
-    if mc.weight == 4 and info.hasBoom:
+    if mc.weight == 2 and info.hasBoom:
         info.hasBoom = False
         control.press("r", duration=0.1)
         time.sleep(1)
         return
-    # 传送点，暂时离开，boss站,将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
+    # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
     if mc.weight == 5:
         info.currentStage = 0
-    # if map_name == "旧都列车" and config.wholeCourse == False:
-    #     if mc.weight == 5:  # 拿完零号业绩到传送点
-    #         info.currentStage = 0
     control.press(str(dirct), duration=0.1)
-    # info.lastDirct = dirct
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
+
+
+# 炸弹使用
+@task.page(name="炸弹", target_texts=["^交叉爆破$", "^使用$"])
+def select_map(positions: Dict[str, Position]):
+    pos = positions.get("^使用$")
+    control.click(pos.x, pos.y)
+    time.sleep(1)
 
 
 @task.page(name="选择角色", target_texts=["出战"])

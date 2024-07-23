@@ -9,9 +9,9 @@
 import numpy as np
 from onnxruntime import InferenceSession
 import cv2
-
+import yaml
 from schema import MapComponent, MapInfo
-from utils import screenshot, RootPath
+from utils import screenshot, RootPath, config
 from ..detect import Model, find_current
 from ..init import Provider
 
@@ -20,7 +20,7 @@ DownloadPath = RootPath / "download"  # 下载路径
 
 # components_model = InferenceSession(DownloadPath / "components.onnx")
 components_model = InferenceSession(
-    str(DownloadPath / "components_level.onnx"), providers=Provider
+    str(DownloadPath / "components_keyword.onnx"), providers=Provider
 )
 components_input_name = components_model.get_inputs()[0].name
 components_output_name = components_model.get_outputs()[0].name
@@ -31,6 +31,19 @@ television_model = InferenceSession(
 television_input_name = television_model.get_inputs()[0].name
 television_output_name = television_model.get_outputs()[0].name
 television = Model(television_model, iou_threshold=0.1)
+
+with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
+    components_label = yaml.safe_load(f)
+# 零号业绩模式，改变权重
+if config.modeSelect == 2:
+    for i in components_label:
+        if components_label[i]["name"] == "零号业绩":
+            components_label[i]["weight"] = 10
+# 零号银行，改变权重
+if config.modeSelect == 3:
+    for i in components_label:
+        if components_label[i]["name"] == "零号银行":
+            components_label[i]["weight"] = 10
 
 
 def preprocess_crop(crop):
@@ -63,16 +76,18 @@ def component_class(
         conf, index = infer_crop(crop)
         # 获取组件标签
         return MapComponent(
+            name=components_label[index]["name"],
             x=x,  # 组件坐标
             y=y,  # 组件坐标
             confidence=conf,  # 组件置信度
-            weight=index,  # 组件权重
+            weight=components_label[index]["weight"],  # 组件权重
         )
     return MapComponent(
+        name="double",  # 组件名称
         x=1,  # 组件坐标
         y=1,  # 组件坐标
         confidence=0,  # 组件置信度
-        weight=3,  # 组件权重
+        weight=1,  # 组件权重
     )
 
 
