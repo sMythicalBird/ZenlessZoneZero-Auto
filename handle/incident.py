@@ -51,7 +51,7 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     priority=1,
     target_texts=["背包", "^当前层数"],
     target_image="tv_spot.png",
-    exclude_texts=["零号银行"],
+    exclude_texts=["零号银行", "呼叫增援"],
 )
 def action():
     time.sleep(1)
@@ -176,7 +176,7 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="呼叫增援_对话", target_texts=["^呼叫增援"])
+@task.page(name="呼叫增援_对话", priority=4, target_texts=["^呼叫增援"])
 def action():
     control.press("space", duration=0.1)
 
