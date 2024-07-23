@@ -96,6 +96,14 @@ class Control:
         time.sleep(0.1)
         mouseUp()
 
+    @staticmethod
+    def frequent_attack(n):
+        for _ in range(n):
+            mouseDown()
+            time.sleep(0.1)
+            mouseUp()
+            time.sleep(0.1)
+
     # 向前跑ts
     @staticmethod
     def head(t):
@@ -104,6 +112,30 @@ class Control:
         time.sleep(t)
         keyUp("w")
         keyUp("shift")
+
+    # 冲刺攻击
+    @staticmethod
+    def dash_attack(t):
+        keyDown("w")
+        keyDown("shift")
+        time.sleep(t)
+        mouseDown()
+        time.sleep(0.2)
+        keyUp("w")
+        keyUp("shift")
+        mouseUp()
+
+    # 冲刺蓄力攻击
+    @staticmethod
+    def dash_charge_attack(t):
+        keyDown("w")
+        keyDown("shift")
+        time.sleep(t)
+        mouseDown()
+        time.sleep(1.3)
+        keyUp("w")
+        keyUp("shift")
+        mouseUp()
 
     @staticmethod
     def scroll(clicks: int):

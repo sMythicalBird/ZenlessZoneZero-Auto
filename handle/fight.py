@@ -13,7 +13,7 @@ from utils.task import task
 from re import template
 from pydirectinput import press
 from utils import config
-
+from handle.fight_logic import fight_logics
 
 def is_not_fight(text: str):
     text = template(text)
@@ -28,26 +28,7 @@ def is_not_fight(text: str):
 
 # 定义战斗逻辑，两次3a1e接q
 def fight_login():
-    for i in range(5):
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        press("e", duration=0.1)
-        time.sleep(0.3)
-        press("space", duration=0.1)
-        time.sleep(0.2)
-        press("shift", duration=0.1)
-    press("q", duration=0.1)
-    time.sleep(0.2)
+    fight_logics[config.fightStyle]()
 
 
 # 战斗逻辑

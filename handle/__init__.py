@@ -15,5 +15,6 @@ from .fight import *
 from .others import *
 from .option import *
 from .favor_ability import *
+from .fight_logic import *
 
 __all__ = []
