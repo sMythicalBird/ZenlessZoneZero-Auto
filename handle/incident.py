@@ -181,10 +181,10 @@ def action():
     control.press("space", duration=0.1)
 
 
-@task.page(name="呼叫增援_不增援", target_texts=["呼叫增援", "^接应支援代理人$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^接应支援代理人$")
-    control.click(pos.x, pos.y + 70)
+# @task.page(name="呼叫增援_不增援", target_texts=["呼叫增援", "^接应支援代理人$"])
+# def action(positions: Dict[str, Position]):
+#     pos = positions.get("^接应支援代理人$")
+#     control.click(pos.x, pos.y + 70)
 
 
 @task.page(name="催化", target_texts=["同类持有", "^催化$"])
