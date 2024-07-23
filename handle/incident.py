@@ -51,6 +51,7 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     priority=1,
     target_texts=["背包", "^当前层数"],
     target_image="tv_spot.png",
+    exclude_texts=["零号银行"],
 )
 def action():
     time.sleep(1)
@@ -108,11 +109,11 @@ def action():
         control.click(pos[0], pos[1])
 
 
-# 离开类，所有需要离开的情况
-@task.page(name="离开操作", target_texts=["^离开$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^离开$")
-    control.click(pos.x, pos.y)
+# # 离开类，所有需要离开的情况
+# @task.page(name="离开操作", target_texts=["^离开$"])
+# def action(positions: Dict[str, Position]):
+#     pos = positions.get("^离开$")
+#     control.click(pos.x, pos.y)
 
 
 @task.page(name="丢弃操作", target_texts=["^丢弃$"])
@@ -374,12 +375,17 @@ def action(positions: Dict[str, Position]):
 
 @task.page(name="零号银行_存压力", target_texts=["接受压力债务", "^零号银行$"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("^存款$")
+    pos = positions.get("接受压力债务")
     control.click(pos.x, pos.y)
 
 
+@task.page(name="零号银行_对话", target_texts=["^零号银行$"])
+def action():
+    control.press("space", duration=0.1)
+
+
 @task.page(
-    name="零号银行_存压力",
+    name="零号银行_离开",
     priority=10,
     target_texts=["还可存款0次", "^零号银行$", "^离开$"],
 )
