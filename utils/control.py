@@ -90,12 +90,6 @@ class Control:
     def esc():
         press("esc", duration=0.1)
 
-    @staticmethod
-    def attack():
-        mouseDown()
-        time.sleep(0.1)
-        mouseUp()
-
     # 向前跑ts
     @staticmethod
     def head(t):

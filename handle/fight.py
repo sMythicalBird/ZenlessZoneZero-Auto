@@ -11,8 +11,9 @@ from schema import Position, info
 from utils import control, screenshot, logger
 from utils.task import task
 from re import template
-from pydirectinput import press
+from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp
 from utils import config
+from schema.config import Tactic
 
 
 def is_not_fight(text: str):
@@ -26,28 +27,42 @@ def is_not_fight(text: str):
     return True
 
 
+def mousePress(key: str, duration: float):
+    mouseDown(button=key)
+    time.sleep(duration)
+    mouseUp(button=key)
+
+
+keyboard_map = {"down": keyDown, "up": keyUp}
+mouse_map = {"down": mouseDown, "up": mouseUp}
+
+
+def execute_tactic(tactic: Tactic):
+    logger.debug(f"执行战斗策略: {tactic}")
+    # 如果没有设置key，只设置了delay，则延迟delay时间
+    if tactic.key is None:
+        return
+    # key 为鼠标操作
+    if tactic.key in ["left", "right", "middle"]:
+        if tactic.type_ == "press":
+            mousePress(tactic.key, tactic.duration)
+        else:
+            mouse_map[tactic.type_](button=tactic.key)
+        return
+    # key 为键盘操作
+    if tactic.type_ == "press":
+        press(tactic.key, duration=tactic.duration)
+    else:
+        keyboard_map[tactic.type_](tactic.key)
+
+
 # 定义战斗逻辑，两次3a1e接q
 def fight_login():
-    for i in range(5):
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        press("e", duration=0.1)
-        time.sleep(0.3)
-        press("space", duration=0.1)
-        time.sleep(0.2)
-        press("shift", duration=0.1)
-    press("q", duration=0.1)
-    time.sleep(0.2)
+    for tactic in config.fightTactics:
+        for _ in range(tactic.repeat):
+            execute_tactic(tactic)
+            if tactic.delay:
+                time.sleep(tactic.delay)
 
 
 # 战斗逻辑

@@ -6,7 +6,7 @@
 @author SuperLazyDog
 """
 from yaml import safe_load, safe_dump
-from schema.config import Config
+from schema.config import Config, Tactic
 from .init import RootPath, logger
 
 
@@ -21,5 +21,12 @@ if not config_path.exists():
     # exit(1)
     logger.info(f"已生成默认配置文件 config.yaml")
 with open(config_path, "r", encoding="utf-8") as f:
-    config = safe_load(f)
-config = Config(**config)
+    config: dict = safe_load(f)
+fightTactics = config.pop("fightTactics")
+fightTactics = [Tactic(**item) for item in fightTactics]
+config: Config = Config(**config)
+config.fightTactics = fightTactics
+if not config.fightTactics:
+    logger.error(f"战斗策略为空，请检查配置文件")
+    exit(1)
+logger.info(f"配置文件加载成功")
