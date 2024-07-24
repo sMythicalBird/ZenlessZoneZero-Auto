@@ -33,7 +33,7 @@ def grid_map(screen: np.ndarray):
         control.press("space")
         return
     # 检查离开标志
-    if info.exit_flag:
+    if info.exitFlag:
         control.esc()
         return
     # 超过地图最大时间
@@ -66,13 +66,13 @@ def grid_map(screen: np.ndarray):
         return
     (mc, dirct) = mapWay[0]  # 去除下一个地图位置
     # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
-    if mc.weight == 2 and info.hasBoom:
+    if mc.name == "怪物" and info.hasBoom:
         info.hasBoom = False
         control.press("r", duration=0.1)
         time.sleep(1)
         return
     # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
-    if mc.weight == 5:
+    if mc.name == "终点":
         info.currentStage = 0
     control.press(str(dirct), duration=0.1)
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
@@ -95,7 +95,7 @@ def action(positions: Dict[str, Position]):
     info.fightCount += 1  # 战斗次数记录
     info.currentStage = 0  # 进入战斗，无偏移
     info.hasBoom = config.hasBoom  # 是否有炸弹
-    info.exit_flag = False  # 离开标志
+    info.exitFlag = False  # 离开标志
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 

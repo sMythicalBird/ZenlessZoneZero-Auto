@@ -206,6 +206,7 @@ class _Task(BaseModel):
     _conditionalActions: list[ConditionalAction] = []  # title="条件操作函数列表"
     _running: bool = False  # title="是否运行中"
     _pause: bool = False  # title="是否暂停"
+    lastPageName: str = ""  # title="上次页面名称"
 
     def page(
         self,
@@ -343,6 +344,7 @@ class _Task(BaseModel):
                 page.action(**params)  # 执行页面操作函数
                 if page.sleep:
                     time.sleep(page.sleep)
+                self.lastPageName = page.name  # 设置上次页面名称
                 break  # 匹配成功后跳出循环
 
         # 遍历事件操作

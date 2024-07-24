@@ -54,7 +54,9 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     exclude_texts=["零号银行", "呼叫增援"],
 )
 def action():
-    time.sleep(1)
+    # 如果上一个页面不是通用点击事件，那么等待一秒
+    if not task.lastPageName == "通用点击事件":
+        time.sleep(1)
     screen = screenshot()  # 截图
     if any(
         find_template(screen, option_image_match)
@@ -70,9 +72,9 @@ def action():
         for result in results
     ):
         return
-    for y in range(640, 319, -40):
-        control.click(1050, y)
-        time.sleep(0.1)
+    # 点击坐标，点击位置根据点击次数变化
+    control.click(1050, 320 + (info.clickCount % 9) * 40)
+    info.clickCount = (info.clickCount + 1) % 9
 
 
 # 遇到确定就点击
@@ -395,7 +397,7 @@ def action():
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    info.exit_flag = True  # 存完钱准备离开
+    info.exitFlag = True  # 存完钱准备离开
 
 
 # 零号业绩
@@ -403,4 +405,4 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
-    info.exit_flag = True  # 拿完业绩准备离开
+    info.exitFlag = True  # 拿完业绩准备离开
