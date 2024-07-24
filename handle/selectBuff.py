@@ -14,24 +14,6 @@ from utils.task import task
 from re import template
 
 
-def get_pos(text: str):
-    text = template(text)
-    img = screenshot()  # 截图
-    ocr_Results = task.ocr(img)  # OCR识别
-    # print(ocr_Results)
-    positions = []
-    for ocr_result in ocr_Results:
-        if text.search(ocr_result.text):
-            # print(ocr_result)
-            positions.append(
-                [
-                    (ocr_result.position[0] + ocr_result.position[2]) / 2,
-                    (ocr_result.position[1] + ocr_result.position[3]) / 2,
-                ]
-            )
-    return positions
-
-
 buff_class = ["冻结", "暴击", "决斗" "闪避"]
 
 
