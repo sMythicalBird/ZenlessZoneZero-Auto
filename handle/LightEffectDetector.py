@@ -1,16 +1,17 @@
 import cv2
 import numpy as np
-
 import matplotlib.pyplot as plt  # 调试用，非必须
 import os
 from pathlib import Path
+from utils import screenshot
 
 
 class lightEffectDetector:
     def __init__(self, img):
         # 初始化图像、颜色范围、形态学操作的卷积核
         self.img = img
-        self._preprocess_img()
+        if isinstance(self.img, str):
+            self._preprocess_img()
         self.img_hsv = cv2.cvtColor(self.img, cv2.COLOR_RGB2HSV)
 
         # 传入自定义的光效颜色范围参数：黄色
@@ -172,15 +173,15 @@ def detector_test(img_path):
     plt.show()
 
     # 打印结果
-    print(os.path.split(img_path)[-1])
+    # print(os.path.split(img_path)[-1])
     print(results)
 
 
-root_path = Path(__file__).parent.parent
-img_path = root_path / "screenshot\\fight_sight"
-for img in os.listdir(img_path):
-    print(os.path.join(img_path, img))
-    detector_test(os.path.join(img_path, img))
+# root_path = Path(__file__).parent.parent
+# img_path = root_path / "screenshot\\fight_sight"
+# for img in os.listdir(img_path):
+#     print(os.path.join(img_path, img))
+#     detector_test(os.path.join(img_path, img))
 
-# for img in os.listdir("fight"):
-#     detector_test(os.path.join("fight", img))
+img = screenshot()
+detector_test(img)
