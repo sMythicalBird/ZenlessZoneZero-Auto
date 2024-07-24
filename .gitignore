@@ -17,5 +17,6 @@ yolo
 **/__pycache__
 **/py310
 config.yaml
+tactics.yaml
 script
 screenshot
