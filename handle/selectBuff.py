@@ -22,7 +22,7 @@ buff_class = ["冻结", "暴击", "决斗" "闪避"]
 def action():
     img = screenshot()  # 截图
     ocr_Results = task.ocr(img)  # OCR识别
-    print(ocr_Results)
+    # print(ocr_Results)
     sel_text = template("^选择$")
     sel_list = []
     for ocr_result in ocr_Results:
@@ -41,15 +41,9 @@ def action():
                 right = ocr_result.position[2] + 30
                 # 识别到buff种类，选择
                 for pos in sel_list:
-                    if pos[0] > left and pos[0] < right:  # 点击返回
+                    if left < pos[0] < right:  # 点击返回
                         control.click(pos[0], pos[1])
                         return
     for pos in sel_list:  # 防止遇到不可触碰事件
         control.click(pos[0], pos[1])
         time.sleep(0.1)
-
-
-@task.page(name="丢弃操作", target_texts=["^丢弃$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^丢弃$")
-    control.click(pos.x, pos.y)

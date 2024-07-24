@@ -90,6 +90,12 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+@task.page(name="丢弃操作", target_texts=["^丢弃$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^丢弃$")
+    control.click(pos.x, pos.y)
+
+
 # 清除侵蚀效果
 @task.page(name="清楚侵蚀效果", target_texts=["^清除$"])
 def action(positions: Dict[str, Position]):
