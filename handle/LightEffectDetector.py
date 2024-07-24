@@ -5,6 +5,9 @@ import os
 from pathlib import Path
 from utils import screenshot
 
+from pynput.keyboard import Key, Listener
+from threading import Thread
+
 
 class lightEffectDetector:
     def __init__(self, img):
@@ -183,5 +186,25 @@ def detector_test(img_path):
 #     print(os.path.join(img_path, img))
 #     detector_test(os.path.join(img_path, img))
 
-img = screenshot()
-detector_test(img)
+# 测试
+# img = screenshot()
+# detector_test(img)
+
+
+def test():
+    img = screenshot()
+    detector_test(img)
+
+
+def on_press(key):
+    match key:
+        case Key.f11:  # 检测一次
+            Thread(target=test).start()
+        case Key.f12:  # 结束运行
+            return False
+    return None
+
+
+if __name__ == "__main__":
+    with Listener(on_press=on_press) as listener:
+        listener.join()
