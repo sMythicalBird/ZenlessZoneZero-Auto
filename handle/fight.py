@@ -38,7 +38,7 @@ mouse_map = {"down": mouseDown, "up": mouseUp}
 
 
 def execute_tactic(tactic: Tactic):
-    logger.debug(f"执行战斗策略: {tactic}")
+    # logger.debug(f"执行战斗策略: {tactic}")
     # 如果没有设置key，只设置了delay，则延迟delay时间
     if tactic.key is None:
         return
