@@ -23,6 +23,7 @@ from pydirectinput import (
 
 from .init import OffsetX, OffsetY
 
+# 禁用鼠标安全模式
 FAILSAFE = False
 
 

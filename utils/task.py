@@ -167,6 +167,9 @@ class Page(BaseModel):
 
     @staticmethod
     def str2_text_match(text: str | Pattern | TextMatch) -> TextMatch:
+        """
+        检查文本目标类型是否为字符串或正则表达式，如果是则转换为 TextMatch
+        """
         if isinstance(text, str) or isinstance(text, Pattern):
             name = text if isinstance(text, str) else text.pattern
             return TextMatch(name=name, text=text)
@@ -174,6 +177,9 @@ class Page(BaseModel):
 
     @staticmethod
     def str2_image_match(image: str | Path | np.ndarray | ImageMatch) -> ImageMatch:
+        """
+        检查图片目标类型是否为字符串或图片，如果是则转换为 ImageMatch
+        """
         if not isinstance(image, ImageMatch):
             return ImageMatch(image=image)
         return image
@@ -266,22 +272,6 @@ class _Task(BaseModel):
             :param action: 页面操作函数
             :return:
             """
-            # err = ValueError(
-            #     "页面操作函数参数数量应当为0或1,参数名称positions，为且类型必须为 Dict[str, Position]"
-            # )
-            # if not callable(action):
-            #     raise ValueError("页面操作函数必须为可调用对象")
-            # sig = inspect.signature(action)
-            # if len(sig.parameters) > 1:
-            #     raise err
-            # # 检查参数类型是否为 Dict[str, Position]
-            # if len(sig.parameters) == 1:
-            #     positions_annotation = list(sig.parameters.values())[0].annotation
-            #     if (
-            #         positions_annotation.__origin__ != dict
-            #         or positions_annotation.__args__ != (str, Position)
-            #     ):
-            #         raise ValueError("页面操作函数参数类型必须为 Dict[str, Position]")
             logger.debug(f"添加页面：{name}")
             self._pages.append(
                 Page(

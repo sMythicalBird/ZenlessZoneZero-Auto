@@ -123,6 +123,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         if each["w"] < m_w:
             outputs_real.append(each)
         else:
+            # 如果宽度大于2倍宽度，拆分为4个小格子
             # 计算中心点和小格子相对偏移量
             center_x = each["x"]
             center_y = each["y"] - h / 2
@@ -157,6 +158,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                 }
             )
     x_groups = []
+    # 按 x 坐标排序
     x_outputs = sorted(outputs_real, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
     while x_outputs:
