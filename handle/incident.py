@@ -97,33 +97,6 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
-@task.page(name="选择_鸣徽或邦布", priority=4, target_texts=["同类持有", "^选择$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^选择$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="选择_不可触碰", target_texts=["同类持有", "^选择$", "不可触碰"])
-def action():
-    positions = get_pos("^选择$")
-    for pos in positions:
-        control.click(pos[0], pos[1])
-
-
-# # 离开类，所有需要离开的情况
-# @task.page(name="离开操作", target_texts=["^离开$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^离开$")
-#     control.click(pos.x, pos.y)
-
-
-@task.page(name="丢弃操作", target_texts=["^丢弃$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^丢弃$")
-    control.click(pos.x, pos.y)
-
-
 @task.page(name="目标位置", target_texts=["关键进展", "^确认继续$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
@@ -181,12 +154,6 @@ def action(positions: Dict[str, Position]):
 @task.page(name="呼叫增援_对话", priority=4, target_texts=["^呼叫增援"])
 def action():
     control.press("space", duration=0.1)
-
-
-# @task.page(name="呼叫增援_不增援", target_texts=["呼叫增援", "^接应支援代理人$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^接应支援代理人$")
-#     control.click(pos.x, pos.y + 70)
 
 
 @task.page(name="催化", target_texts=["同类持有", "^催化$"])
