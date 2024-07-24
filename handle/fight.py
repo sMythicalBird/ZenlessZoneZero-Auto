@@ -12,7 +12,7 @@ from utils import control, screenshot, logger
 from utils.task import task
 from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp
-from utils import config
+from utils import config, fightTactics
 from schema.config import Tactic
 
 
@@ -58,7 +58,7 @@ def execute_tactic(tactic: Tactic):
 
 # 定义战斗逻辑，两次3a1e接q
 def fight_login():
-    for tactic in config.fightTactics:
+    for tactic in fightTactics:
         for _ in range(tactic.repeat):
             execute_tactic(tactic)
             if tactic.delay:

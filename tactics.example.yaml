@@ -1,0 +1,40 @@
+# 鼠标左键攻击5次，每次按住0.2s，间隔0.1s
+-   key: "left"          # 按键 left为鼠标左键，right为鼠标右键，middle为鼠标中键
+    type: "press"        # 按住 press为按住， down为按下， up为松开
+    duration: 0.1        # 按住时间  duration为按住时间，press时有效
+    delay: 0.2          # 本次操作执行完毕后延迟时间 默认为0.1
+    repeat: 5           # 本次操作重复次数
+# 键盘按键e按住0.5s，如果未设置 delay 默认为0.1，如果未设置 clicks 默认为1
+-   key: "e"         # 按键
+    type: "press"   # 按住
+    duration: 0.5   # 按住时间
+# 等待0.5s
+-   delay: 0.5    # 等待时间
+# 按键盘按键space
+-   key: "space"      # 按键
+    type: "press"      # 点击
+
+# 冲刺蓄力攻击
+-   key: "w"
+    type: "down"
+    delay: 0          # 执行完毕后不进行延迟
+
+# 按键盘按键shift
+-   key: "shift"      # 按键
+    type: "press"      # 按下
+
+-   key: "shift"      # 按键
+    type: "down"      # 按下
+# 等待0.5s
+-   delay: 0.5        # 等待时间
+# 鼠标左键按下
+-   key: "left"      # 按键
+    type: "down"      # 按下
+    duration: 1.3    # 按住时间
+# 松开w
+-   key: "w"
+    type: "up"
+    delay: 0
+# 松开shift
+-   key: "shift"
+    type: "up"

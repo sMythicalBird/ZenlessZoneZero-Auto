@@ -13,7 +13,7 @@ from .init import (
     RealHeight,
     Hwnd,
 )
-from .config import config
+from .config import config, fightTactics
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way

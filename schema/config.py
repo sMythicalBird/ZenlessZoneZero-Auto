@@ -76,4 +76,3 @@ class Config(BaseModel):
     maxMapTime: int = Field(15 * 60, description="在地图内最大时间（单位秒）")
     hasBoom: bool = Field(False, description="是否有炸弹")
     useGpu: bool = Field(True, description="是否使用GPU")
-    fightTactics: List[Tactic] = Field([], description="战斗策略")
