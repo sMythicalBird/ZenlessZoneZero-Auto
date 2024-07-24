@@ -18,3 +18,4 @@ maxFightTime: 150           # 最大战斗时间，单场战斗时间默认为15
 maxMapTime: 900             # 在地图内最大时间默认为900s，超过最大时间未通关地图会重开
 hasBoom: False              # 是否解锁炸弹
 useGpu: True                # 是否使用GPU，默认True, 使用GPU会加速模型训练,如果改为False，会强制使用CPU进行OCR识别
+selBuff: ["冻结", "暴击", "决斗", "闪避"]       # 鸣辉选择

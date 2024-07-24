@@ -9,12 +9,12 @@ from typing import Dict
 
 
 from schema import Position
-from utils import control, screenshot
+from utils import control, screenshot, config
 from utils.task import task
 from re import template
 
 
-buff_class = ["冻结", "暴击", "决斗" "闪避"]
+selBuff = config.selBuff
 
 
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
@@ -33,7 +33,7 @@ def action():
                     (ocr_result.position[1] + ocr_result.position[3]) / 2,
                 ]
             )
-    for each in buff_class:
+    for each in selBuff:
         text = template(each)  # 需要的buff种类
         for ocr_result in ocr_Results:
             if text.search(ocr_result.text):  # 识别到buff种类
