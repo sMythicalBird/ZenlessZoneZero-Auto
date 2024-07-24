@@ -1,16 +1,38 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt # 调试用，非必须
+
+import matplotlib.pyplot as plt  # 调试用，非必须
 import os
 
 
-class LightEffectDetector:
-    def __init__(self, img, color_ranges):
+class lightEffectDetector:
+    def __init__(self, img):
         # 初始化图像、颜色范围、形态学操作的卷积核
         self.img = img
         self._preprocess_img()
-        self.img_hsv = cv2.cvtColor(self.img_np, cv2.COLOR_RGB2HSV)
-        self.color_ranges = color_ranges
+        self.img_hsv = cv2.cvtColor(self.img, cv2.COLOR_RGB2HSV)
+
+        # 传入自定义的光效颜色范围参数：黄色
+        lower_hsv_yellow = np.array([15, 80, 160])
+        upper_hsv_yellow = np.array([35, 255, 255])
+        # 传入自定义的光效颜色范围参数：红色
+        lower_hsv_red_1 = np.array([170, 70, 255])  # 红色HSV范围对应0-180度，需分段处理
+        upper_hsv_red_1 = np.array([180, 200, 255])
+        lower_hsv_red_2 = np.array([0, 70, 255])
+        upper_hsv_red_2 = np.array([10, 200, 255])
+
+        self.color_ranges = {
+            'yellow':
+                {
+                    'yellow_1': (lower_hsv_yellow, upper_hsv_yellow),
+                },
+            'red':
+                {
+                    'red_1': (lower_hsv_red_1, upper_hsv_red_1),
+                    'red_2': (lower_hsv_red_2, upper_hsv_red_2),
+                }
+        }
+
         self.kernel = np.ones((5, 5), np.uint8)  # 形态学操作使用的卷积核
         self.kernel_size = 1
         self.kernel_V = cv2.getStructuringElement(
@@ -21,18 +43,19 @@ class LightEffectDetector:
 
     def _preprocess_img(self):
         # 预处理图像，裁剪左上角能量显示、右下角技能显示、右上角BOSS血条部分，避免识别黄色光效时干扰
-        img = self.img_np = cv2.cvtColor(
-            cv2.imread(self.img), cv2.COLOR_BGR2RGB)
+        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+        
         x1, y1, w, h = 60, 120, 220, 40  # 左上角能量显示
         x2, y2 = x1 + w, y1 + h
         img[y1:y2, x1:x2, :] = 0
+
         x1_1, y1_1, w_1, h_1 = 1160, 520, 50, 160  # 右下角技能显示
         x2_1, y2_1 = x1_1 + w_1, y1_1 + h_1
         img[y1_1:y2_1, x1_1:x2_1, :] = 0
+
         x2_1, y2_1, w_2, h_2 = 460, 2, 380, 32  # 右上角BOSS血条部分
         x2_1, y2_1 = x2_1 + w_2, y2_1 + h_2
         img[y2_1:y2_1+h_2, x2_1:x2_1+w_2, :] = 0
-        self.img_np = img
 
     def _process_contours(self, img_hsv, color_ranges):
         # 根据颜色范围创建掩码，进行形态学操作，并找到轮廓
@@ -101,15 +124,15 @@ class LightEffectDetector:
 
     def debug_show_contours(self):
         # 调试用，显示图像中的轮廓和外扩矩形及数据
-        img_np_debug = self.img_np.copy()
+        img_debug = self.img.copy()
         for color_name, subranges in self.color_ranges.items():
             contours = self._process_contours(self.img_hsv, subranges)
             for contour in contours:
                 x, y, w, h = cv2.boundingRect(contour)
                 aspect_ratio = max((w / h), (h / w))
                 if max(w, h) > 50 and aspect_ratio > 5:
-                    cv2.drawContours(img_np_debug, contour, -1, (0, 0, 255), 1)
-                    cv2.rectangle(img_np_debug, (x, y),
+                    cv2.drawContours(img_debug, contour, -1, (0, 0, 255), 1)
+                    cv2.rectangle(img_debug, (x, y),
                                   (x + w, y + h), (0, 255, 255), 1)
                     format_str = (
                         f"rect:{w}*{h}@({x},{y})"
@@ -125,38 +148,19 @@ class LightEffectDetector:
                         x,
                         (y + h + 15) if (y + h + 15) < (720 - 15) else 720 - 15
                     )
-                    cv2.putText(img_np_debug, format_str, text_pos,
+                    cv2.putText(img_debug, format_str, text_pos,
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
-        return img_np_debug
+        return img_debug
 
 
-# 传入自定义的光效颜色范围参数：黄色
-lower_hsv_yellow = np.array([15, 80, 160])
-upper_hsv_yellow = np.array([35, 255, 255])
-# 传入自定义的光效颜色范围参数：红色
-lower_hsv_red_1 = np.array([170, 70, 255])  # 红色HSV范围对应0-180度，需分段处理
-upper_hsv_red_1 = np.array([180, 200, 255])
-lower_hsv_red_2 = np.array([0, 70, 255])
-upper_hsv_red_2 = np.array([10, 200, 255])
 
-color_ranges = {
-    'yellow':
-        {
-            'yellow_1': (lower_hsv_yellow, upper_hsv_yellow),
-        },
-    'red':
-        {
-            'red_1': (lower_hsv_red_1, upper_hsv_red_1),
-            'red_2': (lower_hsv_red_2, upper_hsv_red_2),
-        }
-}
 
 # 测试用例
 
 
 def detector_test(img_path):
     # 创建光效检测器实例
-    detector = LightEffectDetector(img_path, color_ranges)
+    detector = lightEffectDetector(img_path)
 
     results = detector.detect_light_effects(rect=True, peri=False)
 
