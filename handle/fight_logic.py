@@ -31,16 +31,27 @@ def default_fight_logic():
     press("q", duration=0.1)
     time.sleep(0.2)
 
+def dodge_style_fight_logic():
+    for _ in range(2):
+        control.dash("d")
+        time.sleep(0.1)
+        control.attack()
+        time.sleep(0.1)
+
+    press("e", duration=0.1)
+    control.switch()
+    press("q", duration=0.1)
+    time.sleep(0.1)
+
 def ellen_0_fight_logic():
     logger.debug("-------- 进入艾莲0战斗逻辑 --------")
     for _ in range(5):
-        control.dash_charge_attack(0.5)
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.frequent_attack(5)
+        control.dash_attack(0.6)
+        for _ in range(3):
+            control.dash("d")
+            time.sleep(0.1)
+            control.attack()
+            time.sleep(0.1)
 
     for _ in range(2):
         press("e", duration=0.1)
@@ -49,16 +60,16 @@ def ellen_0_fight_logic():
 
     press("q", duration=0.1)
     time.sleep(0.2)
+
 def ellen_2_fight_logic():
     logger.debug("-------- 进入艾莲2战斗逻辑 --------")
     for _ in range(5):
-        control.dash_attack(0.3)
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.attack()
-        time.sleep(0.2)
-        control.frequent_attack(5)
+        control.dash_attack(0.6)
+        for _ in range(3):
+            control.dash("d")
+            time.sleep(0.1)
+            control.attack()
+            time.sleep(0.1)
 
     for _ in range(2):
         press("e", duration=0.1)
@@ -70,6 +81,7 @@ def ellen_2_fight_logic():
 
 fight_logics = {
     "default": default_fight_logic,
+    "dodge": dodge_style_fight_logic,
     "ellen": ellen_0_fight_logic,
     "ellen_2": ellen_2_fight_logic
 }

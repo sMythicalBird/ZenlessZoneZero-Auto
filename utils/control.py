@@ -113,6 +113,22 @@ class Control:
         keyUp("w")
         keyUp("shift")
 
+    # 闪避
+    @staticmethod
+    def dodge():
+        keyDown("shift")
+        time.sleep(0.1)
+        keyUp("shift")
+
+    # 冲刺
+    @staticmethod
+    def dash(direction):
+        keyDown(direction)
+        keyDown("shift")
+        time.sleep(0.1)
+        keyUp(direction)
+        keyUp("shift")
+
     # 冲刺攻击
     @staticmethod
     def dash_attack(t):
@@ -136,6 +152,13 @@ class Control:
         keyUp("w")
         keyUp("shift")
         mouseUp()
+
+    # 换人
+    @staticmethod
+    def switch():
+        keyDown("space")
+        time.sleep(0.1)
+        keyUp("space")
 
     @staticmethod
     def scroll(clicks: int):
