@@ -10,7 +10,7 @@ from copy import deepcopy
 from ctypes import windll
 from re import Pattern, template
 from typing import Dict
-
+from threading import Lock
 import cv2
 import numpy as np
 import win32gui
@@ -128,6 +128,9 @@ def find_template(
     return positions[0]
 
 
+screenshot_lock = Lock()
+
+
 def screenshot() -> np.ndarray | None:
     """
     截取当前窗口的屏幕图像。
@@ -139,6 +142,7 @@ def screenshot() -> np.ndarray | None:
         - np.ndarray: 截图的numpy数组，格式为RGB（不包含alpha通道）。
         - None: 如果截取屏幕失败，则返回None。
     """
+    screenshot_lock.acquire()
     hwndDC = win32gui.GetWindowDC(Hwnd)  # 获取窗口设备上下文（DC）
     mfcDC = win32ui.CreateDCFromHandle(hwndDC)  # 创建MFC DC从hwndDC
     saveDC = mfcDC.CreateCompatibleDC()  # 创建与mfcDC兼容的DC
@@ -161,6 +165,7 @@ def screenshot() -> np.ndarray | None:
             del hwndDC, mfcDC, saveDC, saveBitMap
         except Exception as e:
             logger.error(f"清理截图资源失败: {e}")
+        screenshot_lock.release()
         return screenshot()  # 如果截取失败，则重试
 
     # 从位图中获取图像数据
@@ -179,6 +184,7 @@ def screenshot() -> np.ndarray | None:
         win32gui.ReleaseDC(Hwnd, hwndDC)
     except Exception as e:
         logger.error(f"清理截图资源失败: {e}")
+    screenshot_lock.release()
     return im  # 返回截取到的图像
 
 

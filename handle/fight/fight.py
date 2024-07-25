@@ -12,14 +12,13 @@ from utils import control, screenshot, logger
 from utils.task import task
 from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from utils import config, fightTactics
+from utils import config, fightTactics, RootPath
 from schema.config import Tactic
 from .light_detector import detector
 from threading import Thread
-from pathlib import Path
 import cv2
 
-image_path = Path(__file__).parent.parent.parent / "download/yuan.png"
+image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
 
 
@@ -79,7 +78,6 @@ def detector_task():
         img = screenshot()
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
-        print(results)
         if results["yellow"]["rect"]:
             control.press("space", duration=0.1)
         elif results["red"]["rect"]:
@@ -117,29 +115,25 @@ def fight_login():
     进入战斗
     """
     mouse_press("middle", 0.1)
-    # ef_login()
-    # for tactic in fightTactics:
-    #     for _ in range(tactic.repeat):
-    #         execute_tactic(tactic)
-    #         if tactic.delay:
-    #             time.sleep(tactic.delay)
+    for tactic in fightTactics:
+        for _ in range(tactic.repeat):
+            execute_tactic(tactic)
+            if tactic.delay:
+                time.sleep(tactic.delay)
 
 
 # 地图中自动寻路
 def turn():
     while True:
-        flag = 0
+        flag = True
         for i in range(10):
-            # screen = np.array(ImageGrab.grab())
             screen = screenshot()
-            screen_gray = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-
+            screen_gray = cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY)
             result = cv2.matchTemplate(screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(
-                result
-            )  # max_val为识别图像左上角坐标
+            # max_val为识别图像左上角坐标
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
             if max_val > 0.85:
-                flag = 1
+                flag = False
                 x, _ = max_loc
                 _, y = max_loc
                 x += image_to_quan.shape[1] / 2
@@ -159,7 +153,7 @@ def turn():
                     press("w", duration=2)
                     break
             time.sleep(0.03)
-        if flag == 0:
+        if flag:
             break
 
 
@@ -186,7 +180,9 @@ def action():
                 detectorFlag = False
                 break
         # 执行战斗逻辑
-        fight_login()
+        turn()
+        for i in range(3):
+            fight_login()
 
 
 # 打不过溜了

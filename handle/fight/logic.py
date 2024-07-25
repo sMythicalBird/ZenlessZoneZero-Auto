@@ -1,7 +1,5 @@
 import time
 import pydirectinput
-from PIL import ImageGrab, Image
-import numpy as np
 import cv2
 from pathlib import Path
 from utils import screenshot
@@ -57,9 +55,8 @@ def turn():
                 y += image_to_quan.shape[0] / 2
                 print(x, y)
                 x = int(x)
-
                 if y > 400:
-                    pydirectinput.moveRel(xOffset=1100, yOffset=0, relative=True)
+                    pydirectinput.move(xOffset=1100, yOffset=0, relative=True)
                 time.sleep(0.2)
                 x = x - 648
                 if abs(x) < 250:
@@ -67,7 +64,7 @@ def turn():
                         x = int(x ** (1 / 1.28))
                     else:
                         x = -int(abs(x) ** (1 / 1.28))
-                pydirectinput.moveRel(xOffset=x, yOffset=0, relative=True)
+                pydirectinput.move(xOffset=x, yOffset=0, relative=True)
                 if abs(x) <= 2:
                     keyboard_press("w", 2, 0)
                     break

@@ -6,14 +6,12 @@
 @author SuperLazyDog
 """
 import sys
-import time
 from pathlib import Path
 
 import requests
 from tqdm import tqdm
 from hashlib import md5
 from .init import logger, RootPath
-from .utils import retry
 
 
 def download_with_progressbar(url: str, save_path: Path):
