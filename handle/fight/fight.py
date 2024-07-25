@@ -31,7 +31,7 @@ def is_not_fight(text: str):
     return True
 
 
-def mousePress(key: str, duration: float):
+def mouse_press(key: str, duration: float):
     """
     鼠标点击
     """
@@ -53,7 +53,7 @@ def execute_tactic(tactic: Tactic):
     # key 为鼠标操作
     if tactic.key in ["left", "right", "middle"]:
         if tactic.type_ == "press":
-            mousePress(tactic.key, tactic.duration)
+            mouse_press(tactic.key, tactic.duration)
         else:
             mouse_map[tactic.type_](button=tactic.key)
         return
@@ -76,8 +76,8 @@ def detector_task():
         results = detector.detect_light_effects(img)
         if results["yellow"]["rect"]:
             control.press("space")
-        elif results["red"]["rect"]:
-            control.press("shift")
+        # elif results["red"]["rect"]:
+        #     control.press("shift")
         time.sleep(0.1)
 
 
@@ -86,6 +86,7 @@ def fight_login():
     """
     进入战斗
     """
+    mouse_press("middle", 0.1)
     for tactic in fightTactics:
         for _ in range(tactic.repeat):
             execute_tactic(tactic)
@@ -96,9 +97,6 @@ def fight_login():
 # 战斗逻辑
 @task.page(name="战斗中", target_texts=["^Space$"])
 def action():
-    # 向前跑一会 触发战斗，如果未触发，则直接退出
-    time.sleep(2)
-    control.head(1)
     # 持续进行战斗，若两分钟后还在当前页面，则战斗地图需要跑图或者练度太低(练度低估计也已经寄了)，那就跑路
     global detectorFlag
     detectorFlag = True

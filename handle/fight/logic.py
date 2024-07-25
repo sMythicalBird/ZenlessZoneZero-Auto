@@ -1,12 +1,14 @@
 import time
 import pydirectinput
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 import numpy as np
 import cv2
+from pathlib import Path
+from utils import screenshot
 
-image_to_quan = cv2.imread(
-    "C:\\Users\\123\\Desktop\\juequling\\yuan.png", cv2.IMREAD_GRAYSCALE
-)
+root_path = Path(__file__).parent.parent
+image_path = root_path / "download/yuan.png"
+image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
 
 
 def keyboard_press(key: str, duration: float, interval: float):
@@ -38,7 +40,8 @@ def turn():
     while True:
         flag = 0
         for i in range(10):
-            screen = np.array(ImageGrab.grab())
+            # screen = np.array(ImageGrab.grab())
+            screen = screenshot()
             screen_gray = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
 
             result = cv2.matchTemplate(screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
@@ -71,3 +74,9 @@ def turn():
             time.sleep(0.03)
         if flag == 0:
             break
+
+
+time.sleep(3)
+print("start")
+turn()
+print("end")
