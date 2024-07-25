@@ -14,6 +14,8 @@ from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp
 from utils import config, fightTactics
 from schema.config import Tactic
+from handle.LightEffectDetector import lightEffectDetector
+from threading import Thread
 
 
 def is_not_fight(text: str):
@@ -56,13 +58,36 @@ def execute_tactic(tactic: Tactic):
         keyboard_map[tactic.type_](tactic.key)
 
 
+# 检测标志
+detector_flag = False
+
+
+def detector():
+    global detector_flag
+    while detector_flag:
+        img = screenshot()
+        # 创建光效检测器实例
+        detector = lightEffectDetector(img)
+        results = detector.detect_light_effects(rect=True, peri=False)
+        if results["yellow"]["rect"]:
+            control.press("space")
+        elif results["red"]["rect"]:
+            control.press("shift")
+        print(results)
+        time.sleep(0.1)
+
+
 # 定义战斗逻辑，两次3a1e接q
 def fight_login():
+    global detector_flag
+    detector_flag = True
+    Thread(target=detector).start()
     for tactic in fightTactics:
         for _ in range(tactic.repeat):
             execute_tactic(tactic)
             if tactic.delay:
                 time.sleep(tactic.delay)
+    detector_flag = False
 
 
 # 战斗逻辑
@@ -87,8 +112,6 @@ def action(positions: Dict[str, Position]):
             if is_not_fight("Space"):
                 # 防止战斗结束动画放完刚好进入地图，提前走格子出现路径混乱
                 break
-        # 继续战斗
-        # print("战斗中")
         fight_login()
 
 

@@ -190,21 +190,21 @@ def detector_test(img_path):
 # img = screenshot()
 # detector_test(img)
 
-
-def test():
-    img = screenshot()
-    detector_test(img)
-
-
-def on_press(key):
-    match key:
-        case Key.f11:  # 检测一次
-            Thread(target=test).start()
-        case Key.f12:  # 结束运行
-            return False
-    return None
-
-
-if __name__ == "__main__":
-    with Listener(on_press=on_press) as listener:
-        listener.join()
+# # 测试用
+# def test():
+#     img = screenshot()
+#     detector_test(img)
+#
+#
+# def on_press(key):
+#     match key:
+#         case Key.f11:  # 检测一次
+#             Thread(target=test).start()
+#         case Key.f12:  # 结束运行
+#             return False
+#     return None
+#
+#
+# if __name__ == "__main__":
+#     with Listener(on_press=on_press) as listener:
+#         listener.join()
