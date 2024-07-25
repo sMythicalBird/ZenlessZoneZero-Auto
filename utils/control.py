@@ -95,10 +95,8 @@ class Control:
     @staticmethod
     def head(t):
         keyDown("w")
-        keyDown("shift")
         time.sleep(t)
         keyUp("w")
-        keyUp("shift")
 
     @staticmethod
     def scroll(clicks: int):

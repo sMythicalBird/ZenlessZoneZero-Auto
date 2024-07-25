@@ -80,8 +80,8 @@ def detector_task():
         results = detector.detect_light_effects(img)
         if results["yellow"]["rect"]:
             control.press("space", duration=0.1)
-        elif results["red"]["rect"]:
-            control.press("shift", duration=0.1)
+        # elif results["red"]["rect"]:
+        #     control.press("shift", duration=0.1)
 
 
 def keyboard_press(key: str, duration: float, interval: float):
@@ -100,11 +100,11 @@ def m_press(key: str, duration: float, interval: float):
 
 def ef_login():
     for i in range(5):
-        # keyboard_press("shift", 0.025, 0.05)
+        keyboard_press("shift", 0.025, 0.05)
         m_press("left", 0.025, 0.1)
-        # keyboard_press("space", 0.025, 0.05)
+        keyboard_press("space", 0.025, 0.05)
         m_press("left", 0.025, 0.025)
-        # keyboard_press("shift", 0.025, 0.025)
+        keyboard_press("shift", 0.025, 0.025)
         m_press("left", 0.025, 0.1)
     keyboard_press("2", 0.025, 0.025)
 
@@ -115,11 +115,12 @@ def fight_login():
     进入战斗
     """
     mouse_press("middle", 0.1)
-    for tactic in fightTactics:
-        for _ in range(tactic.repeat):
-            execute_tactic(tactic)
-            if tactic.delay:
-                time.sleep(tactic.delay)
+    ef_login()
+    # for tactic in fightTactics:
+    #     for _ in range(tactic.repeat):
+    #         execute_tactic(tactic)
+    #         if tactic.delay:
+    #             time.sleep(tactic.delay)
 
 
 # 地图中自动寻路
@@ -163,6 +164,7 @@ def action():
     # 持续进行战斗，若两分钟后还在当前页面，则战斗地图需要跑图或者练度太低(练度低估计也已经寄了)，那就跑路
     global detectorFlag
     detectorFlag = True
+    control.head(1.5)
     Thread(target=detector_task).start()
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
@@ -179,8 +181,9 @@ def action():
                 # 防止战斗结束动画放完刚好进入地图，提前走格子出现路径混乱
                 detectorFlag = False
                 break
-        # 执行战斗逻辑
+        # 判断转向
         turn()
+        # 执行战斗逻辑
         for i in range(3):
             fight_login()
 
