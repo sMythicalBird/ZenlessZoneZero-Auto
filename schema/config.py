@@ -44,7 +44,7 @@ class Tactic(BaseModel):
             data["delay"] = 0.1
         # 如果设置了ket，但是没有设置type，则默认设置为press
         if "key" in data and "type" not in data and "type_" not in data:
-            data["type_"] = "press"
+            data["type"] = "press"
         super().__init__(**data)
 
     # 检查 type_ 是否合法
