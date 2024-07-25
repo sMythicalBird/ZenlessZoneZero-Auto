@@ -16,6 +16,7 @@ from utils.task import task, ImageMatch, find_template
 from PIL import Image
 from re import template
 from utils import config
+from utils.map.components import set_weight
 
 
 def get_pos(text: str):
@@ -149,6 +150,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接应支援代理人$")
     control.click(pos.x, pos.y)
+    set_weight("呼叫增援", 3)
 
 
 @task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])
@@ -169,8 +171,6 @@ def action(positions: Dict[str, Position]):
 
 
 # 下面为其他地图新增
-
-
 # 投机客
 @task.page(name="投机客", target_texts=["投机客", "^不需要借款$"])
 def action(positions: Dict[str, Position]):

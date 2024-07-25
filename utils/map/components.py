@@ -33,6 +33,12 @@ television_output_name = television_model.get_outputs()[0].name
 television = Model(television_model, iou_threshold=0.1)
 with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
     components_label = yaml.safe_load(f)
+
+# 通关模式，接一次队友
+if config.modeSelect == 1:
+    for i in components_label:
+        if components_label[i]["name"] == "呼叫增援":
+            components_label[i]["weight"] = 10
 # 零号业绩模式，改变权重
 if config.modeSelect == 2:
     for i in components_label:
@@ -43,6 +49,16 @@ if config.modeSelect == 3:
     for i in components_label:
         if components_label[i]["name"] == "零号银行":
             components_label[i]["weight"] = 10
+
+
+def set_weight(name: str, weight: int):
+    """
+    改变权重
+    """
+    global components_label
+    for item in components_label:
+        if components_label[item]["name"] == name:
+            components_label[item]["weight"] = weight
 
 
 def preprocess_crop(crop):
@@ -165,6 +181,10 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         output = x_outputs.pop(0)
         x = output["x"]
         map_component = component_class(screen, x, output["y"], w, h, output["label"])
+        # if map_component.confidence < 0.97:
+        #     map_component.weight = 3
+        #     map_component.name = "其他"
+        # print(map_component)
         group = x_groups[-1] if x_groups else None
         if group is None or group["max_x"] < x:
             x_groups.append(
@@ -177,6 +197,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
             )
         else:
             group["map_components"].append([output["y"], map_component])
+    # input()
     # 按 y 坐标排序
     y_groups = []
     y_outputs = sorted(outputs_real, key=lambda item: item["y"])

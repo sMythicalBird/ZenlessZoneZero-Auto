@@ -115,12 +115,12 @@ def fight_login():
     进入战斗
     """
     mouse_press("middle", 0.1)
-    ef_login()
-    # for tactic in fightTactics:
-    #     for _ in range(tactic.repeat):
-    #         execute_tactic(tactic)
-    #         if tactic.delay:
-    #             time.sleep(tactic.delay)
+    # ef_login()
+    for tactic in fightTactics:
+        for _ in range(tactic.repeat):
+            execute_tactic(tactic)
+            if tactic.delay:
+                time.sleep(tactic.delay)
 
 
 # 地图中自动寻路
