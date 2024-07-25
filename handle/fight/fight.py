@@ -11,11 +11,16 @@ from schema import Position, info
 from utils import control, screenshot, logger
 from utils.task import task
 from re import template
-from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp
+from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
 from utils import config, fightTactics
 from schema.config import Tactic
 from .light_detector import detector
 from threading import Thread
+from pathlib import Path
+import cv2
+
+image_path = Path(__file__).parent.parent.parent / "download/yuan.png"
+image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
 
 
 def is_not_fight(text: str):
@@ -74,11 +79,36 @@ def detector_task():
         img = screenshot()
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
+        print(results)
         if results["yellow"]["rect"]:
-            control.press("space")
-        # elif results["red"]["rect"]:
-        #     control.press("shift")
-        time.sleep(0.1)
+            control.press("space", duration=0.1)
+        elif results["red"]["rect"]:
+            control.press("shift", duration=0.1)
+
+
+def keyboard_press(key: str, duration: float, interval: float):
+    keyDown(key)
+    time.sleep(duration)
+    keyUp(key)
+    time.sleep(interval)
+
+
+def m_press(key: str, duration: float, interval: float):
+    mouseDown(button=key)
+    time.sleep(duration)
+    mouseUp(button=key)
+    time.sleep(interval)
+
+
+def ef_login():
+    for i in range(5):
+        # keyboard_press("shift", 0.025, 0.05)
+        m_press("left", 0.025, 0.1)
+        # keyboard_press("space", 0.025, 0.05)
+        m_press("left", 0.025, 0.025)
+        # keyboard_press("shift", 0.025, 0.025)
+        m_press("left", 0.025, 0.1)
+    keyboard_press("2", 0.025, 0.025)
 
 
 # 定义战斗逻辑，两次3a1e接q
@@ -87,11 +117,50 @@ def fight_login():
     进入战斗
     """
     mouse_press("middle", 0.1)
-    for tactic in fightTactics:
-        for _ in range(tactic.repeat):
-            execute_tactic(tactic)
-            if tactic.delay:
-                time.sleep(tactic.delay)
+    # ef_login()
+    # for tactic in fightTactics:
+    #     for _ in range(tactic.repeat):
+    #         execute_tactic(tactic)
+    #         if tactic.delay:
+    #             time.sleep(tactic.delay)
+
+
+# 地图中自动寻路
+def turn():
+    while True:
+        flag = 0
+        for i in range(10):
+            # screen = np.array(ImageGrab.grab())
+            screen = screenshot()
+            screen_gray = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+
+            result = cv2.matchTemplate(screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(
+                result
+            )  # max_val为识别图像左上角坐标
+            if max_val > 0.85:
+                flag = 1
+                x, _ = max_loc
+                _, y = max_loc
+                x += image_to_quan.shape[1] / 2
+                y += image_to_quan.shape[0] / 2
+                x = int(x)
+                if y > 400:
+                    moveRel(xOffset=1100, yOffset=0, relative=True)
+                time.sleep(0.2)
+                x = x - 648
+                if abs(x) < 250:
+                    if x > 0:
+                        x = int(x ** (1 / 1.28))
+                    else:
+                        x = -int(abs(x) ** (1 / 1.28))
+                moveRel(xOffset=x, yOffset=0, relative=True)
+                if abs(x) <= 2:
+                    press("w", duration=2)
+                    break
+            time.sleep(0.03)
+        if flag == 0:
+            break
 
 
 # 战斗逻辑
@@ -116,6 +185,7 @@ def action():
                 # 防止战斗结束动画放完刚好进入地图，提前走格子出现路径混乱
                 detectorFlag = False
                 break
+        # 执行战斗逻辑
         fight_login()
 
 
