@@ -5,10 +5,6 @@
 @author:    sMythicalBird
 """
 import time
-from typing import Dict
-
-
-from schema import Position
 from utils import control, screenshot, config
 from utils.task import task
 from re import template

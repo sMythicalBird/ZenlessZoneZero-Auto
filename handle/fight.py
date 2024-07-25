@@ -14,15 +14,17 @@ from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp
 from utils import config, fightTactics
 from schema.config import Tactic
-from handle.LightEffectDetector import lightEffectDetector
+from .light_detector import detector
 from threading import Thread
 
 
 def is_not_fight(text: str):
+    """
+    判断是否还在战斗中
+    """
     text = template(text)
     img = screenshot()  # 截图
     ocr_Results = task.ocr(img)  # OCR识别
-    # print(ocr_Results)
     for ocr_result in ocr_Results:
         if text.search(ocr_result.text):
             return False
@@ -30,6 +32,9 @@ def is_not_fight(text: str):
 
 
 def mousePress(key: str, duration: float):
+    """
+    鼠标点击
+    """
     mouseDown(button=key)
     time.sleep(duration)
     mouseUp(button=key)
@@ -40,8 +45,9 @@ mouse_map = {"down": mouseDown, "up": mouseUp}
 
 
 def execute_tactic(tactic: Tactic):
-    # logger.debug(f"执行战斗策略: {tactic}")
-    # 如果没有设置key，只设置了delay，则延迟delay时间
+    """
+    执行战斗策略
+    """
     if tactic.key is None:
         return
     # key 为鼠标操作
@@ -59,45 +65,44 @@ def execute_tactic(tactic: Tactic):
 
 
 # 检测标志
-detector_flag = False
+detectorFlag = False
 
 
-def detector():
-    global detector_flag
-    while detector_flag:
+def detector_task():
+    global detectorFlag
+    while detectorFlag:
         img = screenshot()
         # 创建光效检测器实例
-        detector = lightEffectDetector(img)
-        results = detector.detect_light_effects(rect=True, peri=False)
+        results = detector.detect_light_effects(img)
         if results["yellow"]["rect"]:
             control.press("space")
         elif results["red"]["rect"]:
             control.press("shift")
-        print(results)
         time.sleep(0.1)
 
 
 # 定义战斗逻辑，两次3a1e接q
 def fight_login():
-    global detector_flag
-    detector_flag = True
-    Thread(target=detector).start()
+    """
+    进入战斗
+    """
     for tactic in fightTactics:
         for _ in range(tactic.repeat):
             execute_tactic(tactic)
             if tactic.delay:
                 time.sleep(tactic.delay)
-    detector_flag = False
 
 
 # 战斗逻辑
 @task.page(name="战斗中", target_texts=["^Space$"])
-def action(positions: Dict[str, Position]):
+def action():
     # 向前跑一会 触发战斗，如果未触发，则直接退出
     time.sleep(2)
-    # print("前进")
     control.head(1)
     # 持续进行战斗，若两分钟后还在当前页面，则战斗地图需要跑图或者练度太低(练度低估计也已经寄了)，那就跑路
+    global detectorFlag
+    detectorFlag = True
+    Thread(target=detector_task).start()
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
         if fight_time > config.maxFightTime:
@@ -111,6 +116,7 @@ def action(positions: Dict[str, Position]):
             time.sleep(2)
             if is_not_fight("Space"):
                 # 防止战斗结束动画放完刚好进入地图，提前走格子出现路径混乱
+                detectorFlag = False
                 break
         fight_login()
 

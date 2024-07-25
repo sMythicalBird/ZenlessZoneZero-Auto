@@ -31,5 +31,6 @@ __all__ = [
     "get_map_info",
     "auto_find_way",
     "config",
+    "fightTactics",
 ]
 logger.debug("初始化utils模块完成")
