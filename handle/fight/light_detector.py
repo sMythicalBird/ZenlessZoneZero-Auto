@@ -80,7 +80,7 @@ class lightDetector:
         判断轮廓的宽高比是否符合条件
         """
         aspect_ratio = max((width / height), (height / width))
-        return (aspect_ratio > 5) and max(width, height) > 50
+        return (aspect_ratio > 10) and max(width, height) > 100
 
     def detect_rectangles(self, img_hsv: np.ndarray) -> dict:
         """
@@ -148,11 +148,11 @@ class lightDetector:
             for contour in contours:
                 x, y, w, h = cv2.boundingRect(contour)
                 aspect_ratio = max((w / h), (h / w))
-                if max(w, h) > 50 and aspect_ratio > 5:
+                if max(w, h) > 100 and aspect_ratio > 10:
                     cv2.drawContours(img_debug, contour, -1, (0, 0, 255), 1)
-                    cv2.rectangle(img_debug, (x, y), (x + w, y + h), (0, 255, 255), 1)
+                    cv2.rectangle(img_debug, (x, y), (x + w, y + h), (0, 255, 255), 2)
                     format_str = (
-                        f"rect:{w}*{h}@({x},{y})" f"aspect ratio:{aspect_ratio:.1f}"
+                        f"{color_name}:{w}*{h}@({x},{y})"+f"as_rat:{aspect_ratio:.1f}"
                     )
                     if ((x + 300) < 1280) and ((y + h) < (720 - 15)):
                         x = x
@@ -171,7 +171,7 @@ class lightDetector:
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.5,
                         (0, 255, 255),
-                        1,
+                        2,
                     )
         return img_debug
 
