@@ -30,7 +30,7 @@ logger.info(f"配置文件加载成功")
 
 
 tactics_path = RootPath / "tactics.yaml"
-logger.info(f"加载战斗策略文件 {config_path}")
+logger.info(f"加载战斗策略文件 {tactics_path}")
 # 判断配置文件是否存在
 if not tactics_path.exists():
     logger.error(f"tactics.yaml 未在 {tactics_path} 发现")

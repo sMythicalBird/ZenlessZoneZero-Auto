@@ -357,11 +357,6 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="零号银行_对话", target_texts=["^零号银行$"])
-def action():
-    control.press("space", duration=0.1)
-
-
 @task.page(
     name="零号银行_离开",
     priority=10,
@@ -379,3 +374,11 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
     info.exitFlag = True  # 拿完业绩准备离开
+
+
+@task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^打开")
+    control.click(pos.x, pos.y)
+    pos = positions.get("^暂时离开$")
+    control.click(pos.x, pos.y)
