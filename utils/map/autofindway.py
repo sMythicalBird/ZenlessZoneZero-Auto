@@ -80,7 +80,7 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
                 start = [i, j]
     # 打平components
     components_list: List[MapComponent] = [
-        component for line in components for component in line if component.weight > 1
+        component for line in components for component in line if component.weight > 0
     ]
     # 按照权重进行分组
     components_group = groupby(components_list, key=lambda component: component.weight)
