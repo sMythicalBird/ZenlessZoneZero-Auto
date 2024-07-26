@@ -115,7 +115,7 @@ def detector_task():
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
         if results["yellow"]["rect"]:
-            press("space", duration=0.1)
+            press("space", duration=0.025)
             time.sleep(0.1)
             # 弹反反击
             mouse_press("left", 0.05)
@@ -124,7 +124,7 @@ def detector_task():
             # img_save(img, spec_name="light_detect_yellow", show_ms=True)
             # time.sleep(0.5)
         elif results["red"]["rect"]:
-            press("shift", duration=0.1)
+            press("shift", duration=0.025)
             time.sleep(0.1)
             # 闪避反击
             mouse_press("left", 0.05)
