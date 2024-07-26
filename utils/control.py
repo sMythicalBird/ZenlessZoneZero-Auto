@@ -18,13 +18,13 @@ from pydirectinput import (
     keyUp,
     scroll,
     moveRel,
-    FAILSAFE,
 )
+import pydirectinput
 
 from .init import OffsetX, OffsetY
 
-# 禁用鼠标安全模式
-FAILSAFE = False
+# 禁用安全模式
+pydirectinput.FAILSAFE = False
 
 
 def reset_mouse(x=0, y=0):

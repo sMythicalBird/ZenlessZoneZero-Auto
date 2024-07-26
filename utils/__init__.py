@@ -34,3 +34,6 @@ __all__ = [
     "fightTactics",
 ]
 logger.debug("初始化utils模块完成")
+
+version = "072700"
+logger.info(f"当前版本：{version}")
