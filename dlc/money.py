@@ -104,6 +104,10 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^下一步$")
     control.click(pos.x, pos.y)
 
+@task.page(name="选择关卡_滚动", priority=6, target_texts=["零号空洞的挑战"])
+def action():
+    time.sleep(0.3)
+    control.move_at(1000, 500, 1000, 200)
 
 @task.page(name="选择关卡_滚动", priority=2, target_texts=["关键敌情", "委托详情"])
 def action():
