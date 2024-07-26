@@ -155,11 +155,10 @@ def turn():
             screen_gray = cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY)
             result = cv2.matchTemplate(screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
             # max_val为识别图像左上角坐标
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-            if max_val > 0.85:
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            if max_val > 0.8:
                 flag = False
-                x, _ = max_loc
-                _, y = max_loc
+                x, y = max_loc
                 x += image_to_quan.shape[1] / 2
                 y += image_to_quan.shape[0] / 2
                 x = int(x)
@@ -167,11 +166,8 @@ def turn():
                     moveRel(xOffset=1100, yOffset=0, relative=True)
                 time.sleep(0.2)
                 x = x - 648
-                if abs(x) < 250:
-                    if x > 0:
-                        x = int(x ** (1 / 1.28))
-                    else:
-                        x = -int(abs(x) ** (1 / 1.28))
+                if -250 < x < 250:
+                    x = int(x ** (1 / 1.28))
                 moveRel(xOffset=x, yOffset=0, relative=True)
                 if abs(x) <= 2:
                     press("w", duration=2)
