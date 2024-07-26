@@ -167,7 +167,7 @@ def turn():
                 time.sleep(0.2)
                 x = x - 648
                 if -250 < x < 250:
-                    x = int(x ** (1 / 1.28))
+                    x = int(abs(x) ** (1 / 1.28)) * (1 if x > 0 else -1)
                 moveRel(xOffset=x, yOffset=0, relative=True)
                 if abs(x) <= 2:
                     press("w", duration=2)
