@@ -128,8 +128,8 @@ def detector_task():
             time.sleep(0.1)
             # 闪避反击
             mouse_press("left", 0.05)
-            time.sleep(0.05)
-            mouse_press("left", 0.05)
+            # time.sleep(0.05)
+            # mouse_press("left", 0.05)
         #     img_save(img, spec_name="light_detect_red", show_ms=True)
 
 
@@ -185,6 +185,7 @@ def action():
     detectorFlag = True
     control.head(1.5)
     Thread(target=detector_task).start()
+    num = 1
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
         if fight_time > config.maxFightTime:
@@ -201,9 +202,11 @@ def action():
                 detectorFlag = False
                 break
         # 判断转向
-        turn()
-        # 执行战斗逻辑
-        for i in range(3):
+        if num % 2:
+            turn()
+        num += 1
+        # 执行战斗逻辑五次
+        for i in range(5):
             fight_login()
 
 
