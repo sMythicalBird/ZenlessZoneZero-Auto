@@ -18,7 +18,7 @@ def bi_bfs(
     matrix: List[List[MapComponent]], start: list[int], goal: list[int]
 ) -> List[Tuple[MapComponent, Dirct]]:
     # 因为需要记录最短路径及其移动方向，因此分两步
-    # 1、终点bfs找全图最短路径
+    # 1、终点bfs找全图最短路径,终点找出能来的所有点
     rows, cols = len(matrix), len(matrix[0])
     visited = np.zeros((rows, cols))
     for i in range(rows):
@@ -75,7 +75,8 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     start: list[int] = [-1, -1]
     for i in range(len(components)):
         for j in range(len(components[i])):
-            if components[i][j].weight == 1:
+            # 如果权重为-1，则为起点
+            if components[i][j].weight == -1:
                 start = [i, j]
     # 打平components
     components_list: List[MapComponent] = [
@@ -86,9 +87,8 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     components_group = [
         (key, [item for item in group]) for key, group in components_group
     ]
-    # 排序
+    # 排序 倒序
     components_group = sorted(components_group, key=lambda item: item[0], reverse=True)
-    # 倒序遍历
     # logger.debug(f"分组信息: {components_group}")
     # 遍历分组
     for key, group in components_group:

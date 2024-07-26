@@ -29,34 +29,62 @@ logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 def grid_map(screen: np.ndarray):
     # 判断是否在进入事件对话，检查是否可以找到自身位置
     k = find_current()
-    if not k:
+    if not k:  # 不在地图中
         control.press("space")
         return
+    # 检查离开标志
+    if info.exitFlag:
+        control.esc()
+        return
+    # 超过地图最大时间
     if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
-        # info.entryMapTime = datetime.now()
         return
     control.scroll(-5)
-    if info.currentStage == 1 and (k := find_current()):
-        control.move_at(k.x, k.y, 360, 500)
-    elif info.currentStage == 2 and (k := find_current()):
-        control.move_at(k.x, k.y, 900, 500)
+    # 全通和零号业绩拆开做
+    # 零号业绩相关的判断
+    # 旧都列车地图需要移动，其他地图不需要拖动
+    if map_name == "旧都列车":
+        if info.currentStage == 1 and (k := find_current()):  # 左下拖拿业绩
+            control.move_at(k.x, k.y, 360, 500)
+        # 不在往上走了
+        elif info.currentStage == 2 and (k := find_current()):  # 右下拖拿银行
+            control.move_at(k.x, k.y, 900, 500)
+        elif info.currentStage == 5 and (k := find_current()):  # 向下拖去传送点
+            control.move_at(k.x, k.y, 640, 500)
+    # 获取地图信息
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")
         return
+    # 寻路
     mapWay = auto_find_way(map_info)
+    # 在地图但未识别到足够的地图信息做路径搜索
     if not mapWay:
         logger.debug("未找到路径")
         return
-    (mc, dirct) = mapWay[0]
-    if mc.weight == 5:  # 拿完零号业绩到传送点
+    (mc, dirct) = mapWay[0]  # 去除下一个地图位置
+    # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
+    if mc.name == "怪物" and info.hasBoom:
+        info.hasBoom = False
+        control.press("r", duration=0.1)
+        time.sleep(1)
+        return
+    # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
+    if mc.name == "终点":
         info.currentStage = 0
     control.press(str(dirct), duration=0.1)
-    # info.lastDirct = dirct
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
+
+
+# 炸弹使用
+@task.page(name="炸弹", target_texts=["^交叉爆破$", "^使用$"])
+def select_map(positions: Dict[str, Position]):
+    pos = positions.get("^使用$")
+    control.click(pos.x, pos.y)
+    time.sleep(1)
 
 
 @task.page(name="选择角色", target_texts=["出战"])
@@ -66,6 +94,8 @@ def action(positions: Dict[str, Position]):
     info.entryMapTime = datetime.now()  # 进入地图时间
     info.fightCount += 1  # 战斗次数记录
     info.currentStage = 0  # 进入战斗，无偏移
+    info.hasBoom = config.hasBoom  # 是否有炸弹
+    info.exitFlag = False  # 离开标志
     # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 

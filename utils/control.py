@@ -23,6 +23,7 @@ from pydirectinput import (
 
 from .init import OffsetX, OffsetY
 
+# 禁用鼠标安全模式
 FAILSAFE = False
 
 
@@ -90,20 +91,12 @@ class Control:
     def esc():
         press("esc", duration=0.1)
 
-    @staticmethod
-    def attack():
-        mouseDown()
-        time.sleep(0.1)
-        mouseUp()
-
     # 向前跑ts
     @staticmethod
     def head(t):
         keyDown("w")
-        keyDown("shift")
         time.sleep(t)
         keyUp("w")
-        keyUp("shift")
 
     @staticmethod
     def scroll(clicks: int):

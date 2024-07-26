@@ -40,6 +40,9 @@ class StatusInfo(BaseModel):
     currentStage: int = Field(
         0, title="当前阶段"
     )  # 0、无偏移     1、左下        2、右下
+    hasBoom: bool = Field(True, title="是否有炸弹")
+    exitFlag: bool = Field(False, title="是否退出")
+    clickCount: int = Field(0, title="点击次数")
 
 
 info = StatusInfo()

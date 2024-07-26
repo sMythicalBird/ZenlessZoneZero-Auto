@@ -6,14 +6,12 @@
 @author SuperLazyDog
 """
 import sys
-import time
 from pathlib import Path
 
 import requests
 from tqdm import tqdm
 from hashlib import md5
 from .init import logger, RootPath
-from .utils import retry
 
 
 def download_with_progressbar(url: str, save_path: Path):
@@ -57,6 +55,9 @@ DownLoadBaseUrl = [
 
 
 def check_file(retry_count=0):
+    """
+    检查文件列表中的文件是否存在，不存在则下载
+    """
     fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.json"
     file_list = requests.get(fileListUrl, timeout=3).json()
     for item in file_list:

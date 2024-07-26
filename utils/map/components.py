@@ -9,9 +9,9 @@
 import numpy as np
 from onnxruntime import InferenceSession
 import cv2
-
+import yaml
 from schema import MapComponent, MapInfo
-from utils import screenshot, RootPath
+from utils import screenshot, RootPath, config
 from ..detect import Model, find_current
 from ..init import Provider
 
@@ -20,7 +20,7 @@ DownloadPath = RootPath / "download"  # 下载路径
 
 # components_model = InferenceSession(DownloadPath / "components.onnx")
 components_model = InferenceSession(
-    str(DownloadPath / "components_level.onnx"), providers=Provider
+    str(DownloadPath / "components_keyword.onnx"), providers=Provider
 )
 components_input_name = components_model.get_inputs()[0].name
 components_output_name = components_model.get_outputs()[0].name
@@ -31,6 +31,34 @@ television_model = InferenceSession(
 television_input_name = television_model.get_inputs()[0].name
 television_output_name = television_model.get_outputs()[0].name
 television = Model(television_model, iou_threshold=0.1)
+with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
+    components_label = yaml.safe_load(f)
+
+# 通关模式，接一次队友
+if config.modeSelect == 1:
+    for i in components_label:
+        if components_label[i]["name"] == "呼叫增援":
+            components_label[i]["weight"] = 10
+# 零号业绩模式，改变权重
+if config.modeSelect == 2:
+    for i in components_label:
+        if components_label[i]["name"] == "零号业绩":
+            components_label[i]["weight"] = 10
+# 零号银行，改变权重
+if config.modeSelect == 3:
+    for i in components_label:
+        if components_label[i]["name"] == "零号银行":
+            components_label[i]["weight"] = 10
+
+
+def set_weight(name: str, weight: int):
+    """
+    改变权重
+    """
+    global components_label
+    for item in components_label:
+        if components_label[item]["name"] == name:
+            components_label[item]["weight"] = weight
 
 
 def preprocess_crop(crop):
@@ -63,16 +91,18 @@ def component_class(
         conf, index = infer_crop(crop)
         # 获取组件标签
         return MapComponent(
+            name=components_label[str(index)]["name"],
             x=x,  # 组件坐标
             y=y,  # 组件坐标
             confidence=conf,  # 组件置信度
-            weight=index,  # 组件权重
+            weight=components_label[str(index)]["weight"],  # 组件权重
         )
     return MapComponent(
+        name="double",  # 组件名称
         x=1,  # 组件坐标
         y=1,  # 组件坐标
         confidence=0,  # 组件置信度
-        weight=3,  # 组件权重
+        weight=1,  # 组件权重
     )
 
 
@@ -109,6 +139,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         if each["w"] < m_w:
             outputs_real.append(each)
         else:
+            # 如果宽度大于2倍宽度，拆分为4个小格子
             # 计算中心点和小格子相对偏移量
             center_x = each["x"]
             center_y = each["y"] - h / 2
@@ -143,12 +174,17 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                 }
             )
     x_groups = []
+    # 按 x 坐标排序
     x_outputs = sorted(outputs_real, key=lambda item: item["x"])
     # 遍历输出 对x坐标进行分组
     while x_outputs:
         output = x_outputs.pop(0)
         x = output["x"]
         map_component = component_class(screen, x, output["y"], w, h, output["label"])
+        # if map_component.confidence < 0.97:
+        #     map_component.weight = 3
+        #     map_component.name = "其他"
+        # print(map_component)
         group = x_groups[-1] if x_groups else None
         if group is None or group["max_x"] < x:
             x_groups.append(
@@ -161,6 +197,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
             )
         else:
             group["map_components"].append([output["y"], map_component])
+    # input()
     # 按 y 坐标排序
     y_groups = []
     y_outputs = sorted(outputs_real, key=lambda item: item["y"])

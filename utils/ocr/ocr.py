@@ -100,6 +100,9 @@ class Ocr:
         self.last_time = time.time()
 
     def ocr(self, img: np.ndarray) -> list[OcrResult]:
+        """
+        文字识别
+        """
         if self.interval:
             self.check_interval()
         results = self.paddleOCR.ocr(img, cls=False)[0]

@@ -13,10 +13,10 @@ from .init import (
     RealHeight,
     Hwnd,
 )
+from .config import config, fightTactics
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way
-from .config import config
 
 __all__ = [
     "logger",
@@ -31,5 +31,6 @@ __all__ = [
     "get_map_info",
     "auto_find_way",
     "config",
+    "fightTactics",
 ]
 logger.debug("初始化utils模块完成")

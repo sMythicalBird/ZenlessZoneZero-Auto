@@ -16,6 +16,7 @@ from utils.task import task, ImageMatch, find_template
 from PIL import Image
 from re import template
 from utils import config
+from utils.map.components import set_weight
 
 
 def get_pos(text: str):
@@ -51,9 +52,12 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     priority=1,
     target_texts=["背包", "^当前层数"],
     target_image="tv_spot.png",
+    exclude_texts=["零号银行", "呼叫增援"],
 )
 def action():
-    time.sleep(1)
+    # 如果上一个页面不是通用点击事件，那么等待一秒
+    if not task.lastPageName == "通用点击事件":
+        time.sleep(1)
     screen = screenshot()  # 截图
     if any(
         find_template(screen, option_image_match)
@@ -69,9 +73,9 @@ def action():
         for result in results
     ):
         return
-    for y in range(640, 319, -40):
-        control.click(1050, y)
-        time.sleep(0.1)
+    # 点击坐标，点击位置根据点击次数变化
+    control.click(1050, 320 + (info.clickCount % 9) * 40)
+    info.clickCount = (info.clickCount + 1) % 9
 
 
 # 遇到确定就点击
@@ -87,6 +91,12 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+@task.page(name="丢弃操作", target_texts=["^丢弃$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^丢弃$")
+    control.click(pos.x, pos.y)
+
+
 # 清除侵蚀效果
 @task.page(name="清楚侵蚀效果", target_texts=["^清除$"])
 def action(positions: Dict[str, Position]):
@@ -94,39 +104,17 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
-@task.page(name="选择_鸣徽或邦布", priority=4, target_texts=["同类持有", "^选择$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^选择$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="选择_不可触碰", target_texts=["同类持有", "^选择$", "不可触碰"])
-def action():
-    positions = get_pos("^选择$")
-    for pos in positions:
-        control.click(pos[0], pos[1])
-
-
-# 离开类，所有需要离开的情况
-@task.page(name="离开操作", target_texts=["^离开$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^离开$")
-    control.click(pos.x, pos.y)
-
-
-@task.page(name="丢弃操作", target_texts=["^丢弃$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^丢弃$")
-    control.click(pos.x, pos.y)
-
-
 @task.page(name="目标位置", target_texts=["关键进展", "^确认继续$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
-    info.currentStage = 1
     control.click(pos.x, pos.y)
     # 进入战斗
+    if config.modeSelect == 1:
+        info.currentStage = 5  # 向下拖拽
+    elif config.modeSelect == 2:
+        info.currentStage = 1  # 左下拖
+    elif config.modeSelect == 3:
+        info.currentStage = 2  # 右下拖
 
 
 # 8、资源回收小组
@@ -158,24 +146,22 @@ def action(positions: Dict[str, Position]):
 
 
 # 11、呼叫增援，接应和入队分别处理，对话交给地图处理
-# @task.page(name="呼叫增援_接应", target_texts=["呼叫增援", "^接应支援代理人$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^接应支援代理人$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-#
-#
-# @task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^2号位$")
-#     control.click(pos.x, pos.y)
-#     time.sleep(2)
-
-
-@task.page(name="呼叫增援_不增援", target_texts=["呼叫增援", "^接应支援代理人$"])
+@task.page(name="呼叫增援_接应", target_texts=["呼叫增援", "^接应支援代理人$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接应支援代理人$")
-    control.click(pos.x, pos.y + 70)
+    control.click(pos.x, pos.y)
+    set_weight("呼叫增援", 3)
+
+
+@task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^2号位$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="呼叫增援_对话", priority=4, target_texts=["^呼叫增援"])
+def action():
+    control.press("space", duration=0.1)
 
 
 @task.page(name="催化", target_texts=["同类持有", "^催化$"])
@@ -185,8 +171,6 @@ def action(positions: Dict[str, Position]):
 
 
 # 下面为其他地图新增
-
-
 # 投机客
 @task.page(name="投机客", target_texts=["投机客", "^不需要借款$"])
 def action(positions: Dict[str, Position]):
@@ -265,16 +249,6 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^帮我催化催化")
     control.click(pos.x, pos.y)
-
-
-@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认$")
-    control.click(pos.x, pos.y)
-    info.currentStage = 2
-    if not config.wholeCourse:
-        time.sleep(1)
-        control.esc()
 
 
 @task.page(name="邦布商人_鸣徽交易", target_texts=["^鸣徽交易", "^同类持有"])
@@ -367,4 +341,52 @@ def action(positions: Dict[str, Position]):
 @task.page(name="助战邦布已满", target_texts=["^交换$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^交换$")
+    control.click(pos.x, pos.y)
+
+
+# 零号银行
+@task.page(name="零号银行_存款", target_texts=["^存款$", "^零号银行$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^存款$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="零号银行_存压力", target_texts=["接受压力债务", "^零号银行$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("接受压力债务")
+    control.click(pos.x, pos.y)
+
+
+@task.page(
+    name="零号银行_离开",
+    priority=10,
+    target_texts=["还可存款0次", "^零号银行$", "^离开$"],
+)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+    info.exitFlag = True  # 存完钱准备离开
+
+
+# 零号业绩
+@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确认$")
+    control.click(pos.x, pos.y)
+    info.exitFlag = True  # 拿完业绩准备离开
+
+
+@task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^打开")
+    control.click(pos.x, pos.y)
+    pos = positions.get("^暂时离开$")
+    control.click(pos.x, pos.y)
+
+
+@task.page("全自动医疗仓", target_texts=["^全自动", "^启动", "^暂时离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^启动")
+    control.click(pos.x, pos.y)
+    pos = positions.get("^暂时离开$")
     control.click(pos.x, pos.y)

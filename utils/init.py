@@ -74,6 +74,7 @@ else:
     win32gui.MoveWindow(
         Hwnd, 0, 0, rect[2] - rect[0], rect[3] - rect[1], True
     )  # 设置窗口位置为0,0
+    logger.debug("将游戏窗口移动到屏幕左上角")
     while True:
         rect = win32gui.GetWindowRect(Hwnd)  # 获取窗口区域
         if rect[0] == 0 and rect[1] == 0:
