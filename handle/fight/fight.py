@@ -72,34 +72,40 @@ def execute_tactic(tactic: Tactic):
 detectorFlag = False
 
 
-def get_screenshot_name(spec_name=None, show_ms=False):
-    """
-    生成图片名称：[spec_name_]ZZZAuto_screenshot_20210915-102030.png
-    spec_name: 特殊名称，可选
-    show_ms: 是否显示毫秒，默认不显示
-    """
-    date_str = datetime.now().strftime(
-        "%Y%m%d-%H%M%S") if not show_ms else datetime.now().strftime("%Y%m%d-%H%M%S.%f")[:-3]
-    img_name = f"{spec_name}_{date_str}.png" if (
-        spec_name is not None) else f"{date_str}.png"
-    return img_name
-
-
-def img_save(img, dst_path=None, spec_name=None, show_ms=False):
-    """
-    图片截图保存
-    dst_path: 保存图片路径，默认 screenshots\
-    spec_name: 特殊名称，可选
-    show_ms: 是否显示毫秒，默认不显示
-    """
-    img_name = get_screenshot_name(spec_name, show_ms)
-
-    if dst_path is None:
-        dst_path = "D:\\ZZZ-Auto\\dev\\ZenlessZoneZero-Auto\\test\\screenshots\\captrue\\"
-
-    cv2.imwrite(f"{dst_path}{img_name}", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    # logger.info(f"保存截图：{dst_path}{img_name}")
-    logger.info(f"保存截图：{img_name}")
+# def get_screenshot_name(spec_name=None, show_ms=False):
+#     """
+#     生成图片名称：[spec_name_]ZZZAuto_screenshot_20210915-102030.png
+#     spec_name: 特殊名称，可选
+#     show_ms: 是否显示毫秒，默认不显示
+#     """
+#     date_str = (
+#         datetime.now().strftime("%Y%m%d-%H%M%S")
+#         if not show_ms
+#         else datetime.now().strftime("%Y%m%d-%H%M%S.%f")[:-3]
+#     )
+#     img_name = (
+#         f"{spec_name}_{date_str}.png" if (spec_name is not None) else f"{date_str}.png"
+#     )
+#     return img_name
+#
+#
+# def img_save(img, dst_path=None, spec_name=None, show_ms=False):
+#     """
+#     图片截图保存
+#     dst_path: 保存图片路径，默认 screenshots\
+#     spec_name: 特殊名称，可选
+#     show_ms: 是否显示毫秒，默认不显示
+#     """
+#     img_name = get_screenshot_name(spec_name, show_ms)
+#
+#     if dst_path is None:
+#         dst_path = (
+#             "D:\\ZZZ-Auto\\dev\\ZenlessZoneZero-Auto\\test\\screenshots\\captrue\\"
+#         )
+#
+#     cv2.imwrite(f"{dst_path}{img_name}", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+#     # logger.info(f"保存截图：{dst_path}{img_name}")
+#     logger.info(f"保存截图：{img_name}")
 
 
 def detector_task():
@@ -109,48 +115,31 @@ def detector_task():
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
         if results["yellow"]["rect"]:
-            keyboard_press("space", 0.025, 0.05)
+            press("space", 0.025)
+            time.sleep(0.1)
             logger.debug(f"黄光识别：{results['yellow']['rect']}")
+            # 弹反反击
+            mouse_press("left", 0.05)
+            time.sleep(0.05)
+            mouse_press("left", 0.05)
             # img_save(img, spec_name="light_detect_yellow", show_ms=True)
             # time.sleep(0.5)
         # elif results["red"]["rect"]:
         #     keyboard_press("shift", 0.025, 0.05)
         #     logger.debug(f"红光识别：{results['red']['rect']}")
-            # img_save(img, spec_name="light_detect_red", show_ms=True)
+        #     # 闪避反击
+        #     mouse_press("left", 0.05)
+        #     time.sleep(0.05)
+        #     mouse_press("left", 0.05)
+        #     img_save(img, spec_name="light_detect_red", show_ms=True)
 
 
-def keyboard_press(key: str, duration: float, interval: float):
-    keyDown(key)
-    time.sleep(duration)
-    keyUp(key)
-    time.sleep(interval)
-
-
-def m_press(key: str, duration: float, interval: float):
-    mouseDown(button=key)
-    time.sleep(duration)
-    mouseUp(button=key)
-    time.sleep(interval)
-
-
-def ef_login():
-    for i in range(5):
-        keyboard_press("shift", 0.025, 0.05)
-        m_press("left", 0.025, 0.1)
-        keyboard_press("space", 0.025, 0.05)
-        m_press("left", 0.025, 0.025)
-        keyboard_press("shift", 0.025, 0.025)
-        m_press("left", 0.025, 0.1)
-    keyboard_press("2", 0.025, 0.025)
-
-
-# 定义战斗逻辑，两次3a1e接q
+# 定义战斗逻辑
 def fight_login():
     """
     进入战斗
     """
-    mouse_press("middle", 0.1)
-    # ef_login()
+    mouse_press("middle", 0.05)
     for tactic in fightTactics:
         for _ in range(tactic.repeat):
             execute_tactic(tactic)
