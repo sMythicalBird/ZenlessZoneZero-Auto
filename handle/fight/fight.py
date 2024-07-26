@@ -117,20 +117,19 @@ def detector_task():
         if results["yellow"]["rect"]:
             press("space", 0.025)
             time.sleep(0.1)
-            logger.debug(f"黄光识别：{results['yellow']['rect']}")
             # 弹反反击
             mouse_press("left", 0.05)
             time.sleep(0.05)
             mouse_press("left", 0.05)
             # img_save(img, spec_name="light_detect_yellow", show_ms=True)
             # time.sleep(0.5)
-        # elif results["red"]["rect"]:
-        #     keyboard_press("shift", 0.025, 0.05)
-        #     logger.debug(f"红光识别：{results['red']['rect']}")
-        #     # 闪避反击
-        #     mouse_press("left", 0.05)
-        #     time.sleep(0.05)
-        #     mouse_press("left", 0.05)
+        elif results["red"]["rect"]:
+            press("shift", 0.025)
+            time.sleep(0.1)
+            # 闪避反击
+            mouse_press("left", 0.05)
+            time.sleep(0.05)
+            mouse_press("left", 0.05)
         #     img_save(img, spec_name="light_detect_red", show_ms=True)
 
 

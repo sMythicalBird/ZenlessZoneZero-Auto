@@ -382,3 +382,11 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
     pos = positions.get("^暂时离开$")
     control.click(pos.x, pos.y)
+
+
+@task.page("全自动医疗仓", target_texts=["^全自动", "^启动", "^暂时离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^启动")
+    control.click(pos.x, pos.y)
+    pos = positions.get("^暂时离开$")
+    control.click(pos.x, pos.y)
