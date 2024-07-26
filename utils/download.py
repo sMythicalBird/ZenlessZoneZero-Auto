@@ -103,4 +103,4 @@ def check_file_task():
         sys.exit(1)
 
 
-# check_file_task()
+check_file_task()
