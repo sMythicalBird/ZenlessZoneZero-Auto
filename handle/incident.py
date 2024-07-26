@@ -60,7 +60,7 @@ def action():
         time.sleep(1)
     screen = screenshot()  # 截图
     if any(
-        find_template(screen, option_image_match)
+        find_template(screen, option_image_match, threshold=0.95)
         for option_image_match in OptionImageMatch
     ):
         return
