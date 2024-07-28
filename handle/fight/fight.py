@@ -85,12 +85,14 @@ def detector_task():
         results = detector.detect_light_effects(img)
         execute_tactic_event.set()      # Signal to suspend fight_login
         if results["yellow"]["rect"]:
+            logger.debug(f"进入黄光战斗模式")
             for tactic in fightTacticsDict["黄光"]:
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
                     if tactic.delay:
                         time.sleep(tactic.delay)
         elif results["red"]["rect"]:
+            logger.debug(f"进入红光战斗模式")
             for tactic in fightTacticsDict["红光"]:
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
@@ -105,6 +107,7 @@ def fight_login(fight_counts):
     进入战斗
     """
 
+    mouse_press("middle", 0.05)
     cur_character = current_character()
 
     # 5次执行完整逻辑或换人后退出
@@ -121,7 +124,6 @@ def fight_login(fight_counts):
             else:
                 fight_counts[cur_character] += 1
 
-        mouse_press("middle", 0.05)
         for tactic in fight_tactics:
             for _ in range(tactic.repeat):
                 execute_tactic_event.wait() # Wait if execute_tactic_event is set
@@ -133,7 +135,8 @@ def fight_login(fight_counts):
             # 如果人物变动，退出并切换战斗逻辑
             if prev_character != cur_character:
                 break
-
+    mouse_press("middle", 0.05)
+    
     return fight_counts
 
 
