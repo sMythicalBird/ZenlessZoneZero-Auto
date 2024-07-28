@@ -1,0 +1,53 @@
+# 冲刺蓄力攻击
+-   key: "w"
+    type: "down"
+    delay: 0
+# 连按shift2次
+-   key: "shift"
+    type: "press"
+    duration: 0.025
+    delay: 0.1
+    repeat: 2
+# 鼠标左键按下
+-   key: "left"
+    type: "press"
+    duration: 1.2
+    delay: 0.1
+# 松开w
+-   key: "w"
+    type: "up"
+    delay: 0
+
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第3段连按延长时间
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.1
+    repeat: 5
+
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第3段连按延长时间
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.1
+    repeat: 5

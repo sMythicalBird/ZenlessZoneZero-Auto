@@ -20,3 +20,4 @@ config.yaml
 tactics.yaml
 script
 screenshot
+tactics/

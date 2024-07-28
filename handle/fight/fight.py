@@ -9,18 +9,23 @@ from typing import Dict
 from datetime import datetime
 from schema import Position, info
 from utils import control, screenshot, logger
-from utils.task import task
+from utils.task import task, find_template
 from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from utils import config, fightTactics, RootPath
+from utils import config, characters, fightTacticsDict, RootPath
 from schema.config import Tactic
 from .light_detector import detector
 from threading import Thread
+import threading
 import cv2
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
 
+
+# Create an event for synchronization
+# when 黄光thread execute tactic，block fight_login
+execute_tactic_event = threading.Event()
 
 def is_not_fight(text: str):
     """
@@ -78,31 +83,71 @@ def detector_task():
         img = screenshot()
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
+        execute_tactic_event.set()      # Signal to suspend fight_login
         if results["yellow"]["rect"]:
-            press("space", duration=0.025)
-            time.sleep(0.1)
-            # 弹反反击
-            mouse_press("left", 0.05)
-            time.sleep(0.05)
-            mouse_press("left", 0.05)
+            for tactic in fightTacticsDict["黄光"]:
+                for _ in range(tactic.repeat):
+                    execute_tactic(tactic)
+                    if tactic.delay:
+                        time.sleep(tactic.delay)
         elif results["red"]["rect"]:
-            press("shift", duration=0.025)
-            time.sleep(0.1)
-            # 闪避反击
-            mouse_press("left", 0.05)
+            for tactic in fightTacticsDict["红光"]:
+                for _ in range(tactic.repeat):
+                    execute_tactic(tactic)
+                    if tactic.delay:
+                        time.sleep(tactic.delay)
+        execute_tactic_event.clear()    # Clear signal to resume fight_login
 
 
 # 定义战斗逻辑
-def fight_login():
+def fight_login(fight_counts):
     """
     进入战斗
     """
-    mouse_press("middle", 0.05)
-    for tactic in fightTactics:
-        for _ in range(tactic.repeat):
-            execute_tactic(tactic)
-            if tactic.delay:
-                time.sleep(tactic.delay)
+
+    cur_character = current_character()
+
+    # 5次执行完整逻辑或换人后退出
+    for _ in range(5):
+        prev_character = cur_character
+        fight_tactics = fightTacticsDict[cur_character]
+        logger.debug(f"进入{cur_character}战斗模式")
+        if cur_character in fight_counts:
+            if fight_counts[cur_character] >= 2:
+                if cur_character+"技能" in fightTacticsDict:
+                    fight_tactics = fightTacticsDict[cur_character+"技能"]
+                    logger.debug(f"进入{cur_character}技能战斗模式")
+                fight_counts[cur_character] = 0
+            else:
+                fight_counts[cur_character] += 1
+
+        mouse_press("middle", 0.05)
+        for tactic in fight_tactics:
+            for _ in range(tactic.repeat):
+                execute_tactic_event.wait() # Wait if execute_tactic_event is set
+                logger.debug(f"key: {tactic.key}, delay: {tactic.delay}")
+                execute_tactic(tactic)
+                if tactic.delay:
+                    time.sleep(tactic.delay)
+
+            cur_character = current_character()
+            # 如果人物变动，退出并切换战斗逻辑
+            if prev_character != cur_character:
+                break
+
+    return fight_counts
+
+
+def current_character():
+    img = screenshot()
+    for chara, chara_icon in characters.items():
+        imgPosition = find_template(
+            img, chara_icon, (0, 0, 200, 120), threshold=0.9
+        )
+        if imgPosition is not None:
+            if chara in fightTacticsDict:
+                return chara
+    return "默认"
 
 
 # 地图中自动寻路
@@ -149,6 +194,9 @@ def action():
     control.head(1.5)
     Thread(target=detector_task).start()
     num = 1
+    # 记录角色普通战斗模块执行次数，达到一定次数后执行技能战斗模块
+    # 若角色技能战斗模块为空，则执行角色普通模块
+    fight_counts = {chara: 0 for chara in characters}
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
         if fight_time > config.maxFightTime:
@@ -168,9 +216,7 @@ def action():
         if num % 2:
             turn()
         num += 1
-        # 执行战斗逻辑五次
-        for i in range(5):
-            fight_login()
+        fight_counts = fight_login(fight_counts)
 
 
 # 打不过溜了
