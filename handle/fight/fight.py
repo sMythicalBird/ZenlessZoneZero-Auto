@@ -107,8 +107,12 @@ def fight_login():
 
 # 地图中自动寻路
 def turn():
+    cnt = 0  # 记录转向次数
     while True:
         flag = True
+        cnt += 1
+        if cnt > 4:
+            break
         for i in range(10):
             screen = screenshot()
             screen_gray = cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY)
