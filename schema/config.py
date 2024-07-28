@@ -8,7 +8,6 @@
 from typing import List
 
 from pydantic import BaseModel, Field, model_validator
-from enum import Enum
 
 ZoneMap = {
     1: {
@@ -77,3 +76,4 @@ class Config(BaseModel):
     hasBoom: bool = Field(False, description="是否有炸弹")
     useGpu: bool = Field(True, description="是否使用GPU")
     selBuff: List[str] = Field([], description="选择buff")
+    characters: List[str] = Field([], description="角色池，用于载入角色战斗模块，空则载入默认战斗模块")

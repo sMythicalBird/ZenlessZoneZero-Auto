@@ -53,10 +53,14 @@ logger.info(f"加载人物头像 {character_dir}")
 if not character_dir.exists():
     os.makedirs(character_dir)
 characters = {}
-for png_file in character_dir.glob('*.png'):
+for chara in config.characters:
+    png_file = character_dir / f"{chara}.png"
+    if not png_file.exists():
+        logger.info(f"暂不支持{chara}战斗模块")
+        continue
     shutil.copy(png_file, tmp_file)
     image = cv2.imread(str(tmp_file), cv2.IMREAD_UNCHANGED)
     if image is None:
         raise ValueError(f"加载头像文件失败: {png_file}")
-    characters[png_file.stem] = image
+    characters[chara] = image
 os.remove(tmp_file)
