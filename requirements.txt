@@ -7,8 +7,10 @@ pillow
 pydantic>2.0
 requests
 tqdm
+pyautogui
 pynput
 pydirectinput-rgx
+pyside6==6.7.2
 pywin32
 pyyaml
 onnxruntime-gpu
