@@ -34,6 +34,11 @@ logger.info(f"配置文件加载成功")
 
 tactics_dir = RootPath / "tactics"
 fightTacticsDict = {}
+if not tactics_dir.exists() or len(tactics_dir.glob("*.yaml"))==0:
+    logger.info(f"未检测到 {tactics_dir} 目录，请在 {tactics_dir} 目录下添加战斗策略文件")
+    tactics_dir = RootPath / "tactics_defaults"
+    logger.info(f"将使用 {tactics_dir} 默认目录加载战斗策略文件")
+
 for yaml_file in tactics_dir.glob("*.yaml"):
     logger.info(f"加载战斗策略文件 {yaml_file}")
     with open(yaml_file, "r", encoding="utf-8") as f:
@@ -43,8 +48,6 @@ for yaml_file in tactics_dir.glob("*.yaml"):
         continue
     fightTactics: List[Tactic] = [Tactic(**item) for item in fightTactics]
     fightTacticsDict[yaml_file.stem] = fightTactics
-if not fightTacticsDict:
-    logger.error(f"请在 {tactics_dir} 目录下添加战斗策略文件")
 
 
 character_dir = RootPath / "download" / "characters"
