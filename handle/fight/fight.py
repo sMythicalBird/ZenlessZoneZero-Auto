@@ -125,7 +125,6 @@ def fight_login(fight_counts):
         for tactic in fight_tactics:
             for _ in range(tactic.repeat):
                 execute_tactic_event.wait() # Wait if execute_tactic_event is set
-                logger.debug(f"key: {tactic.key}, delay: {tactic.delay}")
                 execute_tactic(tactic)
                 if tactic.delay:
                     time.sleep(tactic.delay)
