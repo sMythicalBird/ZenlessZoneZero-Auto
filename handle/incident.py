@@ -115,7 +115,8 @@ def action(positions: Dict[str, Position]):
         info.currentStage = 1  # 左下拖
     elif utils.config.modeSelect == 3:
         info.currentStage = 2  # 右下拖
-
+    elif config.modeSelect == 4:
+        info.currentStage = 0  # 向下拖拽
 
 # 8、资源回收小组
 @task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
@@ -357,23 +358,45 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(
-    name="零号银行_离开",
-    priority=10,
-    target_texts=["还可存款0次", "^零号银行$", "^离开$"],
-)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^离开$")
-    control.click(pos.x, pos.y)
-    info.exitFlag = True  # 存完钱准备离开
+if config.modeSelect == 2 or config.modeSelect == 3:
+    @task.page(
+        name="零号银行_离开",
+        priority=10,
+        target_texts=["还可存款0次", "^零号银行$", "^离开$"],
+    )
+    def action(positions: Dict[str, Position]):
+        pos = positions.get("^离开$")
+        control.click(pos.x, pos.y)
+        info.exitFlag = True  # 存完钱准备离开
 
 
-# 零号业绩
-@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认$")
-    control.click(pos.x, pos.y)
-    info.exitFlag = True  # 拿完业绩准备离开
+    # 零号业绩
+    @task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+    def action(positions: Dict[str, Position]):
+        pos = positions.get("^确认$")
+        control.click(pos.x, pos.y)
+        info.exitFlag = True  # 拿完业绩准备离开
+if config.modeSelect == 4:
+    from utils.map.components import my_set_weight,my_unset_weight
+
+    @task.page(
+        name="零号银行_离开",
+        priority=10,
+        target_texts=["还可存款0次", "^零号银行$", "^离开$"],
+    )
+    def action(positions: Dict[str, Position]):
+        pos = positions.get("^离开$")
+        control.click(pos.x, pos.y)
+        my_set_weight()
+
+    # 零号业绩
+    @task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+    def action(positions: Dict[str, Position]):
+        pos = positions.get("^确认$")
+        control.click(pos.x, pos.y)
+        info.exitFlag = True  # 拿完业绩准备离开
+        my_unset_weight()
+
 
 
 @task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
