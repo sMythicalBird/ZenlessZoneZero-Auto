@@ -12,7 +12,8 @@ from utils import control, screenshot, logger
 from utils.task import task, find_template
 from re import template
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from utils import config, characters_icons, fightTacticsDict, RootPath
+from utils import fightTacticsDict, RootPath
+import utils
 from schema.config import Tactic
 from .light_detector import detector
 from threading import Thread
@@ -142,7 +143,7 @@ def fight_login(fight_counts):
 
 def current_character():
     img = screenshot()
-    for chara, chara_icon in characters_icons.items():
+    for chara, chara_icon in utils.characters_icons.items():
         imgPosition = find_template(
             img, chara_icon, (0, 0, 200, 120), threshold=0.9
         )
@@ -198,14 +199,14 @@ def action():
     num = 1
     # 记录角色普通战斗模块执行次数，达到一定次数后执行技能战斗模块
     # 若角色技能战斗模块为空，则执行角色普通模块
-    fight_counts = {chara: 0 for chara in characters_icons}
+    fight_counts = {chara: 0 for chara in utils.characters_icons}
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
-        if fight_time > config.maxFightTime:
+        if fight_time > utils.config.maxFightTime:
             control.esc()
             break
         logger.debug(
-            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{config.maxFightTime - fight_time:.2f}s",
+            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{utils.config.maxFightTime - fight_time:.2f}s",
         )
         # 检查是否还在战斗,判断两次，防止因为战斗动画的原因产生误判退出
         if is_not_fight("Space"):

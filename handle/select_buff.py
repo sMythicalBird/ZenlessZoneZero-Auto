@@ -5,12 +5,13 @@
 @author:    sMythicalBird
 """
 import time
-from utils import control, screenshot, config
+import utils
+from utils import control, screenshot
 from utils.task import task
 from re import template
 
 
-selBuff = config.selBuff
+selBuff = utils.config.selBuff
 
 
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
