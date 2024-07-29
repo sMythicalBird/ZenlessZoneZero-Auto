@@ -132,7 +132,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         if output["y"] >= h // 2
         and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
     ]  # 按 x 坐标排序
-    # 2*2格子拆分
+    # 2*2 格子拆分
     m_w = w * 1.5  # 切割2*2
     outputs_real = []
     for each in outputs:
