@@ -153,7 +153,7 @@ def move1():
     keyDown("w")
     time.sleep(0.18)
     moveRel(500, 0, relative=True)
-    time.sleep(0.7)
+    time.sleep(0.8)
     moveRel(-500, 0, relative=True)
     time.sleep(0.3)
     keyUp("w")
@@ -212,7 +212,7 @@ def action():
         move1()
     else:
         move2()
-    time.sleep(1)
+    time.sleep(2)
     pos = get_pos("^战斗委托$")
     if pos:
         mflag = 1
