@@ -309,28 +309,28 @@ class MainWindow(QMainWindow):
 
     def start_action(self):
         if self.task_thread is None:
-            print("Starting task thread...")
+            logger.debug("Starting task thread...")
             self.stop_event.clear()
             self.task_thread = Thread(target=self.run_task)
             self.task_thread.start()
 
     def restart_action(self):
         if self.task_thread is not None:
-            print("Restarting task...")
+            logger.debug("Restarting task...")
             task.restart()
 
     def pause_action(self):
         if self.task_thread is not None:
-            print("Pausing task...")
+            logger.debug("Pausing task...")
             task.pause()
 
     def stop_action(self):
         if self.task_thread is not None:
-            print("Stopping task thread...")
+            logger.debug("Stopping task thread...")
             self.stop_event.set()
             task.stop()
             self.task_thread.join()
-            print("Task thread completed.")
+            logger.debug("Task thread completed.")
             self.task_thread = None
 
     def run_task(self):
@@ -355,12 +355,12 @@ class MainWindow(QMainWindow):
         key_thread = Thread(target=key_event)
         key_thread.start()
 
-        print("Starting task run...")
+        logger.debug("Starting task run...")
         while not self.stop_event.is_set():
             task.run()
-        print("Task run completed.")
+        logger.debug("Task run completed.")
         key_thread.join()
-        print("Key thread completed.")
+        logger.debug("Key thread completed.")
 
 
 if __name__ == "__main__":
