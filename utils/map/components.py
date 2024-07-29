@@ -132,7 +132,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         if output["y"] >= h // 2
         and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
     ]  # 按 x 坐标排序
-    # 2*2格子拆分
+    # 2*2 格子拆分
     m_w = w * 1.5  # 切割2*2
     outputs_real = []
     for each in outputs:
@@ -181,9 +181,9 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         output = x_outputs.pop(0)
         x = output["x"]
         map_component = component_class(screen, x, output["y"], w, h, output["label"])
-        # if map_component.confidence < 0.97:
-        #     map_component.weight = 3
-        #     map_component.name = "其他"
+        if map_component.confidence < 0.95:
+            map_component.weight = 3
+            map_component.name = "其他"
         # print(map_component)
         group = x_groups[-1] if x_groups else None
         if group is None or group["max_x"] < x:

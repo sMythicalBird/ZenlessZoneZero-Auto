@@ -76,6 +76,7 @@ class Ocr:
         self.interval = interval
         # 判断GPU是否可用
         use_gpu = is_compiled_with_cuda()
+        # TODO: check if we want to read the value (utils.config.useGpu) modified by GUI
         device = "GPU" if use_gpu and config.useGpu else "CPU"
         logger.debug(f"使用{device}进行OCR识别")
         self.paddleOCR = PaddleOCR(

@@ -12,11 +12,11 @@ import numpy as np
 from schema import Position, info
 from utils import control, screenshot, logger, RootPath
 from pathlib import Path
-from utils.task import task, ImageMatch, find_template
+from utils.task import task, find_template
 from PIL import Image
 from re import template
-from utils import config
 from utils.map.components import set_weight
+import utils
 
 
 def get_pos(text: str):
@@ -109,11 +109,11 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
     control.click(pos.x, pos.y)
     # 进入战斗
-    if config.modeSelect == 1:
+    if utils.config.modeSelect == 1:
         info.currentStage = 5  # 向下拖拽
-    elif config.modeSelect == 2:
+    elif utils.config.modeSelect == 2:
         info.currentStage = 1  # 左下拖
-    elif config.modeSelect == 3:
+    elif utils.config.modeSelect == 3:
         info.currentStage = 2  # 右下拖
 
 
@@ -213,9 +213,9 @@ def action(positions: Dict[str, Position]):
 
 
 # 降低压力值 回复生命值 获得齿轮硬币
-@task.page(name="降低压力值", target_texts=["^获得齿轮硬币$"])
+@task.page(name="降低压力值", target_texts=["^降低压力值"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("^获得齿轮硬币$")
+    pos = positions.get("^降低压力值")
     control.click(pos.x, pos.y)
 
 
