@@ -4,21 +4,29 @@
 @time:      2024/7/10 上午2:35
 @author:    sMythicalBird
 """
-import time
-from typing import Dict
-from datetime import datetime
-from schema import Position, info
-from utils import control, screenshot, logger
-from utils.task import task, find_template
-from re import template
-from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from utils import fightTacticsDict, RootPath
-import utils
-from schema.config import Tactic
-from .light_detector import detector
-from threading import Thread
 import threading
+import time
+from datetime import datetime
+from re import template
+from threading import Thread
+from typing import Dict
+
 import cv2
+from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
+
+from schema import Position, info
+from schema.config import Tactic
+from utils import (
+    fightTacticsDict,
+    RootPath,
+    characterIcons,
+    config,
+    control,
+    screenshot,
+    logger,
+)
+from utils.task import task, find_template
+from .light_detector import detector
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
@@ -142,8 +150,11 @@ def fight_login(fight_counts: dict):
 
 
 def current_character():
+    """
+    获取当前角色
+    """
     img = screenshot()
-    for chara, chara_icon in utils.characters_icons.items():
+    for chara, chara_icon in characterIcons.items():
         imgPosition = find_template(img, chara_icon, (0, 0, 200, 120), threshold=0.9)
         if imgPosition is not None:
             if chara in fightTacticsDict:
@@ -151,8 +162,10 @@ def current_character():
     return "默认"
 
 
-# 地图中自动寻路
 def turn():
+    """
+    地图中自动寻路 适用于地图中的转向
+    """
     cnt = 0  # 记录转向次数
     while True:
         flag = True
@@ -197,14 +210,14 @@ def action():
     num = 1
     # 分别记录不同角色普通战斗模块执行次数，达到一定次数后执行技能战斗模块
     # 若角色技能战斗模块为空，则执行角色普通模块
-    fight_counts = {chara: 0 for chara in utils.characters_icons}
+    fight_counts = {chara: 0 for chara in characterIcons}
     while True:
         fight_time = (datetime.now() - info.lastMoveTime).total_seconds()
-        if fight_time > utils.config.maxFightTime:
+        if fight_time > config.maxFightTime:
             control.esc()
             break
         logger.debug(
-            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{utils.config.maxFightTime - fight_time:.2f}s",
+            f"当前战斗时长{fight_time:.2f}s 剩余战斗时间{config.maxFightTime - fight_time:.2f}s",
         )
         # 检查是否还在战斗,判断两次，防止因为战斗动画的原因产生误判退出
         if is_not_fight("Space"):

@@ -11,7 +11,6 @@ from itertools import groupby
 import numpy as np
 from schema.info import Dirct
 from schema import MapComponent, MapInfo
-from utils import logger
 
 
 def bi_bfs(

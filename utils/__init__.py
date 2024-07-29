@@ -13,7 +13,7 @@ from .init import (
     RealHeight,
     Hwnd,
 )
-from .config import config, characters_icons, fightTacticsDict, load_characters
+from .config import config, characterIcons, fightTacticsDict, load_characters
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way
@@ -31,7 +31,7 @@ __all__ = [
     "get_map_info",
     "auto_find_way",
     "config",
-    "characters_icons",
+    "characterIcons",
     "load_characters",
     "fightTacticsDict",
 ]
