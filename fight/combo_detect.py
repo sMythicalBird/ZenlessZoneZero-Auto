@@ -72,7 +72,7 @@ def circle_detect(img_edge: np.ndarray) -> bool:
             return True
 
 
-def character_choice_detect(img: np.ndarray) -> bool:
+def combo_detect(img: np.ndarray) -> bool:
     """
     角色选择检测
     :param img: 输入图像 RGB 格式

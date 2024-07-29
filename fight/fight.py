@@ -25,7 +25,7 @@ from utils import (
 )
 from utils.task import task, find_template
 from .light_detector import detector
-from .character_choice import character_choice_detect  # 连携技的判断
+from .combo_detect import combo_detect  # 连携技的判断
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
@@ -92,10 +92,9 @@ def detector_task():
         img = screenshot()
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
-        combo_attack = character_choice_detect(img)
+        combo_attack = combo_detect(img)
         execute_tactic_event.set()  # Signal to suspend fight_login
         if combo_attack:
-            print("combo")
             mouse_press("left", 0.05)
             time.sleep(0.1)
             mouse_press("left", 0.05)
