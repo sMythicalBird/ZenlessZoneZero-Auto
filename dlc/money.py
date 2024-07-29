@@ -124,7 +124,7 @@ def action(positions: Dict[str, Position]):
 
 
 # 通关
-@task.page(name="通关", target_texts=["^完成$"])
+@task.page(name="通关", priority=2,target_texts=["^完成$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^完成$")
     control.click(pos.x, pos.y)
@@ -202,7 +202,8 @@ def action(positions: Dict[str, Position]):
 @task.page(
     name="主界面",
     priority=2,
-    target_image=ImageMatch(image="dlc_video.png", confidence=0.9),
+    target_texts=["星期"],
+
 )
 def action():
     global mflag
