@@ -115,7 +115,8 @@ def action(positions: Dict[str, Position]):
         info.currentStage = 1  # 左下拖
     elif config.modeSelect == 3:
         info.currentStage = 2  # 右下拖
-
+    elif config.modeSelect == 4:
+        info.currentStage = 0  # 向下拖拽
 
 # 8、资源回收小组
 @task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
