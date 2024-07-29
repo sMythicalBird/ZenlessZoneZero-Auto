@@ -11,7 +11,6 @@
 # option: 添加选项的处理
 
 from .incident import *
-from .fight import *
 from .others import *
 from .option import *
 from .favor_ability import *

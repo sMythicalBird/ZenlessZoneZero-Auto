@@ -8,3 +8,4 @@
 from .info import info
 from .base import *
 from .map import *
+from .config import ZoneMap
