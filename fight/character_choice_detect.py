@@ -44,8 +44,7 @@ def find_contours(img_edge: np.ndarray) -> tuple:
     轮廓提取
     :param img_edge: 输入轮廓检测结果
     """
-    contours, _ = cv2.findContours(
-        img_edge, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(img_edge, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 
@@ -70,15 +69,16 @@ def circle_detect(img_edge: np.ndarray) -> bool:
     圆形检测
     :param img_edge: 输入轮廓检测结果
     """
-    circles = cv2.HoughCircles(img_edge,
-                               cv2.HOUGH_GRADIENT,
-                               dp=1,
-                               minDist=20,
-                               param1=50,
-                               param2=30,
-                               minRadius=35,
-                               maxRadius=45
-                               )
+    circles = cv2.HoughCircles(
+        img_edge,
+        cv2.HOUGH_GRADIENT,
+        dp=1,
+        minDist=20,
+        param1=50,
+        param2=30,
+        minRadius=35,
+        maxRadius=45,
+    )
     if circles is not None:
         if len(circles) == 2:
             return True

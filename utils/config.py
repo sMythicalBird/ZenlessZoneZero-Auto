@@ -16,6 +16,7 @@ import os
 import shutil
 
 
+# 加载系统配置
 def load_config():
     config_path = RootPath / "config.yaml"
     logger.info(f"加载配置文件 {config_path}")
@@ -35,14 +36,15 @@ def load_config():
     return config
 
 
+# 加载战斗逻辑
 def load_tactics():
-    tactics_dir = RootPath / "tactics"
+    tactics_dir = RootPath / "fight/tactics"
     fightTacticsDict = {}
     if not tactics_dir.exists() or len(list(tactics_dir.glob("*.yaml"))) == 0:
         logger.info(
             f"未检测到 {tactics_dir} 目录，请在 {tactics_dir} 目录下添加战斗策略文件"
         )
-        tactics_dir = RootPath / "tactics_defaults"
+        tactics_dir = RootPath / "fight/tactics_defaults"
         logger.info(f"将使用 {tactics_dir} 默认目录加载战斗策略文件")
 
     for yaml_file in tactics_dir.glob("*.yaml"):
@@ -59,7 +61,7 @@ def load_tactics():
 
 # 加载角色头像进行模板匹配
 def load_characters(config):
-    character_dir = RootPath / "download" / "characters"
+    character_dir = RootPath / "fight/characters"
     tmp_file = character_dir / "tmp.png"
     logger.info(f"加载人物头像 {character_dir}")
     if not character_dir.exists():
