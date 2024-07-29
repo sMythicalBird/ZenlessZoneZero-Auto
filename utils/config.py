@@ -15,6 +15,7 @@ import cv2
 import os
 import shutil
 
+
 def load_config():
     config_path = RootPath / "config.yaml"
     logger.info(f"加载配置文件 {config_path}")
@@ -33,11 +34,14 @@ def load_config():
     logger.info(f"配置文件加载成功")
     return config
 
+
 def load_tactics():
     tactics_dir = RootPath / "tactics"
     fightTacticsDict = {}
-    if not tactics_dir.exists() or len(list(tactics_dir.glob("*.yaml")))==0:
-        logger.info(f"未检测到 {tactics_dir} 目录，请在 {tactics_dir} 目录下添加战斗策略文件")
+    if not tactics_dir.exists() or len(list(tactics_dir.glob("*.yaml"))) == 0:
+        logger.info(
+            f"未检测到 {tactics_dir} 目录，请在 {tactics_dir} 目录下添加战斗策略文件"
+        )
         tactics_dir = RootPath / "tactics_defaults"
         logger.info(f"将使用 {tactics_dir} 默认目录加载战斗策略文件")
 
@@ -52,6 +56,8 @@ def load_tactics():
         fightTacticsDict[yaml_file.stem] = fightTactics
     return fightTacticsDict
 
+
+# 加载角色头像进行模板匹配
 def load_characters(config):
     character_dir = RootPath / "download" / "characters"
     tmp_file = character_dir / "tmp.png"
@@ -59,9 +65,10 @@ def load_characters(config):
     if not character_dir.exists():
         os.makedirs(character_dir)
     characters_icons = {}
+    # 读取配置文件角色头像
     for chara in config.characters:
         png_file = character_dir / f"{chara}.png"
-        if not png_file.exists():
+        if not png_file.exists():  # 不存在使用默认配置
             logger.info(f"暂不支持{chara}战斗模块")
             continue
         shutil.copy(png_file, tmp_file)
@@ -71,6 +78,7 @@ def load_characters(config):
         characters_icons[chara] = image
     os.remove(tmp_file)
     return characters_icons
+
 
 print("Executing utils module")
 config = load_config()
