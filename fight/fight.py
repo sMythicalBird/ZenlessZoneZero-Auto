@@ -10,10 +10,8 @@ from datetime import datetime
 from re import template
 from threading import Thread
 from typing import Dict
-
 import cv2
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-
 from schema import Position, info
 from schema.config import Tactic
 from utils import (
@@ -27,6 +25,7 @@ from utils import (
 )
 from utils.task import task, find_template
 from .light_detector import detector
+from .character_choice_detect import character_choice_detect  # 连携技的判断
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
@@ -93,8 +92,15 @@ def detector_task():
         img = screenshot()
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
+        combo_attack = character_choice_detect(img)
         execute_tactic_event.set()  # Signal to suspend fight_login
-        if results["yellow"]["rect"]:
+        if combo_attack:
+            print("combo")
+            mouse_press("left", 0.05)
+            time.sleep(0.1)
+            mouse_press("left", 0.05)
+            time.sleep(0.1)
+        elif results["yellow"]["rect"]:
             logger.debug(f"进入黄光战斗模式")
             for tactic in fightTacticsDict["黄光"]:
                 for _ in range(tactic.repeat):
@@ -119,7 +125,6 @@ def fight_login(fight_counts: dict):
 
     mouse_press("middle", 0.05)
     cur_character = current_character()
-
     # 5次执行完整逻辑或换人后退出
     for _ in range(5):
         prev_character = cur_character
@@ -146,7 +151,6 @@ def fight_login(fight_counts: dict):
             if prev_character != cur_character:
                 break
     mouse_press("middle", 0.05)
-    # return fight_counts
 
 
 def current_character():

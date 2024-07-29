@@ -99,20 +99,6 @@ def character_choice_detect(img: np.ndarray) -> bool:
 
     img_crop = img[y1:y2, x1:x2]  # 裁剪出目标判断区域
     img_edge_BGR = canny_edge_detect(img_crop)
-    img_rect_detect = rect_detect(img_crop.copy(), img_edge_BGR)
-    img_circle_detect = circle_detect(img_crop.copy(), img_edge_BGR)
-
+    img_circle_detect = circle_detect(img_edge_BGR)
+    img_rect_detect = rect_detect(img_edge_BGR)
     return img_rect_detect or img_circle_detect
-
-
-# 测试用例
-directory = r"d:\ZZZ-Auto\dev\ZenlessZoneZero-Auto\test\screenshots\analyse"
-
-# file = "ZZZAuto_20240727-200101.220.png"
-# img = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
-# print(f"{file}:{character_choice_detect(img)}")
-
-for file in os.listdir(directory):
-    path = os.path.join(directory, file)
-    img = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
-    print(f"{file}:{character_choice_detect(img)}")
