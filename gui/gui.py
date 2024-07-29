@@ -32,9 +32,11 @@ from handle import *
 
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
                                QComboBox, QSlider, QGroupBox, QGridLayout, QLineEdit, QCheckBox, QStackedWidget,
-                               QTabWidget)
+                               QTabWidget, QSpacerItem, QSizePolicy)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
+
+from component.toggle_switch import ToggleSwitch
 
 # Set the QT_PLUGIN_PATH to the appropriate directory
 plugin_path = os.path.join(sys.prefix, "Lib", "site-packages", "PySide6", "plugins")
@@ -127,15 +129,35 @@ class MainWindow(QMainWindow):
         self.max_map_time_input.editingFinished.connect(self.update_max_map_time)
         self.max_fight_time_input.editingFinished.connect(self.update_max_fight_time)
 
-        # check group
+        # Check group
         self.check_group = QGroupBox("勾选设置")
-        self.check_layout = QHBoxLayout()
-        self.has_boom_input = QCheckBox("Has Boom")
+        self.check_layout = QHBoxLayout()  # Use QHBoxLayout to keep them on the same row
+
+        # Use a QVBoxLayout to group each label and toggle switch closer together
+        group1_layout = QVBoxLayout()
+        row1_layout = QHBoxLayout()
+        self.has_boom_label = QLabel("使用炸弹")
+        self.has_boom_input = ToggleSwitch()
         self.has_boom_input.setChecked(utils.config.hasBoom)
-        self.use_gpu_input = QCheckBox("Use GPU")
+        row1_layout.addWidget(self.has_boom_label)
+        row1_layout.addWidget(self.has_boom_input)
+        row1_layout.addSpacerItem(QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        group1_layout.addLayout(row1_layout)
+
+        group2_layout = QVBoxLayout()
+        row2_layout = QHBoxLayout()
+        self.use_gpu_label = QLabel("使用GPU")
+        self.use_gpu_input = ToggleSwitch()
         self.use_gpu_input.setChecked(utils.config.useGpu)
-        self.check_layout.addWidget(self.has_boom_input)
-        self.check_layout.addWidget(self.use_gpu_input)
+        row2_layout.addWidget(self.use_gpu_label)
+        row2_layout.addWidget(self.use_gpu_input)
+        row2_layout.addSpacerItem(QSpacerItem(20, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        group2_layout.addLayout(row2_layout)
+
+        # Add both group layouts to the main horizontal layout
+        self.check_layout.addLayout(group1_layout)
+        self.check_layout.addLayout(group2_layout)
+
         self.check_group.setLayout(self.check_layout)
 
         self.has_boom_input.stateChanged.connect(self.update_has_boom)
