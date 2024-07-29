@@ -13,7 +13,7 @@ from .init import (
     RealHeight,
     Hwnd,
 )
-from .config import config, fightTactics
+from .config import config, characterIcons, fightTacticsDict, load_characters
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way
@@ -31,9 +31,11 @@ __all__ = [
     "get_map_info",
     "auto_find_way",
     "config",
-    "fightTactics",
+    "characterIcons",
+    "load_characters",
+    "fightTacticsDict",
 ]
 logger.debug("初始化utils模块完成")
 
-version = "072700"
+version = "072800"
 logger.info(f"当前版本：{version}")

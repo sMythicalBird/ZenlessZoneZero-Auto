@@ -66,8 +66,8 @@ class Control:
         x: int,
         y: int,
         clicks: int = 2,
-        interval: float = 0.1,
-        duration: float = 0.1,
+        interval: float = 0.05,
+        duration: float = 0.05,
     ):
         x, y = self._pre(x, y)
         click(x, y, clicks=clicks, interval=interval, duration=duration)

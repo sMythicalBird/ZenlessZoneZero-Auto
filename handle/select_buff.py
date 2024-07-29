@@ -4,13 +4,13 @@
 @time:      2024/7/24 下午3:57
 @author:    sMythicalBird
 """
-import time
-from utils import control, screenshot, config
+import utils
+from utils import control, screenshot
 from utils.task import task
 from re import template
 
 
-selBuff = config.selBuff
+selBuff = utils.config.selBuff
 
 
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
@@ -42,4 +42,3 @@ def action():
                         return
     for pos in sel_list:  # 防止遇到不可触碰事件
         control.click(pos[0], pos[1])
-        time.sleep(0.1)

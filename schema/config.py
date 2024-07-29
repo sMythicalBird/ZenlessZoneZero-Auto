@@ -8,7 +8,6 @@
 from typing import List
 
 from pydantic import BaseModel, Field, model_validator
-from enum import Enum
 
 ZoneMap = {
     1: {
@@ -72,8 +71,9 @@ class TargetMap(BaseModel):
 class Config(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
     modeSelect: int = Field(2, description="模式选择")
-    maxFightTime: int = Field(150, description="最大战斗时间（单位秒）")
-    maxMapTime: int = Field(15 * 60, description="在地图内最大时间（单位秒）")
+    maxFightTime: int = Field(200, description="最大战斗时间（单位秒）")
+    maxMapTime: int = Field(25 * 60, description="在地图内最大时间（单位秒）")
     hasBoom: bool = Field(False, description="是否有炸弹")
     useGpu: bool = Field(True, description="是否使用GPU")
-    selBuff: List[str] = Field([], description="选择buff")
+    selBuff: List[str] = Field(["冻结", "暴击", "决斗", "闪避"], description="选择buff")
+    characters: List[str] = Field(["艾莲", "莱卡恩", "苍角", "朱鸢", "安比", "妮可"], description="角色池，用于载入角色战斗模块，空则载入默认战斗模块")
