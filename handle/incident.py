@@ -17,17 +17,16 @@ from PIL import Image
 from re import template
 from utils.map.components import set_weight
 import utils
+from utils.map.components import my_set_weight, my_unset_weight
 
 
 def get_pos(text: str):
     text = template(text)
     img = screenshot()  # 截图
     ocr_Results = task.ocr(img)  # OCR识别
-    # print(ocr_Results)
     positions = []
     for ocr_result in ocr_Results:
         if text.search(ocr_result.text):
-            # print(ocr_result)
             positions.append(
                 [
                     (ocr_result.position[0] + ocr_result.position[2]) / 2,
@@ -115,6 +114,8 @@ def action(positions: Dict[str, Position]):
         info.currentStage = 1  # 左下拖
     elif utils.config.modeSelect == 3:
         info.currentStage = 2  # 右下拖
+    elif utils.config.modeSelect == 4:
+        info.currentStage = 2  # 向下拖拽
 
 
 # 8、资源回收小组
@@ -365,7 +366,22 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    info.exitFlag = True  # 存完钱准备离开
+    if utils.config.modeSelect == 4:
+        my_set_weight()
+        info.currentStage = 6
+    else:  # 模式3
+        info.exitFlag = True  # 存完钱准备离开
+
+
+@task.page(
+    name="零号银行_离开",
+    priority=10,
+    target_texts=["还可存款0次", "^零号银行$", "^离开$"],
+)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+    my_set_weight()
 
 
 # 零号业绩
@@ -374,6 +390,16 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
     info.exitFlag = True  # 拿完业绩准备离开
+    my_unset_weight()
+
+
+# 零号业绩
+@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确认$")
+    control.click(pos.x, pos.y)
+    info.exitFlag = True  # 拿完业绩准备离开
+    my_unset_weight()
 
 
 @task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])

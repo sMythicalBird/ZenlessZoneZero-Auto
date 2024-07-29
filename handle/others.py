@@ -54,6 +54,8 @@ def grid_map(screen: np.ndarray):
             control.move_at(k.x, k.y, 900, 500)
         elif info.currentStage == 5 and (k := find_current()):  # 向下拖去传送点
             control.move_at(k.x, k.y, 640, 500)
+        elif info.currentStage == 6 and (k := find_current()):  # 向左拖动
+            control.move_at(k.x, k.y, 260, 320)
     # 获取地图信息
     map_info = get_map_info(screen)
     if not map_info:
@@ -110,7 +112,7 @@ def select_map(positions: Dict[str, Position]):
 def select_level(positions: Dict[str, Position]):
     pos = positions.get(map_level)
     control.click(pos.x, pos.y)
-    time.sleep(2)
+    time.sleep(0.5)
     pos = positions.get("下一步")
     control.click(pos.x, pos.y)
 
