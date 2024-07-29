@@ -25,7 +25,7 @@ from utils import (
 )
 from utils.task import task, find_template
 from .light_detector import detector
-from .character_choice_detect import character_choice_detect  # 连携技的判断
+from .character_choice import character_choice_detect  # 连携技的判断
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
