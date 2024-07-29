@@ -13,7 +13,7 @@ from .init import (
     RealHeight,
     Hwnd,
 )
-from .config import config, characters, fightTacticsDict
+from .config import config, characters_icons, fightTacticsDict, load_characters
 from .utils import *
 from .control import control
 from .map import get_map_info, auto_find_way
@@ -31,7 +31,8 @@ __all__ = [
     "get_map_info",
     "auto_find_way",
     "config",
-    "characters",
+    "characters_icons",
+    "load_characters",
     "fightTacticsDict",
 ]
 logger.debug("初始化utils模块完成")

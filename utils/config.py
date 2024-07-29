@@ -58,7 +58,7 @@ def load_characters(config):
     logger.info(f"加载人物头像 {character_dir}")
     if not character_dir.exists():
         os.makedirs(character_dir)
-    characters = {}
+    characters_icons = {}
     for chara in config.characters:
         png_file = character_dir / f"{chara}.png"
         if not png_file.exists():
@@ -68,10 +68,11 @@ def load_characters(config):
         image = cv2.imread(str(tmp_file), cv2.IMREAD_UNCHANGED)
         if image is None:
             raise ValueError(f"加载头像文件失败: {png_file}")
-        characters[chara] = image
+        characters_icons[chara] = image
     os.remove(tmp_file)
-    return characters
+    return characters_icons
 
+print("Executing utils module")
 config = load_config()
 fightTacticsDict = load_tactics()
-characters = load_characters(config)
+characters_icons = load_characters(config)
