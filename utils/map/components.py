@@ -55,16 +55,19 @@ if config.modeSelect == 4:
         if components_label[i]["name"] == "零号银行":
             components_label[i]["weight"] = 10
 
-#零号银行和零号业绩一起刷
+
+# 零号银行和零号业绩一起刷
 def my_set_weight():
-    #拿完银行改变权重
+    # 拿完银行改变权重
     for i in components_label:
         if components_label[i]["name"] == "零号银行":
             components_label[i]["weight"] = 0
         if components_label[i]["name"] == "零号业绩":
             components_label[i]["weight"] = 10
+
+
 def my_unset_weight():
-    #拿完业绩改变权重
+    # 拿完业绩改变权重
     for i in components_label:
         if components_label[i]["name"] == "零号银行":
             components_label[i]["weight"] = 10
