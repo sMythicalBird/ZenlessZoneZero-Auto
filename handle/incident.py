@@ -12,7 +12,7 @@ import numpy as np
 from schema import Position, info
 from utils import control, screenshot, logger, RootPath
 from pathlib import Path
-from utils.task import task, ImageMatch, find_template
+from utils.task import task, find_template
 from PIL import Image
 from re import template
 from utils.map.components import set_weight

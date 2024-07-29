@@ -4,7 +4,6 @@
 @time:      2024/7/24 下午3:57
 @author:    sMythicalBird
 """
-import time
 import utils
 from utils import control, screenshot
 from utils.task import task
