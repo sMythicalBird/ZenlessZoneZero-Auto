@@ -43,4 +43,3 @@ def action():
                         return
     for pos in sel_list:  # 防止遇到不可触碰事件
         control.click(pos[0], pos[1])
-        time.sleep(0.1)
