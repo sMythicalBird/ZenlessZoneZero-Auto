@@ -393,15 +393,6 @@ def action(positions: Dict[str, Position]):
     my_unset_weight()
 
 
-# 零号业绩
-@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认$")
-    control.click(pos.x, pos.y)
-    info.exitFlag = True  # 拿完业绩准备离开
-    my_unset_weight()
-
-
 @task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^打开")

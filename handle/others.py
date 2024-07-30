@@ -99,7 +99,6 @@ def action(positions: Dict[str, Position]):
     info.currentStage = 0  # 进入战斗，无偏移
     info.hasBoom = utils.config.hasBoom  # 是否有炸弹
     info.exitFlag = False  # 离开标志
-    # 等待加载进入动画，这个时间不能动，防止提前进行地图截取("施工废墟")
 
 
 @task.page(name="选择副本", target_text="作战机略", target_texts=[map_name])
