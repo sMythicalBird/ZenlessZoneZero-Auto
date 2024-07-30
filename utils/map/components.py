@@ -213,10 +213,6 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         output = x_outputs.pop(0)
         x = output["x"]
         map_component = component_class(screen, x, output["y"], w, h, output["label"])
-        if map_component.confidence < 0.95:
-            map_component.weight = 3
-            map_component.name = "其他"
-        # print(map_component)
         group = x_groups[-1] if x_groups else None
         if group is None or group["max_x"] < x:
             x_groups.append(
