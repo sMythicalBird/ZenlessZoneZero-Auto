@@ -352,9 +352,9 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="零号银行_存压力", target_texts=["接受压力债务", "^零号银行$"])
+@task.page(name="零号银行_存血", target_texts=["消耗10%生命值", "^零号银行$"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("接受压力债务")
+    pos = positions.get("消耗10%生命值")
     control.click(pos.x, pos.y)
 
 
@@ -369,6 +369,15 @@ def action(positions: Dict[str, Position]):
     if utils.config.modeSelect == 4:
         my_set_weight()
         info.currentStage = 6
+        time.sleep(0.5)
+        for i in range(3):
+            control.press("space")
+        time.sleep(0.5)
+        for i in range(3):
+            control.press("d")
+        control.press("s")
+        for i in range(4):
+            control.press("d")
     else:  # 模式3
         info.exitFlag = True  # 存完钱准备离开
 
@@ -390,7 +399,8 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
     info.exitFlag = True  # 拿完业绩准备离开
-    my_unset_weight()
+    if utils.config.modeSelect == 4:
+        my_unset_weight()
 
 
 @task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
