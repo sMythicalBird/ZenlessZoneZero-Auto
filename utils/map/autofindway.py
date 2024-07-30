@@ -81,6 +81,8 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     components_list: List[MapComponent] = [
         component for line in components for component in line if component.weight > 0
     ]
+    # 按照权重排序
+    components_list = sorted(components_list, key=lambda component: component.weight)
     # 按照权重进行分组
     components_group = groupby(components_list, key=lambda component: component.weight)
     components_group = [
@@ -88,7 +90,6 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     ]
     # 排序 倒序
     components_group = sorted(components_group, key=lambda item: item[0], reverse=True)
-    # logger.debug(f"分组信息: {components_group}")
     # 遍历分组
     for key, group in components_group:
         group: List[MapComponent] = list(group)

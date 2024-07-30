@@ -113,6 +113,14 @@ def component_class(
         crop = preprocess_crop(crop)
         # 模型推理 输出每个组件的概率
         conf, index = infer_crop(crop)
+        if conf < 0.95:
+            return MapComponent(
+                name="其他",  # 组件名称
+                x=1,  # 组件坐标
+                y=1,  # 组件坐标
+                confidence=0,  # 组件置信度
+                weight=3,  # 组件权重
+            )
         # 获取组件标签
         return MapComponent(
             name=components_label[str(index)]["name"],
