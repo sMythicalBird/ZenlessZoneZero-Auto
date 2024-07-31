@@ -152,7 +152,7 @@ python main.py
 
 演示视频：[start一键安装启动](https://www.bilibili.com/video/BV1VU411S7Z5)
 1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
-2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-yN1WA.html) | [start.exe备用链接](https://hermes.lanzout.com/i2Jd126300kh) | [start.exe备用链接2](https://cloudreve.caiyun.fun/s/k5h6)
+2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-dD1WA.html) | [start.exe备用链接](https://hermes.lanzout.com/iE8SZ263tdmb) | [start.exe备用链接2](https://cloudreve.caiyun.fun/f/B1I8/start.exe)
 3. 将下载好的启动器放置到项目目录下(ZenlessZoneZero-Auto)
 4. 在项目目录下以管理员权限运行`start.exe`
 5. 第一次运行时请等待一段时间，等待Python环境安装
