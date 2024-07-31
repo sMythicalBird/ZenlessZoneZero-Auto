@@ -97,7 +97,7 @@ def action(positions: Dict[str, Position]):
 
 
 # 清除侵蚀效果
-@task.page(name="清楚侵蚀效果", target_texts=["^清除$"])
+@task.page(name="清除侵蚀效果", target_texts=["^清除$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^清除$")
     control.click(pos.x, pos.y)
@@ -416,4 +416,11 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^启动")
     control.click(pos.x, pos.y)
     pos = positions.get("^暂时离开$")
+    control.click(pos.x, pos.y)
+
+
+# 此区域曾为娱乐区
+@task.page(name="娱乐区幸运拉杆", target_texts=["^拉一下$", "^离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
