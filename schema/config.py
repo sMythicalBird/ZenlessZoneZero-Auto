@@ -76,4 +76,4 @@ class Config(BaseModel):
     hasBoom: bool = Field(False, description="是否有炸弹")
     useGpu: bool = Field(True, description="是否使用GPU")
     selBuff: List[str] = Field(["冻结", "暴击", "决斗", "闪避"], description="选择buff")
-    characters: List[str] = Field(["艾莲", "莱卡恩", "苍角", "朱鸢", "安比", "妮可"], description="角色池，用于载入角色战斗模块，空则载入默认战斗模块")
+    characters: List[str] = Field(["艾莲", "莱卡恩", "苍角", "朱鸢", "安比", "妮可", "格莉丝"], description="角色池，用于载入角色战斗模块，空则载入默认战斗模块")
