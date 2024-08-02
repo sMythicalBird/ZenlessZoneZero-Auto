@@ -192,6 +192,12 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+@task.page(name="投机客_离开", target_texts=["投机客", "^离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+
+
 # 坍塌的房屋
 @task.page(name="坍塌的房屋", target_texts=["坍塌的房屋", "^从塌处离开$"])
 def action(positions: Dict[str, Position]):
@@ -421,6 +427,12 @@ def action(positions: Dict[str, Position]):
 
 # 此区域曾为娱乐区
 @task.page(name="娱乐区幸运拉杆", target_texts=["^拉一下$", "^离开$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+
+# 古怪装置
+@task.page(name="古怪装置", target_texts=["^离开$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
