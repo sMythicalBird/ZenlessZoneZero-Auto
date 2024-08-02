@@ -80,7 +80,7 @@ class lightDetector:
         判断轮廓的宽高比是否符合条件
         """
         aspect_ratio = max((width / height), (height / width))
-        return (aspect_ratio > 10) and max(width, height) > 300
+        return (aspect_ratio > 10) and max(width, height) > 300 and min(width, height) < 50
 
     def detect_rectangles(self, img_hsv: np.ndarray) -> dict:
         """
