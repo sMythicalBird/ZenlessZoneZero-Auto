@@ -102,7 +102,7 @@ else:
     )
     logger.info(f"菜单栏高度为{menu_height},左上角偏移量为({OffsetX},{OffsetY})")
     if not(w == 1280 and h == 720):
-        logger.warning("游戏窗口尺寸不是1280x720，请修改屏幕分辨率为窗口模式1280x720")
+        logger.warning("游戏窗口分辨率不是1280x720，请修改游戏显示模式为“1280x720 窗口”")
         wait_exit()
 
 # 判断能否使用GPU
