@@ -72,7 +72,6 @@ def bi_bfs(
                                 if x_n == x and y_n == y:
                                     continue
                                 neighbours.put((x_n, y_n))
-    print(visited)
     # 一步一搜，因此不再需要全路径，每次返回下一步结果即可
     # 2、起点处获取下一步结果
     (x, y) = start
@@ -124,13 +123,11 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     )
     # 按照权重进行分组
     components_group = groupby(components_list, key=lambda component: component.weight)
-
     # 遍历分组寻路
     for key, group in components_group:
         group: List[MapComponent] = list(group)
         # 遍历每个分组 暂存结果
         results = []
-        # logger.debug(f"当前分组: {key}, 组内信息: {group}")
         for target in group:
             print(target)
             target: MapComponent
