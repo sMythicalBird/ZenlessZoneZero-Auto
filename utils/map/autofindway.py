@@ -17,6 +17,7 @@ def bi_bfs(
     matrix: List[List[MapComponent]], start: list[int], goal: list[int]
 ) -> List[Tuple[MapComponent, Dirct]]:
     # 因为需要记录最短路径及其移动方向，因此分两步
+    # 如何解决传送带的问题，有向图搜索很难记录路径
     # 1、终点bfs找全图最短路径,终点找出能来的所有点
     rows, cols = len(matrix), len(matrix[0])
     visited = np.zeros((rows, cols))
@@ -31,25 +32,59 @@ def bi_bfs(
     while not q.empty():
         cur_size = q.qsize()
         step += 1
+        # 队列不为空
         while cur_size > 0:
             cur_size -= 1
             (x, y) = q.get()
-            neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-            for x_n, y_n in neighbours:
-                if 0 <= y_n < cols and rows > x_n >= 0 == visited[x_n][y_n]:
-                    visited[x_n][y_n] = step
-                    q.put((x_n, y_n))
-    # 2、起点bfs找终点
-    # 方向使用wasd表示
-    # 返回列表第一个值为事件标签，第二个值为方向
-    res: List[Tuple[MapComponent, Dirct]] = []
+            neighbours = queue.Queue()
+            neighbours.put((x - 1, y))
+            neighbours.put((x, y - 1))
+            neighbours.put(((x + 1, y)))
+            neighbours.put((x, y + 1))
+            while not neighbours.empty():
+                (x_n, y_n) = neighbours.get()
+                if 0 <= y_n < cols and rows > x_n >= 0:
+                    if matrix[x_n][y_n].tp_id == 0:  # 非传送带不可重复访问
+                        if visited[x_n][y_n] != 0:  # 已访问
+                            continue
+                        visited[x_n][y_n] = step
+                        q.put((x_n, y_n))
+                    else:
+                        # 将传送带的下一个格子送到相邻队列中
+                        a, b = x_n, y_n
+                        if matrix[x_n][y_n].tp_id == 1:
+                            b -= 1
+                        elif matrix[x_n][y_n].tp_id == 2:
+                            a -= 1
+                        elif matrix[x_n][y_n].tp_id == 3:
+                            b += 1
+                        elif matrix[x_n][y_n].tp_id == 4:
+                            a += 1
+                        if a == x and b == y:  # 若传送带指向自己则继续感染，否则跳过
+                            visited[x_n][y_n] = step
+                            proper_pos = [
+                                (x_n - 1, y_n),
+                                (x_n + 1, y_n),
+                                (x_n, y_n - 1),
+                                (x_n, y_n + 1),
+                            ]
+                            for x_n, y_n in proper_pos:
+                                if x_n == x and y_n == y:
+                                    continue
+                                neighbours.put((x_n, y_n))
+    print(visited)
+    # 一步一搜，因此不再需要全路径，每次返回下一步结果即可
+    # 2、起点处获取下一步结果
     (x, y) = start
     step = visited[x][y]
-    while step > 0:
-        step -= 1
-        neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-        for x_n, y_n in neighbours:
-            if 0 <= x_n < rows and 0 <= y_n < cols and visited[x_n][y_n] == step:
+    neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+    for x_n, y_n in neighbours:
+        if 0 <= x_n < rows and 0 <= y_n < cols:
+            # 找到下一步
+            # 缩短距离或遇到传送带
+            if (visited[x_n][y_n] == step - 1) or (
+                visited[x_n][y_n] == step and matrix[x_n][y_n].tp_id != 0
+            ):
                 direction = Dirct.up
                 if x_n > x:
                     direction = Dirct.down
@@ -57,20 +92,22 @@ def bi_bfs(
                     direction = Dirct.left
                 elif y_n > y:
                     direction = Dirct.right
-                res.append((matrix[x_n][y_n], direction))
-                x, y = x_n, y_n
-                break
-    return res
+                return [
+                    (matrix[x_n][y_n], direction),
+                    step,
+                ]  # 返回下一个格子信息、移动方向、最大移动距离
+    return []  # 找不到路径
 
 
 # 自动寻路
 
 
 def auto_find_way(components: MapInfo | List[List[MapComponent]]):
+    # 寻路中所有二位矩阵索引均以线性代数为准
+    # 检查输入值是否为MapInfo，取出组件矩阵
     if isinstance(components, MapInfo):
         components: List[List[MapComponent]] = components.components
     # 找到起点
-    # logger.debug(f"地图信息: {components}")
     start: list[int] = [-1, -1]
     for i in range(len(components)):
         for j in range(len(components[i])):
@@ -81,32 +118,28 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     components_list: List[MapComponent] = [
         component for line in components for component in line if component.weight > 0
     ]
-    # 按照权重排序
-    components_list = sorted(components_list, key=lambda component: component.weight)
+    # 按照权重倒序排序
+    components_list = sorted(
+        components_list, key=lambda component: component.weight, reverse=True
+    )
     # 按照权重进行分组
     components_group = groupby(components_list, key=lambda component: component.weight)
-    components_group = [
-        (key, [item for item in group]) for key, group in components_group
-    ]
-    # 排序 倒序
-    components_group = sorted(components_group, key=lambda item: item[0], reverse=True)
-    # 遍历分组
+
+    # 遍历分组寻路
     for key, group in components_group:
         group: List[MapComponent] = list(group)
         # 遍历每个分组 暂存结果
         results = []
         # logger.debug(f"当前分组: {key}, 组内信息: {group}")
         for target in group:
-            # logger.debug(f"当前目标: {target}")
+            print(target)
             target: MapComponent
             target_position = [target.y, target.x]
             result = bi_bfs(components, start, target_position)
-            # logger.debug(f"目标位置: {target_position}, 路径: {result}")
             if result:
                 results.append(result)
-        # 按照路径长度排序
-        results = sorted(results, key=lambda x: len(x))
+        # 按照最大搜索步数排序
+        results = sorted(results, key=lambda res: res[1])
         if results:
-            # logger.debug(f"找到目的地: {results[-1]}")
-            # 返回最短路径
-            return results[0]
+            # 返回下一个格子信息和移动方向
+            return results[0][0]

@@ -81,12 +81,12 @@ def grid_map(screen: np.ndarray):
         logger.debug("未识别到地图信息")
         return
     # 寻路
-    mapWay = auto_find_way(map_info)
+    next_way = auto_find_way(map_info)
     # 在地图但未识别到足够的地图信息做路径搜索
-    if not mapWay:
+    if not next_way:
         logger.debug("未找到路径")
         return
-    (mc, dirct) = mapWay[0]  # 去除下一个地图位置
+    (mc, dirct) = next_way  # 获取下一个格子信息和移动方向
     # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
     if mc.name == "怪物" and info.hasBoom:
         info.hasBoom = False
