@@ -13,10 +13,10 @@ from schema import Position, info
 from utils import control, get_map_info, auto_find_way, logger
 from utils.task import task
 from utils.detect.current import find_current
-import utils
+from utils.config import config
 
-map_name = utils.config.targetMap.Zone
-map_level = utils.config.targetMap.Level
+map_name = config.targetMap.Zone
+map_level = config.targetMap.Level
 logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
@@ -38,7 +38,7 @@ def grid_map(screen: np.ndarray):
         control.esc()
         return
     # 超过地图最大时间
-    if (datetime.now() - info.entryMapTime).total_seconds() > utils.config.maxMapTime:
+    if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
         return
@@ -99,7 +99,7 @@ def action(positions: Dict[str, Position]):
     info.entryMapTime = datetime.now()  # 进入地图时间
     info.fightCount += 1  # 战斗次数记录
     info.currentStage = 0  # 进入战斗，无偏移
-    info.hasBoom = utils.config.hasBoom  # 是否有炸弹
+    info.hasBoom = config.hasBoom  # 是否有炸弹
     info.exitFlag = False  # 离开标志
 
 

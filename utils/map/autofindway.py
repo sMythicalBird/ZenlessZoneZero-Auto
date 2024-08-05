@@ -98,9 +98,6 @@ def bi_bfs(
     return []  # 找不到路径
 
 
-# 自动寻路
-
-
 def auto_find_way(components: MapInfo | List[List[MapComponent]]):
     # 寻路中所有二位矩阵索引均以线性代数为准
     # 检查输入值是否为MapInfo，取出组件矩阵
