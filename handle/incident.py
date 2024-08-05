@@ -443,11 +443,11 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 古怪装置
-@task.page(name="古怪装置", target_texts=["^离开$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^离开$")
-    control.click(pos.x, pos.y)
+# # 古怪装置
+# @task.page(name="古怪装置", target_texts=["^离开$"])
+# def action(positions: Dict[str, Position]):
+#     pos = positions.get("^离开$")
+#     control.click(pos.x, pos.y)
 
 
 # 事件有偿休息站
