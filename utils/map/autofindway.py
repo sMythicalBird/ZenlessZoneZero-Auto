@@ -126,7 +126,6 @@ def auto_find_way(components: MapInfo | List[List[MapComponent]]):
         # 遍历每个分组 暂存结果
         results = []
         for target in group:
-            print(target)
             target: MapComponent
             target_position = [target.y, target.x]
             result = bi_bfs(components, start, target_position)

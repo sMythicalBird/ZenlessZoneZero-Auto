@@ -151,7 +151,10 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接应支援代理人$")
     control.click(pos.x, pos.y)
-    set_weight("呼叫增援", 3)
+    info.teammate -= 1
+    # 若已经召唤两个队友，则不再召唤队友
+    if info.teammate == 0:
+        set_weight("呼叫增援", 3)
 
 
 @task.page(name="呼叫增援_入队", target_texts=["呼叫增援", "^2号位$"])

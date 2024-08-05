@@ -103,6 +103,7 @@ def action(positions: Dict[str, Position]):
     info.currentStage = 0  # 进入战斗，无偏移
     info.hasBoom = config.hasBoom  # 是否有炸弹
     info.exitFlag = False  # 离开标志
+    info.teammate = 2  # 获取两个队友
 
 
 @task.page(name="选择副本", target_text="作战机略", target_texts=[map_name])
