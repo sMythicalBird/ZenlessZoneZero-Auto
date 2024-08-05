@@ -59,6 +59,8 @@ def grid_map(screen: np.ndarray):
         elif info.currentStage == 6 and (k := find_current()):  # 向左拖动
             control.move_at(k.x, k.y, 260, 320)
     # 获取地图信息
+    # 防止地图初始化的时候提前开始截图，但是其他情况下又不需要，这延迟多了也不是，少了也不是
+    time.sleep(0.3)
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")
@@ -128,3 +130,12 @@ def exit_map(positions: Dict[str, Position]):
 def settle(positions: Dict[str, Position]):
     pos = positions.get("^完成$")
     control.click(pos.x, pos.y)
+
+
+# 全通模式且在旧都列车，拿侵蚀换buff
+if config.modeSelect == 1 and map_name == "旧都列车":
+
+    @task.page(name="假面研究者_换buff", target_texts=["假面研究者", "接受他的好意"])
+    def settle(positions: Dict[str, Position]):
+        pos = positions.get("接受他的好意")
+        control.click(pos.x, pos.y)

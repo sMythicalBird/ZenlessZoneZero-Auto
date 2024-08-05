@@ -233,11 +233,11 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 假面研究者
-@task.page(name="假面研究者", target_texts=["^拒绝他的好意$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^拒绝他的好意$")
-    control.click(pos.x, pos.y)
+# # 假面研究者
+# @task.page(name="假面研究者", target_texts=["^拒绝他的好意$"])
+# def action(positions: Dict[str, Position]):
+#     pos = positions.get("^拒绝他的好意$")
+#     control.click(pos.x, pos.y)
 
 
 @task.page(name="假面研究者_物资", target_texts=["^拿点侵蚀物资$"])
