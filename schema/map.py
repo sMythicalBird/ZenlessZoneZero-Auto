@@ -16,6 +16,7 @@ class MapComponent(BaseModel):
     y: int = Field(title="组件在当前Map中的索引")
     confidence: float = Field(0, title="组件置信度")
     weight: int = Field(0, title="权重")
+    tp_id: int = Field(0, title="强制传送类型")  # 0:None 1:left 2:top 3:right 4:bottom
 
 
 class MapInfo(BaseModel):

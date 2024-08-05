@@ -15,6 +15,8 @@ from utils.task import task
 from utils.detect.current import find_current
 import utils
 
+# import json
+
 map_name = utils.config.targetMap.Zone
 map_level = utils.config.targetMap.Level
 logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
@@ -60,6 +62,21 @@ def grid_map(screen: np.ndarray):
             control.move_at(k.x, k.y, 260, 320)
     # 获取地图信息
     map_info = get_map_info(screen)
+    # # 测试保存地图信息
+    # for each in map_info.components:
+    #     print(each)
+    # data = []
+    # for x_group in map_info.components:
+    #     x_data = []
+    #     for each in x_group:
+    #         x_data.append(
+    #             {"x": each.x, "y": each.y, "weight": each.weight, "tp_id": each.tp_id}
+    #         )
+    #     data.append(x_data)
+    # with open("map_components.json", "w") as f:
+    #     json.dump(data, f, ensure_ascii=False, indent=4)
+    # for each in data:
+    #     print(each)
     if not map_info:
         logger.debug("未识别到地图信息")
         return

@@ -31,6 +31,8 @@ television_model = InferenceSession(
 television_input_name = television_model.get_inputs()[0].name
 television_output_name = television_model.get_outputs()[0].name
 television = Model(television_model, iou_threshold=0.1)
+
+# 记录模型输出的index对应的标签名和标签权重
 with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
     components_label = yaml.safe_load(f)
 
@@ -128,6 +130,7 @@ def component_class(
             y=y,  # 组件坐标
             confidence=conf,  # 组件置信度
             weight=components_label[str(index)]["weight"],  # 组件权重
+            tp_id=components_label[str(index)]["tp_id"],  # 强制传送类型
         )
     return MapComponent(
         name="double",  # 组件名称
@@ -245,7 +248,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     # 构建地图信息
     size = (len(x_groups), len(y_groups))
     map_info = MapInfo(size=size, w=w, h=h)
-    # 遍历地图组件
+    # 遍历地图组件，建立二维矩阵
     for y_group in y_groups:
         for x_group in x_groups:
             for mapComponent_y, map_component in x_group["map_components"]:
