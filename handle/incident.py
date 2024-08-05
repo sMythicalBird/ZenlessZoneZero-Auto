@@ -409,6 +409,7 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
     my_set_weight()
 
+
 # 零号业绩
 @task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
 def action(positions: Dict[str, Position]):
@@ -441,8 +442,16 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
 
+
 # 古怪装置
 @task.page(name="古怪装置", target_texts=["^离开$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
+    control.click(pos.x, pos.y)
+
+
+# 事件有偿休息站
+@task.page(name="事件有偿休息站", target_texts=["不付费直接使用", "事件有偿休息站"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("不付费直接使用")
     control.click(pos.x, pos.y)
