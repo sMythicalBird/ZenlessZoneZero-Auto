@@ -455,3 +455,10 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("不付费直接使用")
     control.click(pos.x, pos.y)
+
+
+# 事件安全车箱特殊处理
+@task.page(name="事件安全车箱特殊处理", target_texts=["搜刮此处齿轮硬币"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("搜刮此处齿轮硬币")
+    control.click(pos.x, pos.y)
