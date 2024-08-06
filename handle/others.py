@@ -49,11 +49,11 @@ def grid_map(screen: np.ndarray):
     if map_name == "旧都列车":
         if info.currentStage == 1 and (k := find_current()):  # 左下拖拿业绩
             control.move_at(k.x, k.y, 360, 500)
-            control.press("d", duration=0.1)
+            control.press("d", duration=0.05)
         # 不在往上走了
         elif info.currentStage == 2 and (k := find_current()):  # 右下拖拿银行
             control.move_at(k.x, k.y, 900, 500)
-            control.press("a", duration=0.1)
+            control.press("a", duration=0.05)
         elif info.currentStage == 5 and (k := find_current()):  # 向下拖去传送点
             control.move_at(k.x, k.y, 640, 500)
         elif info.currentStage == 6 and (k := find_current()):  # 向左拖动

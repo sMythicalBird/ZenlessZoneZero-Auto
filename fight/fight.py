@@ -121,7 +121,6 @@ def fight_login(fight_counts: dict):
     """
     进入战斗
     """
-
     mouse_press("middle", 0.05)
     cur_character = current_character()
     # 5次执行完整逻辑或换人后退出
@@ -148,6 +147,12 @@ def fight_login(fight_counts: dict):
             # 如果人物变动，退出并切换战斗逻辑
             cur_character = current_character()
             if prev_character != cur_character:
+                # 切人后切换逻辑，重置所有按键
+                keyUp("w")
+                keyUp("a")
+                keyUp("s")
+                keyUp("d")
+                mouseUp(button="left")
                 break
     mouse_press("middle", 0.05)
 
