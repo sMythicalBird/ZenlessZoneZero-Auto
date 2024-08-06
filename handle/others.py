@@ -133,10 +133,10 @@ def settle(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-# 全通模式且在旧都列车，拿侵蚀换buff
-if config.modeSelect == 1 and map_name == "旧都列车":
-
-    @task.page(name="假面研究者_换buff", target_texts=["假面研究者", "接受他的好意"])
-    def settle(positions: Dict[str, Position]):
-        pos = positions.get("接受他的好意")
-        control.click(pos.x, pos.y)
+# # 全通模式且在旧都列车，拿侵蚀换buff
+# if config.modeSelect == 1 and map_name == "旧都列车":
+#
+#     @task.page(name="假面研究者_换buff", target_texts=["假面研究者", "接受他的好意"])
+#     def settle(positions: Dict[str, Position]):
+#         pos = positions.get("接受他的好意")
+#         control.click(pos.x, pos.y)
