@@ -211,9 +211,8 @@ def turn():
     # 初始化标志变量
     search_count = 0
     # 通过循环调整视角到最高处俯视，以便于计算圆点坐标夹角
-    for i in range(5):
+    for i in range(3):
         moveRel(xOffset=0, yOffset=300, relative=True, duration=0.2)
-        time.sleep(0.1)  # 等待视角调整完成
     # 进入主循环，直到匹配成功或满足退出条件
     while True:
         search_count += 1  # 尝试次数加1
