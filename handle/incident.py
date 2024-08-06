@@ -331,12 +331,12 @@ def action(positions: Dict[str, Position]):
 
 
 # 异化检疫门
-@task.page(name="异化检疫门", target_texts=["异化", "^强行闯入", "接受"])
+@task.page(name="异化检疫门", target_texts=["异化", "^强行", "接受"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("接受")
     control.click(pos.x, pos.y)
     time.sleep(0.2)
-    pos = positions.get("^强行闯入")
+    pos = positions.get("^强行")
     control.click(pos.x, pos.y)
 
 
