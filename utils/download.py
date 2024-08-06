@@ -58,7 +58,8 @@ def check_file(retry_count=0):
     """
     检查文件列表中的文件是否存在，不存在则下载
     """
-    fileListUrl = DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)] + "filelist.json"
+    index = (retry_count // 3) % len(DownLoadBaseUrl)
+    fileListUrl = DownLoadBaseUrl[index] + "filelist.json"
     file_list = requests.get(fileListUrl, timeout=3).json()
     for item in file_list:
         file = item["name"].strip()
@@ -75,7 +76,7 @@ def check_file(retry_count=0):
         if need_download:
             logger.info(f"下载文件：{file}")
             download_with_progressbar(
-                f"{DownLoadBaseUrl[retry_count % len(DownLoadBaseUrl)]}{file}",
+                f"{DownLoadBaseUrl[index]}{file}",
                 file_path,
             )
     logger.debug("文件检查完成！")
@@ -88,7 +89,7 @@ def check_file_task():
     """
     retry_count = 0
     check_success = False
-    for i in range(3):
+    for i in range(9):
         try:
             logger.debug("开始检查文件！")
             check_file(retry_count)
