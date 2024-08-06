@@ -1,4 +1,5 @@
 paddlepaddle
+matplotlib==3.9.0
 paddleocr==2.7.3
 numpy<2.0.0
 loguru

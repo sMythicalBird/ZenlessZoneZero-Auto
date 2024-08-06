@@ -4,6 +4,7 @@ nvidia-cudnn-cu11==8.9.5.29
 nvidia-cublas-cu11
 nvidia-cuda-nvrtc-cu11
 paddlepaddle-gpu
+matplotlib==3.9.0
 paddleocr==2.7.3
 numpy<2.0.0
 loguru

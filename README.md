@@ -110,12 +110,13 @@ QQ群`985508983`
    targetMap:
        level: 1                # 默认等级 1: 外围
        zone: 1                 # 默认区域 1: 旧都列车
-   modeSelect: 1               # 模式选择 1: 全通关  2: 刷零号业绩  3：零号银行
-   maxFightTime: 300           # 最大战斗时间，单场战斗时间默认为150s，超过150s会重开(部分战斗场景需要跑图，目前还没进行相关处理，遇到这种情况会退掉重开)
-   maxMapTime: 1500            # 在地图内最大时间默认为900s，超过最大时间未通关地图会重开
+   modeSelect: 1               # 模式选择 1: 全通关  2: 刷零号业绩  3：零号银行  4：零号银行零号业绩一起
+   maxFightTime: 300           # 最大战斗时间，单场战斗时间默认为300s，超过300s会重开(部分战斗场景需要跑图，目前还没进行相关处理，遇到这种情况会退掉重开)
+   maxMapTime: 1500            # 在地图内最大时间默认为1500s，超过最大时间未通关地图会重开
    hasBoom: True               # 是否解锁炸弹
    useGpu: True                # 是否使用GPU，默认True, 使用GPU会加速模型训练,如果改为False，会强制使用CPU进行OCR识别
    selBuff: ["冻结", "暴击", "决斗", "闪避"]       # 鸣辉选择
+   characters: ["艾莲", "莱卡恩", "苍角"]       # 自己带了哪些角色这里就填哪些，当然填了不一定有相应的战斗逻辑，后面版本再加
    ```
 
 2. 将项目文件夹下`fight/tactics_defaults`下的所有文件复制到`fight/tactics`文件夹下。
@@ -191,7 +192,7 @@ pip install onnxruntime-gpu==1.17
   ```
 ## 事件BUG说明
 
-遇到脚本无法处理的事件可以截图上传至[2.0测试版本异常事件汇总 ](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues/63)，截图使用链接提供的截图工具，截取图片后发在问题下的评论区，开发者看到会进行处理
+遇到脚本无法处理的事件可以截图上传至[2.2测试bug汇总 ](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues/130)，截图使用链接提供的截图工具，截取图片后发在问题下的评论区，开发者看到会进行处理
 
 ## 后台运行
 
