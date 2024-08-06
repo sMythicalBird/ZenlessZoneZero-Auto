@@ -4,6 +4,7 @@
 @time:      2024/7/10 上午2:35
 @author:    sMythicalBird
 """
+import math
 import threading
 import time
 from datetime import datetime
@@ -29,7 +30,6 @@ from .combo_detect import combo_detect  # 连携技的判断
 
 image_path = RootPath / "download" / "yuan.png"
 image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
-
 
 # Create an event for synchronization
 # when 黄光thread execute tactic，block fight_login
@@ -165,41 +165,88 @@ def current_character():
     return "默认"
 
 
+def calc_angle(x, y, w, h):
+    """
+    计算圆点坐标与屏幕中心的夹角
+    :param x: 圆点横坐标
+    :param y: 圆点纵坐标
+    :param w: 屏幕宽度
+    :param h: 屏幕高度
+    :return: 圆点与屏幕中心的夹角
+    """
+    x0 = w / 2 + 0.5
+    y0 = h / 2 + 0.5
+    delta_x = x - x0
+    delta_y = y0 - y
+    angle = math.degrees(math.atan2(delta_y, delta_x))
+
+    return angle
+
+
+def search_point():
+    """
+    在屏幕中搜索指定圆点，并返回匹配度和位置
+    """
+    # 定义屏幕裁剪的区域大小，以减少计算量并提高匹配准确率
+    h_crop = 85
+    w_crop = 225  # 屏幕裁剪区域高度和宽度，减小计算量，提高匹配准确率
+    screen = screenshot()  # 截取当前屏幕
+    h, w, _ = screen.shape  # 获取屏幕的宽高
+    # 复制并裁剪屏幕图像，以减少计算量并提高匹配准确率
+    sub_screen = screen.copy()[h_crop : h - h_crop, w_crop : w - w_crop]
+    h1, w1, _ = sub_screen.shape  # 获取裁剪后图像的宽高
+
+    # 将裁剪后的图像转换为灰度图像，以便进行匹配
+    sub_screen_gray = cv2.cvtColor(sub_screen, cv2.COLOR_RGB2GRAY)
+    # 使用模板匹配方法在灰度图像中寻找匹配区域
+    result = cv2.matchTemplate(sub_screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
+    _, max_val, _, max_loc = cv2.minMaxLoc(result)  # 获取匹配度最高的位置和值
+    return h1, w1, max_val, max_loc
+
+
 def turn():
     """
     地图中自动寻路 适用于地图中的转向
     """
-    cnt = 0  # 记录转向次数
+    # 初始化标志变量
+    search_count = 0
+    # 通过循环调整视角到最高处俯视，以便于计算圆点坐标夹角
+    for i in range(5):
+        moveRel(xOffset=0, yOffset=300, relative=True, duration=0.2)
+        time.sleep(0.1)  # 等待视角调整完成
+    # 进入主循环，直到匹配成功或满足退出条件
     while True:
-        flag = True
-        cnt += 1
-        if cnt > 4:
-            break
-        for i in range(10):
-            screen = screenshot()
-            screen_gray = cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY)
-            result = cv2.matchTemplate(screen_gray, image_to_quan, cv2.TM_CCOEFF_NORMED)
-            # max_val为识别图像左上角坐标
-            _, max_val, _, max_loc = cv2.minMaxLoc(result)
-            if max_val > 0.8:
-                flag = False
-                x, y = max_loc
-                x += image_to_quan.shape[1] / 2
-                y += image_to_quan.shape[0] / 2
-                x = int(x)
-                if y > 400:
-                    moveRel(xOffset=1100, yOffset=0, relative=True)
-                time.sleep(0.2)
-                x = x - 648
-                if -250 < x < 250:
-                    x = int(abs(x) ** (1 / 1.28)) * (1 if x > 0 else -1)
-                moveRel(xOffset=x, yOffset=0, relative=True)
-                if abs(x) <= 2:
-                    press("w", duration=2)
-                    break
-            time.sleep(0.03)
-        if flag:
-            break
+        search_count += 1  # 尝试次数加1
+        h1, w1, max_val, max_loc = search_point()  # 获取匹配度最高的位置和值
+        # 如果最大匹配度超过设定阈值，则认为匹配成功
+        if max_val > 0.8:
+            search_count = 0  # 匹配成功，尝试次数清零
+            x, y = max_loc  # 获取匹配区域的左上角坐标
+            x += image_to_quan.shape[1] / 2  # 计算匹配区域中心点的x坐标
+            y += image_to_quan.shape[0] / 2  # 计算匹配区域中心点的y坐标
+            angle = calc_angle(x, y, w1, h1)  # 计算中心点相对于图像中心的夹角
+            delta_ang = abs(angle - 90)  # 计算夹角与90度的差值
+
+            # 根据夹角差值的大小，决定横向移动的距离，以调整视角
+            sign = int(math.copysign(1, x - w1 / 2))  # 根据中心点位置决定移动方向
+            mov_x = (
+                400
+                if delta_ang > 60
+                else 200 if delta_ang > 30 else 100 if delta_ang > 10 else 10
+            )
+            mov_x *= sign  # 根据sign变量决定移动方向
+
+            # 执行视角调整
+            moveRel(xOffset=mov_x, yOffset=0, relative=True, duration=0.2)
+
+            # 如果夹角差值小于等于2度，则认为视角调整成功，退出循环
+            if delta_ang <= 2:
+                press("w", duration=2)
+                time.sleep(0.5)  # 等待前进完成
+        else:
+            time.sleep(0.05)
+            if search_count >= 10:
+                break
 
 
 # 战斗逻辑

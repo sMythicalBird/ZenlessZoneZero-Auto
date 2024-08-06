@@ -95,7 +95,7 @@ def check_file_task():
             check_success = True
             break
         except:
-            logger.exception("检查文件失败！")
+            logger.error("检查文件失败！")
             retry_count += 1
             continue
     if not check_success:
