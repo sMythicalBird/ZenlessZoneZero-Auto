@@ -226,7 +226,6 @@ def turn():
             y += image_to_quan.shape[0] / 2  # 计算匹配区域中心点的y坐标
             angle = calc_angle(x, y, w1, h1)  # 计算中心点相对于图像中心的夹角
             delta_ang = abs(angle - 90)  # 计算夹角与90度的差值
-
             # 根据夹角差值的大小，决定横向移动的距离，以调整视角
             sign = int(math.copysign(1, x - w1 / 2))  # 根据中心点位置决定移动方向
             mov_x = (
@@ -235,14 +234,11 @@ def turn():
                 else 200 if delta_ang > 30 else 100 if delta_ang > 10 else 10
             )
             mov_x *= sign  # 根据sign变量决定移动方向
-
             # 执行视角调整
             moveRel(xOffset=mov_x, yOffset=0, relative=True, duration=0.2)
-
             # 如果夹角差值小于等于2度，则认为视角调整成功，退出循环
             if delta_ang <= 2:
                 press("w", duration=2)
-                time.sleep(0.5)  # 等待前进完成
         else:
             time.sleep(0.05)
             if search_count >= 10:
