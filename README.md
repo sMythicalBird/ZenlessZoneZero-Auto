@@ -11,7 +11,7 @@
 1. [项目简介](#项目简介)
 2. [使用说明](#使用说明-前置条件)
 3. [安装教程](#安装教程)
-4. [安装教程-懒人版](#安装教程-懒人版)
+4. [安装教程-小白一键](#安装教程-小白一键)
 5. [运行报错解决办法](#运行报错解决办法)
 6. [快捷键说明](#快捷键说明)
 7. [事件BUG说明](#事件BUG说明)
@@ -159,16 +159,13 @@ python main.py
     python main.py
     ```
 
-## 安装教程-懒人版
+## 安装教程-小白一键
 
-演示视频：[start一键安装启动](https://www.bilibili.com/video/BV1VU411S7Z5)
-1. 通过本页面上方绿色的Code-DownloadZIP直接下载解压文件并解压
-2. 在云盘下载启动器，链接：[start.exe](https://www.123pan.com/s/iK6A-hD1WA.html) | [start.exe备用链接](https://hermes.lanzout.com/iDcSe263u1zi) | [start.exe备用链接2](https://cloudreve.caiyun.fun/f/DJS3/start.exe)
-3. 将下载好的启动器放置到项目目录下(ZenlessZoneZero-Auto)
-4. 在项目目录下以管理员权限运行`start.exe`
-5. 第一次运行时请等待一段时间，等待Python环境安装
-6. 选择1安装环境需要的依赖(第一次运行时选择，安装完依赖就不需要再选了)
-7. 选择2运行脚本(第一次运行需要下载模型文件，需要等待一段时间)
+压缩包链接：[release链接]([Releases · sMythicalBird/ZenlessZoneZero-Auto (github.com)](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases)) | [夸克链接](https://pan.quark.cn/s/b33eaf2ffcfc)
+
+1. 通过上述链接选择一个直接下载文件并解压
+2. 在项目目录下以管理员权限运行`start.exe`
+7. 选择2运行脚本
 
 ## 运行报错解决办法
 
