@@ -161,11 +161,11 @@ python main.py
 
 ## 安装教程-小白一键
 
-压缩包链接：[release链接]([Releases · sMythicalBird/ZenlessZoneZero-Auto (github.com)](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases)) | [夸克链接](https://pan.quark.cn/s/b33eaf2ffcfc)
+压缩包链接：[release链接](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases) | [夸克链接](https://pan.quark.cn/s/b33eaf2ffcfc)
 
 1. 通过上述链接选择一个直接下载文件并解压
 2. 在项目目录下以管理员权限运行`start.exe`
-7. 选择2运行脚本
+3. 选择3运行脚本
 
 ## 运行报错解决办法
 
