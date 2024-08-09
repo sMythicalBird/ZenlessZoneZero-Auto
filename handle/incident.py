@@ -278,6 +278,9 @@ def action(screen: np.ndarray):
     ocr_results = task.ocr(screen)
     need_exit = False
     for ocr_result in ocr_results:
+        if ocr_result.text.strip() == "离开":
+            control.click(ocr_result.position.x, ocr_result.position.y)
+            return  # 离开特殊区域
         for special_area in special_areas:
             if special_area.search(ocr_result.text):
                 need_exit = True
