@@ -76,7 +76,7 @@ def grid_map(screen: np.ndarray):
     if mc.name == "怪物" and info.hasBoom:
         info.hasBoom = False
         control.press("r", duration=0.1)
-        time.sleep(1)
+        time.sleep(1.5)  # 防止炸弹未点出来就跳过
         return
     # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
     if mc.name == "终点":
