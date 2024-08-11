@@ -12,6 +12,7 @@ from .setting_interface import SettingInterface
 from .config_interface import ConfigInterface
 from .api.check_update import check_update
 
+
 class MainWindow(MSFluentWindow):
     def __init__(self):
         super().__init__()
@@ -22,11 +23,9 @@ class MainWindow(MSFluentWindow):
         # 检查更新
         check_update()
 
-
     def init_ui(self):
         self.setWindowTitle("主窗口")
-        self.resize(800, 600)
-
+        self.resize(1080, 720)
 
     def init_navigation(self):
         # 添加主页导航页
