@@ -18,6 +18,23 @@ This project is based on image classification, template matching, OCR recognitio
 
 The current goal of this project is to allow players to be liberated from the long -term empty cave material per week. It only needs to hang on the computer to automatically complete it. This project will continue to consider adding other automated operations to help players do daily custody
 
+<div class="vp-card-container">
+<VPCard
+  title="Contact by QQ",
+  desc="Zoneless Zero Auto QQ Group"
+  logo="/qq-brands-solid.svg"
+  link="https://qm.qq.com/cgi-bin/qm/qr?authKey=mXI63723ToMBW9BAfzEvfPKMaSKmPV%2BSIc%2FyM69RSuK2nshzLdHYoc2Kb%2BzUOr0a&k=UOEhNKGncTfVIkuhed3PoauuZJgL2DIP&noverify=0"
+  background="rgba(104, 118, 138, 0.15)"
+/>
+<VPCard
+  title="Contact by Github",
+  desc="Github Issues"
+  logo="/github.svg"
+  link="https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues"
+  background="rgba(104, 118, 138, 0.15)"
+/>
+</div>
+
 ## 2 Script Introduction
 
 This script is mainly suitable for **零号空洞** entrust rewards andBrushwards every Friday **零号业绩** brush

@@ -18,6 +18,23 @@ category:
 
 本项目的当前目标是可以让玩家从每周长时间的零号空洞材料刷取中解放出来，只需要在电脑上挂着就可以自动完成。本项目后续也会继续考虑增加其他自动化操作，帮助玩家做到日常托管。
 
+<div class="vp-card-container">
+<VPCard
+  title="联系我们",
+  desc="Zoneless Zero Auto 官方群"
+  logo="/qq-brands-solid.svg"
+  link="https://qm.qq.com/cgi-bin/qm/qr?authKey=mXI63723ToMBW9BAfzEvfPKMaSKmPV%2BSIc%2FyM69RSuK2nshzLdHYoc2Kb%2BzUOr0a&k=UOEhNKGncTfVIkuhed3PoauuZJgL2DIP&noverify=0"
+  background="rgba(104, 118, 138, 0.15)"
+/>
+<VPCard
+  title="联系我们",
+  desc="Github Issues"
+  logo="/github.svg"
+  link="https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues"
+  background="rgba(104, 118, 138, 0.15)"
+/>
+</div>
+
 ## 2 脚本说明
 
 本脚本主要适用于 **零号空洞** 每周五次委托奖励和 **零号业绩** 的刷取
@@ -32,4 +49,5 @@ category:
 
 本软件是一个外部工具旨在自动化绝区零的游戏玩法。并遵守相关法律法规。该软件包旨在减少用户游戏负担,并且它不打算以任何方式破坏游戏平衡或提供任何不公平的优势。该软件包不会以任何方式修改任何游戏文件或游戏代码
 
-本软件开源、免费，仅供学习交流使用，禁止用于商业用途。开发者团队拥有本项目的最终解释权。使用本软件产生的所有问题与本项目与开发者团队无关。若您遇到商家使用本软件进行代练并收费，可能是设备与时间等费用，产生的问题及后果与本软件无关。
+本软件开源、免费，仅供学习交流使用，禁止用于商业用途。开发者团队拥有本项目的最终解释权。使用本软件产生的所有问题与本项目与开发者团队无关。若您遇到商家使用本软件进行代练并收费，可能是设备与时间等费用，产生的问题及后果与本软件无关
+

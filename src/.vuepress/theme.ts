@@ -4,7 +4,7 @@ import { enNavbar, zhNavbar } from "./navbar/index.js";
 import { enSidebar, zhSidebar } from "./sidebar/index.js";
 
 export default hopeTheme({
-  hostname: "https://auto.alphablog.site",
+  hostname: "https://zzz.alphablog.site",
 
   author: {
     name: "SmallPigPig",
@@ -15,7 +15,7 @@ export default hopeTheme({
 
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",
 
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "https://github.com/sMythicalBird/ZenlessZoneZero-Auto",
 
   docsDir: "src",
 
@@ -81,7 +81,7 @@ export default hopeTheme({
       codetabs: true,
       component: true,
       demo: true,
-      figure: true,
+      figure: false,
       imgLazyload: true,
       imgSize: true,
       include: true,
