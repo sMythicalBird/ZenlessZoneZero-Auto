@@ -6,34 +6,44 @@
 """
 
 from qfluentwidgets import MSFluentWindow, NavigationItemPosition
-from qfluentwidgets import FluentIcon as FIF
+from qfluentwidgets import FluentIcon
 from .home_interface import HomeInterface
 from .setting_interface import SettingInterface
-
+from .config_interface import ConfigInterface
+from .api.check_update import check_update
 
 class MainWindow(MSFluentWindow):
     def __init__(self):
         super().__init__()
-        # 设置窗口标题
-        self.setWindowTitle("主窗口")
-        # 设置窗口尺寸
-        self.resize(800, 600)
-        # 其他初始化操作
+        # 初始化窗口ui
         self.init_ui()
-        self.initNavigation()
+        # 初始化窗口导航
+        self.init_navigation()
+        # 检查更新
+        check_update()
+
 
     def init_ui(self):
-        # 在这里添加 UI 组件的初始化代码
-        pass
+        self.setWindowTitle("主窗口")
+        self.resize(800, 600)
 
-    def initNavigation(self):
-        # 添加侧边栏切换按钮
-        self.addSubInterface(HomeInterface(), FIF.HOME, self.tr("主页"))
 
-        # 添加设置按钮
+    def init_navigation(self):
+        # 添加主页导航页
+        self.addSubInterface(HomeInterface(), FluentIcon.HOME, self.tr("主页"))
+
+        # 添加配置导航页
+        self.addSubInterface(
+            ConfigInterface(),
+            FluentIcon.SAVE,
+            self.tr("配置"),
+            position=NavigationItemPosition.BOTTOM,
+        )
+
+        # 添加设置导航页
         self.addSubInterface(
             SettingInterface(),
-            FIF.SETTING,
+            FluentIcon.SETTING,
             self.tr("设置"),
             position=NavigationItemPosition.BOTTOM,
         )
