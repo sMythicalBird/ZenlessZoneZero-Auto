@@ -38,27 +38,22 @@ highlights:
       - title: 定制战斗
         icon: clipboard-check
         details: 可以自行设定角色出招
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/others.html#link-check
 
       - title: 简洁界面
         icon: box-archive
         details: 基于终端的简洁界面
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/stylize/hint.html
 
       - title: 清晰警告
         icon: bell
         details: 提供时间戳和报错内容，你的问题，一目了然
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/stylize/alert.html
 
       - title: 分类管理
         icon: table-columns
         details: 我们的数据集分类明确，方便开发者定制
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/content/tabs.html
 
       - title: 扩展支持
         icon: puzzle-piece
         details: 您也可以修改脚本来达到您想要的效果
-        link: https://theme-hope.vuejs.press/zh/guide/component/grammar.html
 
 
   - header: 新功能
@@ -67,20 +62,23 @@ highlights:
     bgImageDark: https://theme-hope-assets.vuejs.press/bg/1-dark.svg
     features:
       - title: 出招表
-        icon: network-wired
-        details: 我们更新了多位角色的出招表
-        link: https://theme-hope.vuejs.press/zh/guide/feature/catalog.html
+        icon: clapperboard
+        details: 我们更新了多位角色的出招表，艾莲，朱鸢，狼叔，安比......
+        link: /zh/community/updatelog.html
+      - title: 问题修复
+        icon: bug-slash
+        details: 我们修复了多种识别 BUG，让脚本使用更加流畅
+        link: /zh/community/updatelog.html
 
   - header: 高级
-    description: 增强脚本运行的功能
     image: /assets/image/advanced.svg
     bgImage: https://theme-hope-assets.vuejs.press/bg/4-light.svg
     bgImageDark: https://theme-hope-assets.vuejs.press/bg/4-dark.svg
     highlights:
-      - title: 截图标注
+      - title: 后台运行
         icon: dumbbell
-        details:  您可以自行通过接口截图来标注数据集
-        link: https://theme-hope.vuejs.press/zh/guide/advanced/seo.html
+        details:  您可以通过教程修改远程桌面，来达到后台运行
+        link: /zh/demo/configure.html
 
 copyright: false
 footer: 使用 <a href="https://theme-hope.vuejs.press/zh/" target="_blank">VuePress Theme Hope</a> 主题 | MIT 协议, 版权所有 © 2019-至今 Mr.Hope

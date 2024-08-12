@@ -16,8 +16,37 @@ category:
 
 本项目基于图像分类、模板匹配、OCR识别进行地图全局自动寻路和事件处理，不涉及任何游戏内部数据的修改，**不会对游戏内部数据造成任何影响**
 
-本项目的当前目标是可以让玩家从每周长时间的零号空洞材料刷取中解放出来，只需要在电脑上挂着就可以自动完成。本项目后续也会继续考虑增加其他自动化操作，帮助玩家做到日常托管。
+本项目的当前目标是可以让玩家从每周长时间的零号空洞材料刷取中解放出来，只需要在电脑上挂着就可以自动完成。本项目后续也会继续考虑增加其他自动化操作，帮助玩家做到日常托管
 
+<ArtPlayer
+  src="/videos/preview.mp4"
+  autoplay
+  muted
+  airplay
+  aspect-ratio
+  auto-size
+  auto-orientation
+  auto-playback
+  flip
+  loop
+  is-live
+  no-hotkey
+  no-fullscreen
+  no-playback-rate
+  no-setting
+  no-mutex
+/>
+
+### 项目活跃度
+
+![活跃度](https://repobeats.axiom.co/api/embed/d3fbe2b0b63b850ad8d43ce494c8b4a7019c723a.svg)
+
+### 项目开发者
+
+![贡献者](https://contrib.rocks/image?repo=sMythicalBird/ZenlessZoneZero-Auto)
+
+### 项目收藏数
+![Stargazers over time](https://starchart.cc/sMythicalBird/ZenlessZoneZero-Auto.svg?variant=adaptive)
 <div class="vp-card-container">
 <VPCard
   title="联系我们",

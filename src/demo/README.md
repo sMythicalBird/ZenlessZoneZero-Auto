@@ -18,6 +18,36 @@ This project is based on image classification, template matching, OCR recognitio
 
 The current goal of this project is to allow players to be liberated from the long -term empty cave material per week. It only needs to hang on the computer to automatically complete it. This project will continue to consider adding other automated operations to help players do daily custody
 
+<ArtPlayer
+  src="/videos/preview.mp4"
+  autoplay
+  muted
+  airplay
+  aspect-ratio
+  auto-size
+  auto-orientation
+  auto-playback
+  flip
+  loop
+  autoMini
+  is-live
+  no-playback-rate
+  no-setting
+  no-fullscreen
+  no-mutex
+/>
+
+### Project Status
+
+![活跃度](https://repobeats.axiom.co/api/embed/d3fbe2b0b63b850ad8d43ce494c8b4a7019c723a.svg)
+
+### Contributors
+
+![贡献者](https://contrib.rocks/image?repo=sMythicalBird/ZenlessZoneZero-Auto)
+
+### Stargazers over time
+![Stargazers over time](https://starchart.cc/sMythicalBird/ZenlessZoneZero-Auto.svg?variant=adaptive)
+
 <div class="vp-card-container">
 <VPCard
   title="Contact by QQ",

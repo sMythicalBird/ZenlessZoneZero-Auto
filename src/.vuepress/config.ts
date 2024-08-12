@@ -1,5 +1,6 @@
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
+import { redirectPlugin } from "vuepress-plugin-redirect";
 
 export default defineUserConfig({
   base: "/",
@@ -16,7 +17,6 @@ export default defineUserConfig({
       description: "一个让您解放双手的自动刷图脚本",
     },
   },
-
   theme,
 
   // Enable it with pwa

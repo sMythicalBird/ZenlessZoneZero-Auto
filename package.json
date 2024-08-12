@@ -16,5 +16,14 @@
     "vuepress": "2.0.0-rc.14",
     "vuepress-plugin-md-enhance": "2.0.0-rc.52",
     "vuepress-theme-hope": "2.0.0-rc.52"
+  },
+  "dependencies": {
+    "artplayer": "^5.1.6",
+    "dashjs": "^4.7.4",
+    "hls.js": "^1.5.14",
+    "mpegts.js": "^1.7.3",
+    "sandpack-vue3": "^3.1.11",
+    "typescript": "^5.5.4",
+    "vuepress-plugin-redirect": "2.0.0-rc.19"
   }
 }

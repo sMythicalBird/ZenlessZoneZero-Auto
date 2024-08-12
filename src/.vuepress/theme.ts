@@ -1,9 +1,9 @@
 import { hopeTheme } from "vuepress-theme-hope";
-
 import { enNavbar, zhNavbar } from "./navbar/index.js";
 import { enSidebar, zhSidebar } from "./sidebar/index.js";
 
 export default hopeTheme({
+  fullscreen: true,
   hostname: "https://zzz.alphablog.site",
 
   author: {
@@ -71,8 +71,17 @@ export default hopeTheme({
     },
 
     components: {
-      components: ["Badge", "VPCard"],
+      components: ["Badge", "VPCard", "ArtPlayer"],
     },
+    // redirect: {
+    //   defaultLocale: "/zh/",
+    //   autoLocale: true,
+    //   switchLocale: "modal",
+    //   localeConfig: {
+    //     "/zh/": ["zh-CN", "zh-TW", "zh"],
+    //     "/en/": ["en-US", "en-UK", "en"],
+    //   },
+    // },
 
     // All features are enabled for demo, only preserve features you need here
     mdEnhance: {

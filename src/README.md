@@ -7,7 +7,7 @@ bgImage: https://theme-hope-assets.vuejs.press/bg/6-light.svg
 bgImageDark: https://theme-hope-assets.vuejs.press/bg/6-dark.svg
 bgImageStyle:
   background-attachment: fixed
-heroText: ZonelessZero Automation Script
+heroText: ZonelessZeroAuto
 tagline: A automatic brush script that allows you to liberate your hands
 actions:
   - text: Guide
@@ -38,50 +38,48 @@ highlights:
       - title: Custom battle
         icon: clipboard-check
         details: You can set your own role to move yourself
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/others.html#link-check
 
       - title: Simple interface
         icon: box-archive
         details: Simple interface based on terminals
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/stylize/hint.html
 
       - title: Clear warning
         icon: bell
         details: Provide timestamps and error content, your question, clear at a glance
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/stylize/alert.html
 
       - title: Classification management
         icon: table-columns
         details: Our dataset classification is clear, facilitated developer customization
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/content/tabs.html
 
       - title: Component support
         icon: puzzle-piece
         details: You can also modify the script to achieve the effect you want
-        link: https://theme-hope.vuejs.press/zh/guide/component/grammar.html
+       
 
-
-  - header: New feature
+  - header: New features
     image: /assets/image/features.svg
     bgImage: https://theme-hope-assets.vuejs.press/bg/1-light.svg
     bgImageDark: https://theme-hope-assets.vuejs.press/bg/1-dark.svg
     features:
-      - title: Role show
-        icon: network-wired
-        details: We have updated the logic of multiple characters
-        link: https://theme-hope.vuejs.press/zh/guide/feature/catalog.html
+      - title: Schedule
+        icon: clapperboard
+        details: We have updated the tricks of many characters, Ailian, Zhu Yu, Uncle Wolf, Ambi ...
+        link: /community/updatelog.html
+      - title: Problem repair
+        icon: bug-slash
+        details: We fixed a variety of identification bugs to make script use smoother
+        link: /community/updatelog.html
 
   - header: Advanced
-    description: Enhance the function of script operation
     image: /assets/image/advanced.svg
     bgImage: https://theme-hope-assets.vuejs.press/bg/4-light.svg
     bgImageDark: https://theme-hope-assets.vuejs.press/bg/4-dark.svg
     highlights:
-      - title: Screening mark
+      - title: Background operation
         icon: dumbbell
-        details: You can mark the data by yourself by the interface scoring
-        link: https://theme-hope.vuejs.press/zh/guide/advanced/seo.html
+        details:  You can modify the remote desktop by tutorial to achieve background operation
+        link: /demo/configure.html
 
 copyright: false
-footer: 使用 <a href="https://theme-hope.vuejs.press/zh/" target="_blank">VuePress Theme Hope</a> 主题 | MIT 协议, 版权所有 © 2019-至今 Mr.Hope
+footer: 使用 <a href="https://theme-hope.vuejs.press/zh/" target="_blank">VuePress Theme Hope</a> Theme | MIT Licence, all rights reserved © 2019-Now Mr.Hope
 ---
