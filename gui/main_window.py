@@ -10,6 +10,7 @@ from qfluentwidgets import FluentIcon
 from .home_interface import HomeInterface
 from .setting_interface import SettingInterface
 from .config_interface import ConfigInterface
+from .fight_edit_interface import FightEditInterface
 from .api.check_update import check_update
 
 
@@ -30,6 +31,9 @@ class MainWindow(MSFluentWindow):
     def init_navigation(self):
         # 添加主页导航页
         self.addSubInterface(HomeInterface(), FluentIcon.HOME, self.tr("主页"))
+
+        # 添加战斗编辑页面
+        self.addSubInterface(FightEditInterface(), FluentIcon.EDIT, self.tr("战斗设计"))
 
         # 添加配置导航页
         self.addSubInterface(
