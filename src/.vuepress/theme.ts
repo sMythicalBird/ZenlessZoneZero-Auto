@@ -73,15 +73,15 @@ export default hopeTheme({
     components: {
       components: ["Badge", "VPCard", "ArtPlayer"],
     },
-    // redirect: {
-    //   defaultLocale: "/zh/",
-    //   autoLocale: true,
-    //   switchLocale: "modal",
-    //   localeConfig: {
-    //     "/zh/": ["zh-CN", "zh-TW", "zh"],
-    //     "/en/": ["en-US", "en-UK", "en"],
-    //   },
-    // },
+    redirect: {
+      defaultLocale: "/zh/",
+      switchLocale: "modal",
+      localeFallback: true,
+      localeConfig: {
+        "/zh/": ["zh-CN", "zh-TW", "zh"],
+        "/en/": ["en-US", "en-UK", "en"],
+      },
+    },
 
     // All features are enabled for demo, only preserve features you need here
     mdEnhance: {
