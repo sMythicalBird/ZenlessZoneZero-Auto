@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from qfluentwidgets import Pivot, ScrollArea, SettingCardGroup, FluentIcon
 from .components import ComboBoxSettingCard1
+from .cfg_card_group import ZeroHoleGroup, FightGroup
 
 
 class ConfigInterface(ScrollArea):
@@ -33,11 +34,10 @@ class ConfigInterface(ScrollArea):
             "color: black;"
         )
         # 初始化卡组
-        self.ZeroGroup = SettingCardGroup(self.tr("零号空洞"), self.scrollWidget)
-        self.OneGroup = SettingCardGroup(self.tr("战斗"), self.scrollWidget)
+        self.zero_hole_group = ZeroHoleGroup(self.scrollWidget)
+        self.fight_group = FightGroup(self.scrollWidget)
         # 初始化界面
         self.init_ui()
-        self.init_card()
         self.init_layout()
 
     def init_ui(self):
@@ -51,43 +51,15 @@ class ConfigInterface(ScrollArea):
         self.settingLabel.setObjectName("settingLabel")
         self.setStyleSheet("background-color: transparent;")
 
-    def init_card(self):
-        # 在这里添加卡片的初始化代码
-        self.instanceTypeCard = ComboBoxSettingCard1(
-            "instance_type",
-            FluentIcon.ALIGNMENT,
-            self.tr("区域"),
-            None,
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
-        )
-        self.instanceTypeCard1 = ComboBoxSettingCard1(
-            "instance_type",
-            FluentIcon.ALIGNMENT,
-            self.tr("区域2"),
-            None,
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
-        )
-        self.instanceTypeCard2 = ComboBoxSettingCard1(
-            "instance_type",
-            FluentIcon.ALIGNMENT,
-            self.tr("战斗"),
-            None,
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
-        )
-
     def init_layout(self):
-        self.ZeroGroup.addSettingCard(self.instanceTypeCard)
-        self.ZeroGroup.addSettingCard(self.instanceTypeCard1)
-        self.OneGroup.addSettingCard(self.instanceTypeCard2)
-
         self.settingLabel.move(36, 30)
-        self.pivot.move(40, 80)
-
+        self.pivot.move(40, 80)  # 设置导航栏位置
         self.vBoxLayout.addWidget(self.stackedWidget, 0, Qt.AlignmentFlag.AlignTop)
-        self.vBoxLayout.setContentsMargins(40, 80, 36, 0)
+        self.vBoxLayout.setContentsMargins(40, 80, 36, 0)  # 设置卡组内容位置
 
-        self.add_sub_page(self.ZeroGroup, "ZeroGroup", self.tr("零号空洞"))
-        self.add_sub_page(self.OneGroup, "OneGroup", self.tr("战斗"))
+        # 添加卡组
+        self.add_sub_group(self.zero_hole_group, "ZeroGroup", self.tr("零号空洞"))
+        self.add_sub_group(self.fight_group, "OneGroup", self.tr("战斗"))
 
         self.stackedWidget.currentChanged.connect(self.on_current_index_changed)
         self.pivot.setCurrentItem(self.stackedWidget.currentWidget().objectName())
@@ -95,7 +67,7 @@ class ConfigInterface(ScrollArea):
             self.stackedWidget.currentWidget().sizeHint().height()
         )
 
-    def add_sub_page(self, widget: SettingCardGroup, object_name, text):
+    def add_sub_group(self, widget: SettingCardGroup, object_name, text):
         def remove_spacing(layout):
             for i in range(layout.count()):
                 item = layout.itemAt(i)

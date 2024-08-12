@@ -5,17 +5,8 @@
 @author:    sMythicalBird
 """
 
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QStackedWidget,
-    QSpacerItem,
-    QSizePolicy,
-)
-from PySide6.QtCore import Qt
-from qfluentwidgets import Pivot, ScrollArea, SettingCardGroup, FluentIcon
-from .components import ComboBoxSettingCard1
+
+from qfluentwidgets import ScrollArea
 
 
 class SettingInterface(ScrollArea):

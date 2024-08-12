@@ -29,3 +29,7 @@ class ComboBoxSettingCard1(SettingCard):
         self.comboBox = ComboBox(self)
         self.hBoxLayout.addWidget(self.comboBox, 0, Qt.AlignmentFlag.AlignRight)
         self.hBoxLayout.addSpacing(16)
+        for text, option in zip(texts, texts):
+            self.comboBox.addItem(text, userData=option)
+
+        self.comboBox.setCurrentText(texts[0])
