@@ -26,7 +26,7 @@ from .init_cfg import home_img_path
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-
+        # self.setFixedHeight(600)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = QLabel(f"绝区零自动化", self)
         self.galleryLabel.setStyleSheet(
