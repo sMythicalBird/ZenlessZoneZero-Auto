@@ -74,7 +74,9 @@ class LinkCardView(SingleDirectionScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         self.view.setObjectName("view")
-        self.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
+        # 设置view的样式表
+        self.setStyleSheet("background-color: rgba(255, 255, 255, 0);")  # 设置背景透明
+        self.view.setStyleSheet("border: none;")  # 去掉边框
 
     def add_card(self, icon, title, content, url):
         """add link card"""

@@ -25,7 +25,6 @@ import numpy as np
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(500)
 
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = QLabel(f"绝区零自动化", self)
@@ -46,6 +45,7 @@ class BannerWidget(QWidget):
 
         # 获取背景图片
         self.img = Image.open(str(home_img_path / "bg.png"))
+
         self.banner = None
         self.path = None
 
@@ -79,20 +79,14 @@ class BannerWidget(QWidget):
         painter.setRenderHints(
             QPainter.RenderHint.SmoothPixmapTransform | QPainter.RenderHint.Antialiasing
         )
-
         if not self.banner or not self.path:
-            # 获取图片归一化高度进行裁剪
-            image_height = self.img.width * self.height() // self.width()
-            crop_area = (0, 0, self.img.width, image_height)
-            # crop_area = (0, 0, self.img.width, self.img.height)
+            crop_area = (0, 0, self.img.width, self.img.height)
             cropped_img = self.img.crop(crop_area)
-            img_data = np.array(
-                cropped_img.convert("RGBA")
-            )  # Ensure the image is in RGBA format
-            height, width, channels = img_data.shape
+            self.img_data = np.array(cropped_img.convert("RGBA"))
+            height, width, channels = self.img_data.shape
             bytes_per_line = channels * width
             self.banner = QImage(
-                img_data.data,
+                self.img_data.data,
                 width,
                 height,
                 bytes_per_line,
@@ -107,6 +101,13 @@ class BannerWidget(QWidget):
 
         painter.setClipPath(self.path)
         painter.drawImage(self.rect(), self.banner)
+
+    # 每次调整窗口大小时重新计算高度
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        # 重新计算高度
+        new_height = self.size().width() * self.img.height // self.img.width
+        self.setFixedHeight(new_height)
 
 
 class HomeInterface(ScrollArea):
@@ -132,3 +133,5 @@ class HomeInterface(ScrollArea):
         self.vBoxLayout.setSpacing(25)
         self.vBoxLayout.addWidget(self.banner)
         self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        # 设置view的样式表去掉边框
+        self.view.setStyleSheet("border: none;")
