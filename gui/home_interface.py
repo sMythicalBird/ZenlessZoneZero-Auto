@@ -15,11 +15,12 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPainter, QPainterPath, QImage
 
-from .init_cfg import home_img_path
-from .components.link_card import LinkCardView
+from .components import LinkCardView, TaskCardView
 from PIL import Image
 
 import numpy as np
+
+from .init_cfg import home_img_path
 
 
 class BannerWidget(QWidget):
@@ -95,7 +96,7 @@ class BannerWidget(QWidget):
 
             path = QPainterPath()
             path.addRoundedRect(
-                0, 0, width + 50, height + 50, 10, 10
+                0, 0, width + 50, height + 50, 30, 30
             )  # 10 is the radius for corners
             self.path = path.simplified()
 
@@ -117,10 +118,10 @@ class HomeInterface(ScrollArea):
         self.view = QWidget(self)
         # 给view设置布局
         self.vBoxLayout = QVBoxLayout(self.view)
-        # 添加横幅小组件
-        self.banner = BannerWidget(self)
         # 初始化窗口界面
         self.init_ui()
+        # 初始化窗口组件
+        self.load_samples()
 
     def init_ui(self):
         self.setObjectName("HomeInterface")
@@ -131,7 +132,34 @@ class HomeInterface(ScrollArea):
         # 设置布局格式 添加banner
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setSpacing(25)
-        self.vBoxLayout.addWidget(self.banner)
         self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         # 设置view的样式表去掉边框
         self.view.setStyleSheet("border: none;")
+
+    def test_fun1(self, task_name: str):
+        print(task_name)
+
+    def test_fun2(self, task_name: str):
+        print(task_name)
+
+    def load_samples(self):
+        # 添加横幅小组件
+        banner = BannerWidget(self)
+        self.vBoxLayout.addWidget(banner)
+
+        # 添加功能组件
+        task_card_view = TaskCardView(self.tr("任务 >"), self.view)
+        task_card_view.add_task_card(
+            icon=str(home_img_path / "安比.jpg"),
+            title="测试-sig",
+            action=lambda: self.test_fun1("测试-sig"),
+        )
+        task_card_view.add_task_card(
+            icon=str(home_img_path / "安比.jpg"),
+            title="测试-mul",
+            action={
+                "test1": lambda: self.test_fun1("测试-mul-1"),
+                "test2": lambda: self.test_fun2("测试-mul-2"),
+            },
+        )
+        self.vBoxLayout.addWidget(task_card_view)
