@@ -4,7 +4,7 @@
 @time:      2024/8/11 下午4:41
 @author:    sMythicalBird
 """
-from qfluentwidgets import ScrollArea, FluentIcon
+from qfluentwidgets import ScrollArea, FluentIcon, TitleLabel, LargeTitleLabel, qconfig, setTheme, Theme
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QGraphicsDropShadowEffect,
 )
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPainter, QPainterPath, QImage
+from PySide6.QtGui import QPainter, QPainterPath, QImage, QFont
 
 from .components import LinkCardView, TaskCardView
 from PIL import Image
@@ -22,18 +22,16 @@ import numpy as np
 
 from .init_cfg import home_img_path
 
-
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         # self.setFixedHeight(600)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
-        self.galleryLabel = QLabel(f"绝区零自动化", self)
-        self.galleryLabel.setStyleSheet(
-            "color: black; font-size: 50px; font-weight: 600; "
-            "font-family: 'Microsoft YaHei';"
-        )
-
+        self.galleryLabel = TitleLabel(f"绝区零自动化", self)
+        font = QFont("MiSans", 30, QFont.Bold) 
+        self.galleryLabel.setFont(font)
+        setTheme(Theme.AUTO)
+        
         # 创建阴影效果
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)  # 阴影模糊半径
