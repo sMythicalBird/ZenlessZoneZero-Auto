@@ -1,5 +1,5 @@
-name: Bug 反馈
-description: 反馈 BUG 的中文模板
+name: "Bug_Reporter"
+description: "反馈 BUG 的中文模板"
 title: "我遇到了 BUG"
 assignees:
   - octocat
@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        你好，很高兴能有人反馈 BUG 并与我们参与社区建设。请您按照我们提供的模板反馈问题，以便我们尽快解决
+        "你好，很高兴能有人反馈 BUG 并与我们参与社区建设。请您按照我们提供的模板反馈问题，以便我们尽快解决"
   - type: input
     id: contact
     attributes:
@@ -19,21 +19,20 @@ body:
   - type: textarea
     id: what-happened
     attributes:
-      label: 发生了什么
-      description: 反馈您的问题
-      placeholder: 请告诉我们您所遇到的问题，并截图游戏窗口
+      label: "发生了什么"
+      description: "反馈您的问题"
+      placeholder: "请告诉我们您所遇到的问题，并截图游戏窗口"
       value: "A bug happened!"
     validations:
       required: true
   - type: dropdown
     id: version
     attributes:
-      label: Version
-      description: What version of our software are you running?
+      label: "软件版本"
+      description: "你在使用什么版本？"
       options:
-        - v2.2 一键部署版本 (Default)
-        - v2.2 源码版本
-        - v2.1 源码版本
+        - v2.2
+        - v2.1
 
       default: 0
     validations:
@@ -41,7 +40,7 @@ body:
   - type: dropdown
     id: system
     attributes:
-      label: 你的系统版本是？
+      label: "你的系统版本是？"
       multiple: true
       options:
         - Windows 11
@@ -50,15 +49,15 @@ body:
   - type: textarea
     id: debug
     attributes:
-      label: 程序终端输出
-      description: 请提供完整的终端截图
-      placeholder: 可以复制终端输出或者粘贴图片
+      label: "程序终端输出"
+      description: "请提供完整的终端截图"
+      placeholder: "可以复制终端输出或者粘贴图片"
   - type: checkboxes
     id: terms
     attributes:
-      label: 行为守则
-      description: 提交这个 Issues，即代表您认可这个项目的行为守则。并允许我们对该 Issues 做出后续的跟踪和反馈
+      label: "行为守则"
+      description: "提交这个 Issues，即代表您认可这个项目的行为守则。并允许我们对该 Issues 做出后续的跟踪和反馈"
       options:
-        - label: 我同意并已认真阅读相关内容
+        - label: "我同意并已认真阅读相关内容"
           value: true
           required: true
