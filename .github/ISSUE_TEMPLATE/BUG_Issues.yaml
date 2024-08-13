@@ -1,63 +1,62 @@
-name: "Bug_Reporter"
-description: "反馈 BUG 的中文模板"
-title: "我遇到了 BUG"
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug", "triage"]
 assignees:
   - octocat
 body:
   - type: markdown
     attributes:
       value: |
-        "你好，很高兴能有人反馈 BUG 并与我们参与社区建设。请您按照我们提供的模板反馈问题，以便我们尽快解决"
+        Thanks for taking the time to fill out this bug report!
   - type: input
     id: contact
     attributes:
-      label: 更多信息
-      description: 你能告诉我们你的联系方式以便我们跟进吗？
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
       placeholder: ex. email@example.com
     validations:
       required: false
   - type: textarea
     id: what-happened
     attributes:
-      label: "发生了什么"
-      description: "反馈您的问题"
-      placeholder: "请告诉我们您所遇到的问题，并截图游戏窗口"
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
       value: "A bug happened!"
     validations:
       required: true
   - type: dropdown
     id: version
     attributes:
-      label: "软件版本"
-      description: "你在使用什么版本？"
+      label: Version
+      description: What version of our software are you running?
       options:
-        - v2.2
+        - v2.2 (Default)
         - v2.1
-
       default: 0
     validations:
       required: true
   - type: dropdown
-    id: system
+    id: systems
     attributes:
-      label: "你的系统版本是？"
+      label: What systems are you seeing the problem on?
       multiple: true
       options:
         - Windows 11
         - Windows 10
         - Windows 7
   - type: textarea
-    id: debug
+    id: logs
     attributes:
-      label: "程序终端输出"
-      description: "请提供完整的终端截图"
-      placeholder: "可以复制终端输出或者粘贴图片"
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
   - type: checkboxes
     id: terms
     attributes:
-      label: "行为守则"
-      description: "提交这个 Issues，即代表您认可这个项目的行为守则。并允许我们对该 Issues 做出后续的跟踪和反馈"
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com). 
       options:
-        - label: "我同意并已认真阅读相关内容"
-          value: true
+        - label: I agree to follow this project's Code of Conduct
           required: true
