@@ -6,5 +6,6 @@
 """
 from .link_card import LinkCardView
 from .task_card import TaskCardView
+from .combo_box_card import ComboBoxSettingCard1
 
-__all__ = ["LinkCardView", "TaskCardView"]
+__all__ = ["LinkCardView", "TaskCardView", "ComboBoxSettingCard1"]
