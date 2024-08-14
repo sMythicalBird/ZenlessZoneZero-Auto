@@ -1,0 +1,91 @@
+# 一直按住右同时AE
+-   key: "d"
+    type: "down"
+    delay: 0          # 执行完毕后不进行延迟 每动电量：3 3 5 8。
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.024
+    delay: 0.22
+# 垫布
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.21
+# 闪避
+-   key: "shift"
+    type: "press"
+    delay: 0.08
+# 冲刺攻击
+-   key: "left"
+    type: "press"
+    duration: 0.024
+    delay: 0.16
+# 施放e0
+-   key: "e"
+    type: "press"
+    duration: 0.024
+    delay: 0.19
+
+
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.21
+# 垫布
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.21
+# 闪避
+-   key: "shift"
+    type: "press"
+    delay: 0.07
+# 冲刺攻击
+-   key: "left"
+    type: "press"
+    duration: 0.024
+    delay: 0.18
+# 施放e1
+-   key: "e"
+    type: "press"
+    duration: 0.024
+    delay: 0.3
+
+# 平A第3段连按延长时间e
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.3
+# 垫布
+-   key: "left"
+    type: "press"
+    duration: 0.024
+    delay: 0.21
+# 施放e2
+-   key: "e"
+    type: "press"
+    duration: 0.1
+    delay: 0.19
+
+
+# 平A第4段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.7
+# 施放e3
+-   key: "e"
+    type: "press"
+    duration: 0.1
+    delay: 0.22
+# 松开d
+-   key: "d"
+    type: "up"
+    delay: 0          # 执行完毕后不进行延迟
+# q
+-   key: "q"
+    type: "press"
+    duration: 0.1
+    delay: 0.1
