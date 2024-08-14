@@ -270,31 +270,41 @@ def action():
     control.click(1210, 35)
 
 
+# 现在仅在刚进入的时候进行判断，后续不再判断
 @task.page(name="进入特殊区域", target_texts=["进入特殊区域"])
 def action(screen: np.ndarray):
     special_areas = ["0044"]
+    special_areas = []
     special_areas = list(map(lambda x: template(x), special_areas))
     ocr_results = task.ocr(screen)
     need_exit = False
     for ocr_result in ocr_results:
-        if ocr_result.text.strip() == "离开":
-            control.click(ocr_result.position.x, ocr_result.position.y)
-            return  # 离开特殊区域
         for special_area in special_areas:
             if special_area.search(ocr_result.text):
-                need_exit = True
+                logger.debug("当前位于特殊区域:" + special_area.pattern + "，无法寻路")
+                info.exitFlag = True
                 break
-        if need_exit:
+        if info.exitFlag:
             break
-    if need_exit:
-        logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
-        for i in range(10):
+        # 部分特殊区域的处理
+        if "0044" in ocr_result.text:
+            logger.debug("当前位于特殊区域0044")
             control.press("space")
-            time.sleep(0.2)
-        time.sleep(3)
-        control.esc()
-    else:
-        logger.debug("进入特殊区域")
+            control.press("space")
+            control.press("space")
+            time.sleep(1)  # 等待地图预览结束
+            control.press("w", duration=2)
+            return
+
+    # if need_exit:
+    #     logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
+    #     for i in range(10):
+    #         control.press("space")
+    #         time.sleep(0.2)
+    #     time.sleep(3)
+    #     control.esc()
+    # else:
+    #     logger.debug("进入特殊区域")
     control.press("space")
 
 
