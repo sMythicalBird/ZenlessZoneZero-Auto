@@ -51,30 +51,37 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     priority=1,
     target_texts=["背包", "^当前层数"],
     target_image="tv_spot.png",
-    exclude_texts=["零号银行", "呼叫增援"],
+    exclude_texts=["零号银行", "呼叫增援", "进入特殊区域"],
 )
 def action():
-    # 如果上一个页面不是通用点击事件，那么等待一秒
-    if not task.lastPageName == "通用点击事件":
+    # 如果上一个页面是地图层数，说明刚进区域，此时等待一秒加载图像，主要是防止特殊区域的问题
+    if task.lastPageName == "地图层数":
         time.sleep(1)
+        return
+    # 模板匹配找到通用选择事件
     screen = screenshot()  # 截图
     if any(
         find_template(screen, option_image_match, threshold=0.95)
         for option_image_match in OptionImageMatch
     ):
         return
-    exclude_texts = ["特殊区域"]
-    exclude_texts = list(map(lambda x: template(x), exclude_texts))
-    results = task.ocr(screen)
-    if any(
-        exclude_text.search(result.text)
-        for exclude_text in exclude_texts
-        for result in results
-    ):
-        return
-    # 点击坐标，点击位置根据点击次数变化
-    control.click(1050, 320 + (info.clickCount % 9) * 40)
-    info.clickCount = (info.clickCount + 1) % 9
+    # 1.1版本后对话新加数字选项，可以直接输入数字继续对话，通用点击进行调整
+    # exclude_texts = ["特殊区域"]
+    # exclude_texts = list(map(lambda x: template(x), exclude_texts))
+    # results = task.ocr(screen)
+    # if any(
+    #     exclude_text.search(result.text)
+    #     for exclude_text in exclude_texts
+    #     for result in results
+    # ):
+    #     return
+    # # 点击坐标，点击位置根据点击次数变化
+    # control.click(1050, 320 + (info.clickCount % 9) * 40)
+    # info.clickCount = (info.clickCount + 1) % 9
+
+    # 1.1版本变动事件处理逻辑，取消鼠标点击，容易产生误判，好感事件选择第一个，特殊情况额外加判断
+    control.press("1")  # 非特殊判断事件和通用选择事件，则大概率是好感选择
+    control.press("space")  # 对话确认
 
 
 # 遇到确定就点击
@@ -116,14 +123,6 @@ def action(positions: Dict[str, Position]):
         info.currentStage = 2  # 右下拖
     elif utils.config.modeSelect == 4:
         info.currentStage = 2  # 向下拖拽
-
-
-# 8、资源回收小组
-@task.page(name="资源回收小组", target_texts=["^让猫又选物资箱$"])
-def select_role(positions: Dict[str, Position]):
-    pos = positions.get("^让猫又选物资箱$")
-    control.click(pos.x, pos.y)
-    time.sleep(2)
 
 
 # 10、调查协会支援站
@@ -271,7 +270,7 @@ def action():
     control.click(1210, 35)
 
 
-@task.page(name="进入特殊区域", target_texts=["特殊区域"])
+@task.page(name="进入特殊区域", target_texts=["进入特殊区域"])
 def action(screen: np.ndarray):
     special_areas = ["0044"]
     special_areas = list(map(lambda x: template(x), special_areas))
@@ -305,11 +304,12 @@ def action():
     control.click(80, 35)
 
 
-# 怀斯塔学会的援助
-@task.page(name="怀斯塔学会的援助", target_texts=["^接受学会的好意$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^接受学会的好意$")
-    control.click(pos.x, pos.y)
+# 1.1版本移除判断
+# # 怀斯塔学会的援助
+# @task.page(name="怀斯塔学会的援助", target_texts=["^接受学会的好意$"])
+# def action(positions: Dict[str, Position]):
+#     pos = positions.get("^接受学会的好意$")
+#     control.click(pos.x, pos.y)
 
 
 # 老练的调查员
