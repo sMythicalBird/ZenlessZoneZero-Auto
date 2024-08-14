@@ -332,6 +332,7 @@ class _Task(BaseModel):
                     if param.annotation == np.ndarray:
                         params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
+                self.curb_fightCount(page)  # 限制战斗次数
                 if page.sleep:
                     time.sleep(page.sleep)
                 self.lastPageName = page.name  # 设置上次页面名称
@@ -494,6 +495,13 @@ class _Task(BaseModel):
             if position := _Task.find_image(targets=targets):
                 return position
         return None
+
+    def curb_fightCount(self, page, maxFightCount = None):
+        from utils.config import config
+        maxFightCount = maxFightCount or config.maxFightCount
+        if maxFightCount:
+            if self.info.fightCount >= maxFightCount and page.name == "结算界面":
+                self.stop()
 
 
 task = _Task()
