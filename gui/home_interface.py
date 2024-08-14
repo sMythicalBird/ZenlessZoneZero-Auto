@@ -4,7 +4,15 @@
 @time:      2024/8/11 下午4:41
 @author:    sMythicalBird
 """
-from qfluentwidgets import ScrollArea, FluentIcon, TitleLabel, LargeTitleLabel, qconfig, setTheme, Theme
+from qfluentwidgets import (
+    ScrollArea,
+    FluentIcon,
+    TitleLabel,
+    LargeTitleLabel,
+    qconfig,
+    setTheme,
+    Theme,
+)
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -22,16 +30,17 @@ import numpy as np
 
 from .init_cfg import home_img_path
 
+
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        # self.setFixedHeight(600)  # 初始高度，后续会调整
+        self.setFixedHeight(570)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = TitleLabel(f"绝区零自动化", self)
-        font = QFont("MiSans", 30, QFont.Bold) 
+        font = QFont("MiSans", 30, QFont.Bold)
         self.galleryLabel.setFont(font)
         setTheme(Theme.AUTO)
-        
+
         # 创建阴影效果
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)  # 阴影模糊半径
@@ -43,7 +52,7 @@ class BannerWidget(QWidget):
         self.galleryLabel.setObjectName("galleryLabel")
 
         # 获取背景图片
-        self.img = Image.open(str(home_img_path / "bg.png"))
+        self.img = Image.open(str(home_img_path / "bg.jpg"))
 
         self.banner = None
         self.path = None
@@ -54,7 +63,9 @@ class BannerWidget(QWidget):
         # 添加垂直布局
         link_card_layout = QHBoxLayout()
         link_card_layout.addWidget(self.link_card_view)
-        link_card_layout.setAlignment(Qt.AlignmentFlag.AlignBottom)
+        link_card_layout.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignBottom
+        )
 
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(0, 20, 0, 0)
@@ -93,9 +104,7 @@ class BannerWidget(QWidget):
             )
 
             path = QPainterPath()
-            path.addRoundedRect(
-                0, 0, width + 50, height + 50, 30, 30
-            )  # 10 is the radius for corners
+            path.addRoundedRect(0, 0, width + 50, height + 50, 30, 30)
             self.path = path.simplified()
 
         painter.setClipPath(self.path)
