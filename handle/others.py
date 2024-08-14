@@ -140,3 +140,19 @@ def settle(positions: Dict[str, Position]):
 #     def settle(positions: Dict[str, Position]):
 #         pos = positions.get("接受他的好意")
 #         control.click(pos.x, pos.y)
+
+
+# 打不过溜了
+@task.page(name="打不过跑路", target_texts=["^退出战斗$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^退出战斗$")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
+
+
+# 打不过怪
+@task.page(name="打不过怪", target_texts=["^撤退$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^撤退$")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
