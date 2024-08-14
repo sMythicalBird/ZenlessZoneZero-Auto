@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - page
+  workflow_dispatch:
+
 
 permissions:
   contents: write
