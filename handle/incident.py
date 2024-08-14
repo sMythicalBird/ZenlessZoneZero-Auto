@@ -289,23 +289,18 @@ def action(screen: np.ndarray):
         # 部分特殊区域的处理
         if "0044" in ocr_result.text:
             logger.debug("当前位于特殊区域0044")
-            control.press("space")
-            control.press("space")
-            control.press("space")
-            time.sleep(1)  # 等待地图预览结束
-            control.press("w", duration=2)
+            for i in range(5):
+                control.press("space")
+                time.sleep(0.5)
+            time.sleep(4)  # 等待地图预览结束w
+            for i in range(8):
+                control.press("w")
+                time.sleep(0.3)
             return
-
-    # if need_exit:
-    #     logger.info("进入特殊区域,且该特殊区域无法寻路，退出地图")
-    #     for i in range(10):
-    #         control.press("space")
-    #         time.sleep(0.2)
-    #     time.sleep(3)
-    #     control.esc()
-    # else:
-    #     logger.debug("进入特殊区域")
-    control.press("space")
+    # 未被识别到的特殊区域，直接过掉，交给群体事件处理函数
+    for i in range(3):
+        control.press("space")
+        time.sleep(0.5)
 
 
 # 旧都往事系列
