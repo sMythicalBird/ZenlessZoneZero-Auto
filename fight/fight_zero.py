@@ -89,19 +89,24 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
         # 创建光效检测器实例
         results = detector.detect_light_effects(img)
         combo_attack = combo_detect(img)
-        execute_tactic_event.clear()  # 阻塞战斗，如果有的话
+        # 连携技和黄光回切人，给战斗一个阻塞来切换战斗逻辑
         if combo_attack:
+            execute_tactic_event.clear()  # 阻塞战斗，如果有的话
+            logger.debug(f"进入连携技模式")
             mouse_press("left", 0.05)
             time.sleep(0.1)
             mouse_press("left", 0.05)
             time.sleep(0.1)
+            execute_tactic_event.set()  # 释放战斗
         elif results["yellow"]["rect"]:
+            execute_tactic_event.clear()  # 阻塞战斗，如果有的话
             logger.debug(f"进入黄光战斗模式")
             for tactic in fightTacticsDict["黄光"]:
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
                     if tactic.delay:
                         time.sleep(tactic.delay)
+            execute_tactic_event.set()  # 释放战斗
         elif results["red"]["rect"]:
             logger.debug(f"进入红光战斗模式")
             for tactic in fightTacticsDict["红光"]:
@@ -109,7 +114,6 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
                     execute_tactic(tactic)
                     if tactic.delay:
                         time.sleep(tactic.delay)
-        execute_tactic_event.set()  # 释放战斗
 
 
 # 定义战斗逻辑
@@ -165,6 +169,7 @@ def fight_login(
         keyUp("a")
         keyUp("s")
         keyUp("d")
+        keyUp("shift")
         mouseUp(button="left")
         mouse_press("middle", 0.05)
 
