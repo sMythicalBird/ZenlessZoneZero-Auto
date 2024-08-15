@@ -130,6 +130,7 @@ def exit_map(positions: Dict[str, Position]):
 @task.page(name="结算界面", target_texts=["^完成$", "^执照等级$"])
 def settle(positions: Dict[str, Position]):
     pos = positions.get("^完成$")
+    time.sleep(1)  # 延迟等待完成按钮出现
     control.click(pos.x, pos.y)
 
 
