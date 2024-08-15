@@ -1,0 +1,31 @@
+name: 打包并发布 📦
+
+on:
+  workflow_dispatch:
+    inputs:
+      TAG_NAME:
+        description: 'Tag name that the major tag will point to'
+        required: true
+
+env:
+  TAG_NAME: ${{ github.event.inputs.TAG_NAME}}
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download Python 3.10
+      run: |
+        wget https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-amd64.zip
+        7z python-3.10.11-embed-amd64.zip -opy310\
+        rm Python-3.10.0.tgz
+        cd py310\
+        python -m ensurepip --upgrade
+    - name: Install dependencies
+      run: |
+        python -m pip install -r ..\requirements-cpu.txt
