@@ -49,17 +49,17 @@ jobs:
         # 需要start.exe下载地址
         Set-Content "Start.bat" "chcp 65001 & cd /d %~dp0 & .\py310\python.exe main.py & pause"
         Copy-Item config.example.yaml config.yaml
-        7z a zzzAuto-Onekey.7z ..
+        7z a -tzip zzzAuto-Onekey.zip ..
     
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         name: ${{ github.event.inputs.VERSION}} CPU一键包
         # tag_name: ${{ github.event.inputs.VERSION}}
-        body: "使用前务必阅读README！！国内[下载链接](https://mirror.ghproxy.com/https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases/latest/download/zzzAuto-Onekey.7z)"
+        body: "使用前务必阅读README！！国内[下载链接](https://mirror.ghproxy.com/https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases/latest/download/zzzAuto-Onekey.zip)"
         # 生成草稿，不会直接发布
         draft: true
         # 如果没有目标文件，则失败停止发布
         fail_on_unmatched_files: true
         files: |
-          zzzAuto-Onekey.7z
+          zzzAuto-Onekey.zip
