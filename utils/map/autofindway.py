@@ -39,7 +39,7 @@ def bi_bfs(
             neighbours = queue.Queue()
             neighbours.put((x - 1, y))
             neighbours.put((x, y - 1))
-            neighbours.put(((x + 1, y)))
+            neighbours.put((x + 1, y))
             neighbours.put((x, y + 1))
             while not neighbours.empty():
                 (x_n, y_n) = neighbours.get()

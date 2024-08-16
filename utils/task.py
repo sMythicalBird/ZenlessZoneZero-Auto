@@ -15,6 +15,7 @@ from PIL import Image
 from pydantic import BaseModel, Field, ConfigDict
 
 from schema import Position, OcrResult, info
+from . import config
 from .init import logger, RootPath
 from .ocr import Ocr
 from .utils import find_template, screenshot
@@ -332,7 +333,8 @@ class _Task(BaseModel):
                     if param.annotation == np.ndarray:
                         params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
-                self.curb_fightCount(page)  # 限制战斗次数
+                # 应用最大战斗次数规则
+                self.maxfightcount_rule(page)
                 if page.sleep:
                     time.sleep(page.sleep)
                 self.lastPageName = page.name  # 设置上次页面名称
@@ -496,12 +498,19 @@ class _Task(BaseModel):
                 return position
         return None
 
-    def curb_fightCount(self, page, maxFightCount = None):
-        from utils.config import config
-        maxFightCount = maxFightCount or config.maxFightCount
-        if maxFightCount:
-            if self.info.fightCount >= maxFightCount and page.name == "结算界面":
-                self.stop()
+    def maxfightcount_rule(self, page, maxfightcount = None):
+        '''
+        根据最大战斗次数规则判断是否停止战斗。
+        :param page: 当前的页面对象，用于判断是否处于结算界面。
+        :param maxfightcount: 可选参数，指定的最大战斗次数。如果未指定，则使用配置中的默认值。
+        '''
+        # 选择最大战斗次数，如果参数中没有指定，则使用配置中的值。
+        maxfightcount = maxfightcount or config.maxfightcount
+        # 检查是否已经达到最大战斗次数并且当前页面是结算界面。
+        if maxfightcount and info.fightCount >= maxfightcount and page.name == "结算界面":
+            # 如果条件满足，记录日志并停止战斗。
+            logger.info(f"当前已达到最大战斗次数{maxfightcount}，停止战斗")
+            self.stop()
 
 
 task = _Task()
