@@ -17,9 +17,9 @@ from schema import info
 # 任务函数无需参数，无需返回值
 @task.conditional(
     name="最大战斗次数",
-    condition=lambda: config.maxFightCount and info.fightCount >= config.maxFightCount and page.name == '结算界面',
+    condition=lambda: config.maxFightCount and info.fightCount >= config.maxFightCount and info.currentPageName == '结算界面',
 )
-def max_fight_times(page):
+def max_fight_times():
     """
     达到最大战斗次数
     """

@@ -306,11 +306,10 @@ class _Task(BaseModel):
             if not callable(action):
                 raise ValueError("条件操作函数必须为可调用对象")
             logger.debug(f"添加条件操作：{name}")
-            def wrapper(*args,**kwargs):
-                self._conditionalActions.append(
-                    ConditionalAction(name = name, condition = condition, action = action)
-                )
-            return wrapper
+
+            self._conditionalActions.append(
+                ConditionalAction(name = name, condition = condition, action = action))
+
         return decorator
 
     def __call__(self):
