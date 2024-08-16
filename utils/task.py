@@ -307,10 +307,11 @@ class _Task(BaseModel):
             if not callable(action):
                 raise ValueError("条件操作函数必须为可调用对象")
             logger.debug(f"添加条件操作：{name}")
-            self._conditionalActions.append(
-                ConditionalAction(name=name, condition=condition, action=action)
-            )
-
+            def wrapper(*args,**kwargs):
+                self._conditionalActions.append(
+                    ConditionalAction(name = name, condition = condition, action = action)
+                )
+            return wrapper
         return decorator
 
     def __call__(self):
@@ -333,7 +334,7 @@ class _Task(BaseModel):
                     if param.annotation == np.ndarray:
                         params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
-                max_fight_times()   # 设置最大战斗次数条件任务
+                max_fight_times(page)   # 设置最大战斗次数条件任务
                 if page.sleep:
                     time.sleep(page.sleep)
                 self.lastPageName = page.name  # 设置上次页面名称
