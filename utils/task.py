@@ -308,7 +308,8 @@ class _Task(BaseModel):
             logger.debug(f"添加条件操作：{name}")
 
             self._conditionalActions.append(
-                ConditionalAction(name = name, condition = condition, action = action))
+                ConditionalAction(name=name, condition=condition, action=action)
+            )
 
         return decorator
 

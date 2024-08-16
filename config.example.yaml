@@ -20,3 +20,4 @@ hasBoom: True               # 是否解锁炸弹
 useGpu: True                # 是否使用GPU，默认True, 使用GPU会加速模型训练,如果改为False，会强制使用CPU进行OCR识别
 selBuff: ["冻结", "暴击", "决斗", "闪避"]       # 鸣辉选择
 characters: ["艾莲", "莱卡恩", "苍角"]       # 自己带了哪些角色这里就填哪些，当然填了不一定有相应的战斗逻辑，后面版本再加
+maxFightCount: 100          # 最大空洞完成次数，超过最大战斗次数会退出
