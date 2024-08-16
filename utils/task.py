@@ -15,7 +15,6 @@ from PIL import Image
 from pydantic import BaseModel, Field, ConfigDict
 
 from schema import Position, OcrResult, info
-from handle.conditional import max_fight_times
 from .init import logger, RootPath
 from .ocr import Ocr
 from .utils import find_template, screenshot
@@ -334,7 +333,6 @@ class _Task(BaseModel):
                     if param.annotation == np.ndarray:
                         params[name] = img.copy()  # 拷贝图片
                 page.action(**params)  # 执行页面操作函数
-                max_fight_times(page)   # 设置最大战斗次数条件任务
                 if page.sleep:
                     time.sleep(page.sleep)
                 self.lastPageName = page.name  # 设置上次页面名称
