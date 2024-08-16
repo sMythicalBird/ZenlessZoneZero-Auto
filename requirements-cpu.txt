@@ -10,6 +10,7 @@ requests
 tqdm
 pynput
 pydirectinput-rgx
+PySide6-Fluent-Widgets
 pywin32
 pyyaml
 onnxruntime

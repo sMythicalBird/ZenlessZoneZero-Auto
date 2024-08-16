@@ -117,11 +117,11 @@ def component_class(
         conf, index = infer_crop(crop)
         if conf < 0.95:
             return MapComponent(
-                name="其他",  # 组件名称
+                name="当前未识别",  # 组件名称
                 x=1,  # 组件坐标
                 y=1,  # 组件坐标
                 confidence=0,  # 组件置信度
-                weight=3,  # 组件权重
+                weight=1,  # 组件权重
             )
         # 获取组件标签
         return MapComponent(
@@ -161,11 +161,14 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
     # 后处理
     outputs = television.postprocess(screen, pred)
     # 筛选出 y 值大于 h 的输出
+    # print(outputs)
+    # input()
     outputs = [
         output
         for output in outputs
         if output["y"] >= h // 2
         and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
+        and output["conf"] > 0.8  # 置信度大于0.8
     ]  # 按 x 坐标排序
     # 2*2 格子拆分
     m_w = w * 1.5  # 切割2*2
@@ -228,7 +231,6 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
             )
         else:
             group["map_components"].append([output["y"], map_component])
-    # input()
     # 按 y 坐标排序
     y_groups = []
     y_outputs = sorted(outputs_real, key=lambda item: item["y"])
@@ -256,4 +258,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                     map_component.y = y_group["y"]
                     map_component.x = x_group["x"]
                     map_info.components[y_group["y"]][x_group["x"]] = map_component
+    # for each in map_info.components:
+    #     print(each)
+    # input()
     return map_info

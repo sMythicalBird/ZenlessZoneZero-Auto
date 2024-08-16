@@ -10,7 +10,8 @@ requests
 tqdm
 pynput
 pydirectinput-rgx
-pyside6==6.7.2
+pyside6
+PySide6-Fluent-Widgets
 pywin32
 pyyaml
 onnxruntime-gpu==1.17

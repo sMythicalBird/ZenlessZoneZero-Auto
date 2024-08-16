@@ -107,7 +107,7 @@ class Control:
         moveRel(x, y, relative=True)
 
     @staticmethod
-    def press(key, duration=0.1):
+    def press(key, duration=0.05):
         press(key, duration=duration)
 
 
