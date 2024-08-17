@@ -46,8 +46,8 @@ jobs:
     - name: 打包
       run: |
         # 7z压缩
-        # 需要start.exe下载地址
-        Set-Content "Start.bat" "chcp 65001 & cd /d %~dp0 & .\py310\python.exe main.py & pause"
+        # Set-Content "Start.bat" "chcp 65001 & cd /d %~dp0 & .\py310\python.exe main.py & pause"
+        Start-BitsTransfer "http://pan.caiyun.fun/1655577/zzz/start.exe"
         Copy-Item config.example.yaml config.yaml
         # 防止敏感信息泄露
         Remove-Item .git\ -Force -Recurse
