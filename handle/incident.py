@@ -187,7 +187,9 @@ def action(positions: Dict[str, Position]):
 
 
 # 投机客的帮助，不确定是否选项固定，多写几个
-@task.page(name="投机客_帮助_回复生命", target_texts=["投机客", "^恢复身体$"])
+@task.page(
+    name="投机客_帮助_回复生命", priority=6, target_texts=["投机客", "^恢复身体$"]
+)
 def action(positions: Dict[str, Position]):
     pos = positions.get("^恢复身体$")
     control.click(pos.x, pos.y)
@@ -227,9 +229,9 @@ def action(positions: Dict[str, Position]):
 
 
 # 降低压力值 回复生命值 获得齿轮硬币
-@task.page(name="降低压力值", target_texts=["^降低压力值"])
+@task.page(name="回复生命值", target_texts=["^回复生命值"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("^降低压力值")
+    pos = positions.get("^回复生命值")
     control.click(pos.x, pos.y)
 
 
