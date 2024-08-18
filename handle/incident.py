@@ -372,8 +372,9 @@ def action(positions: Dict[str, Position]):
     control.press("space")
     info.currentStage = 5  # 向下拖拽
     info.rewardCount -= 1
-    if info.rewardCount <= 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
-        info.exitFlag = True
+    info.exitFlag = True  # 拿不到业绩直接退出
+    # if info.rewardCount <= 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
+    #     info.exitFlag = True
 
 
 # 零号业绩
