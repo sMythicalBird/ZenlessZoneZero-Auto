@@ -14,6 +14,7 @@ from utils import control, get_map_info, auto_find_way, logger
 from utils.task import task
 from utils.detect.current import find_current
 from utils.config import config
+from utils.map.components import set_weight
 
 map_name = config.targetMap.Zone
 map_level = config.targetMap.Level
@@ -47,17 +48,24 @@ def grid_map(screen: np.ndarray):
     # 零号业绩相关的判断
     # 旧都列车地图需要移动，其他地图不需要拖动
     if map_name == "旧都列车":
-        if info.currentStage == 1 and (k := find_current()):  # 左下拖拿业绩
-            control.move_at(k.x, k.y, 360, 500)
-            control.press("d", duration=0.05)
-        # 不在往上走了
-        elif info.currentStage == 2 and (k := find_current()):  # 右下拖拿银行
-            control.move_at(k.x, k.y, 900, 500)
-            control.press("a", duration=0.05)
-        elif info.currentStage == 5 and (k := find_current()):  # 向下拖去传送点
-            control.move_at(k.x, k.y, 640, 500)
-        elif info.currentStage == 6 and (k := find_current()):  # 向左拖动
-            control.move_at(k.x, k.y, 260, 320)
+        if config.modeSelect == 1:  # 向下拖动
+            if info.currentStage == 5 and (k := find_current()):
+                control.move_at(k.x, k.y, 640, 500)
+                control.press("w", duration=0.05)  # 向上走
+        # elif config.modeSelect == 2:  # 向左下拖动
+        #     if info.currentStage == 1 and (k := find_current()):
+        #         control.move_at(k.x, k.y, 360, 500)
+        #         control.press("d", duration=0.05)  # 向右走快速拿业绩
+        elif config.modeSelect == 3:  # 向右下拖动
+            if info.currentStage == 2 and (k := find_current()):
+                control.move_at(k.x, k.y, 900, 500)
+                control.press("a", duration=0.05)  # 向左走快速拿银行
+        elif config.modeSelect == 4 or config.modeSelect == 2:  #  先左下拖后右下拖
+            if info.currentStage == 1 and (k := find_current()):
+                control.move_at(k.x, k.y, 360, 500)
+                control.press("d", duration=0.05)  # 向右走快速拿业绩
+            elif info.currentStage == 2 and (k := find_current()):
+                control.move_at(k.x, k.y, 900, 500)
     # 获取地图信息
     # 防止地图初始化的时候提前开始截图，但是其他情况下又不需要，这延迟多了也不是，少了也不是
     time.sleep(0.3)
@@ -80,7 +88,7 @@ def grid_map(screen: np.ndarray):
         return
     # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
     if mc.name == "终点":
-        info.currentStage = 0
+        info.currentStage = 0  # 重置偏移量
     control.press(str(dirct), duration=0.1)
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     info.lastMoveTime = datetime.now()
@@ -103,7 +111,14 @@ def action(positions: Dict[str, Position]):
     info.currentStage = 0  # 进入战斗，无偏移
     info.hasBoom = config.hasBoom  # 是否有炸弹
     info.exitFlag = False  # 离开标志
-    info.teammate = 2  # 获取两个队友
+    info.teamMate = config.teamMates  # 获取队友数量
+    if (
+        config.modeSelect == 2 or config.modeSelect == 4
+    ):  # 需要拾取业绩，则将业绩优先级调高
+        info.rewardCount = config.targetMap.reward_count()  # 获取奖励次数
+        set_weight("零号业绩", 10)
+    if info.teamMate:  # 需要队友，则将队友优先级调高
+        set_weight("呼叫增援", 10)
 
 
 @task.page(name="选择副本", target_text="作战机略", target_texts=[map_name])

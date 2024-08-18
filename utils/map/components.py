@@ -36,11 +36,11 @@ television = Model(television_model, iou_threshold=0.1)
 with open(DownloadPath / "components_label.yaml", "r", encoding="utf-8") as f:
     components_label = yaml.safe_load(f)
 
-# 通关模式，接一次队友
-if config.modeSelect == 1:
-    for i in components_label:
-        if components_label[i]["name"] == "呼叫增援":
-            components_label[i]["weight"] = 10
+# # 通关模式，接一次队友
+# if config.modeSelect == 1 or config.modeSelect == 4:
+#     for i in components_label:
+#         if components_label[i]["name"] == "呼叫增援":
+#             components_label[i]["weight"] = 10
 # 零号业绩模式，改变权重
 if config.modeSelect == 2:
     for i in components_label:
@@ -54,27 +54,8 @@ if config.modeSelect == 3:
 # 零号银行和零号业绩一起刷，改变权重
 if config.modeSelect == 4:
     for i in components_label:
-        if components_label[i]["name"] == "零号银行":
-            components_label[i]["weight"] = 10
-
-
-# 零号银行和零号业绩一起刷
-def my_set_weight():
-    # 拿完银行改变权重
-    for i in components_label:
-        if components_label[i]["name"] == "零号银行":
-            components_label[i]["weight"] = 0
         if components_label[i]["name"] == "零号业绩":
             components_label[i]["weight"] = 10
-
-
-def my_unset_weight():
-    # 拿完业绩改变权重
-    for i in components_label:
-        if components_label[i]["name"] == "零号银行":
-            components_label[i]["weight"] = 10
-        if components_label[i]["name"] == "零号业绩":
-            components_label[i]["weight"] = 0
 
 
 def set_weight(name: str, weight: int):
@@ -168,7 +149,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
         for output in outputs
         if output["y"] >= h // 2
         and w // 2 < output["x"] < screen_w - w // 2  # 去掉不完整的图片
-        and output["conf"] > 0.8  # 置信度大于0.8
+        # and output["conf"] > 0.7  # 置信度大于0.8
     ]  # 按 x 坐标排序
     # 2*2 格子拆分
     m_w = w * 1.5  # 切割2*2
@@ -258,7 +239,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                     map_component.y = y_group["y"]
                     map_component.x = x_group["x"]
                     map_info.components[y_group["y"]][x_group["x"]] = map_component
-    # for each in map_info.components:
-    #     print(each)
-    # input()
+    for each in map_info.components:
+        print(each)
+    input()
     return map_info

@@ -8,6 +8,7 @@ import time
 from typing import Dict
 
 import numpy as np
+from numpy.distutils.command.config import config
 
 from schema import Position, info
 from utils import control, screenshot, logger, RootPath
@@ -15,9 +16,8 @@ from pathlib import Path
 from utils.task import task, find_template
 from PIL import Image
 from re import template
-from utils.map.components import set_weight
 import utils
-from utils.map.components import my_set_weight, my_unset_weight
+from utils.map.components import set_weight
 
 
 def get_pos(text: str):
@@ -115,14 +115,16 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
     control.click(pos.x, pos.y)
     # 进入战斗
-    if utils.config.modeSelect == 1:
+    if utils.config.modeSelect == 1:  # 全通模式(无业绩)
         info.currentStage = 5  # 向下拖拽
-    elif utils.config.modeSelect == 2:
+    elif utils.config.modeSelect == 2:  # 业绩模式
         info.currentStage = 1  # 左下拖
-    elif utils.config.modeSelect == 3:
+        set_weight("零号业绩", 10)
+    elif utils.config.modeSelect == 3:  # 银行模式
         info.currentStage = 2  # 右下拖
-    elif utils.config.modeSelect == 4:
-        info.currentStage = 2  # 向下拖拽
+    elif utils.config.modeSelect == 4:  # 全通模式(带业绩)
+        info.currentStage = 1  # 左下拖
+        set_weight("零号业绩", 10)
 
 
 # 10、调查协会支援站
@@ -150,9 +152,9 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接应支援代理人$")
     control.click(pos.x, pos.y)
-    info.teammate -= 1
+    info.teamMate -= 1
     # 若已经召唤两个队友，则不再召唤队友
-    if info.teammate == 0:
+    if info.teamMate == 0:
         set_weight("呼叫增援", 3)
 
 
@@ -362,6 +364,29 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
+# 如果拿不到s会直接退出
+@task.page(name="业绩前的门", target_texts=["你未满足条件", "怀斯塔学会"])
+def action(positions: Dict[str, Position]):
+    # 业绩优先级置低，改变拖拽位置
+    set_weight("零号业绩", 0)
+    control.press("space")
+    info.currentStage = 5  # 向下拖拽
+    info.rewardCount -= 1
+    if info.rewardCount <= 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
+        info.exitFlag = True
+
+
+# 零号业绩
+@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确认$")
+    control.click(pos.x, pos.y)
+    info.currentStage = 2  # 改为向右下拖拽
+    info.rewardCount -= 1
+    if info.rewardCount == 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
+        info.exitFlag = True
+
+
 # 零号银行
 @task.page(name="零号银行_存款", target_texts=["^存款$", "^零号银行$"])
 def action(positions: Dict[str, Position]):
@@ -383,31 +408,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    if utils.config.modeSelect == 4:
-        my_set_weight()
-        info.currentStage = 6
-        time.sleep(0.5)
-        for i in range(3):
-            control.press("space")
-        time.sleep(0.5)
-        for i in range(3):
-            control.press("d")
-        control.press("s")
-        for i in range(4):
-            control.press("d")
-    else:  # 模式3
-        info.exitFlag = True  # 存完钱准备离开
-
-
-@task.page(
-    name="零号银行_离开",
-    priority=10,
-    target_texts=["还可存款0次", "^零号银行$", "^离开$"],
-)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^离开$")
-    control.click(pos.x, pos.y)
-    my_set_weight()
+    info.exitFlag = True  # 存完钱准备离开
 
 
 @task.page(
@@ -418,17 +419,6 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^不要了$")
     control.click(pos.x, pos.y)
-    my_set_weight()
-
-
-# 零号业绩
-@task.page(name="零号业绩领取", target_texts=["^确认$", "业绩"], priority=10)
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认$")
-    control.click(pos.x, pos.y)
-    info.exitFlag = True  # 拿完业绩准备离开
-    if utils.config.modeSelect == 4:
-        my_unset_weight()
 
 
 @task.page("付费通道", target_texts=["^付费", "^打开", "^暂时离开$"])
@@ -452,13 +442,6 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-
-
-# # 古怪装置
-# @task.page(name="古怪装置", target_texts=["^离开$"])
-# def action(positions: Dict[str, Position]):
-#     pos = positions.get("^离开$")
-#     control.click(pos.x, pos.y)
 
 
 # 事件有偿休息站

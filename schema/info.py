@@ -42,7 +42,8 @@ class StatusInfo(BaseModel):
     hasBoom: bool = Field(True, title="是否有炸弹")
     exitFlag: bool = Field(False, title="是否退出")
     clickCount: int = Field(0, title="点击次数")
-    teammate: int = Field(2, title="队友数量")
+    teamMate: int = Field(2, title="队友数量")
+    rewardCount: int = Field(0, title="奖励次数")
 
 
 info = StatusInfo()

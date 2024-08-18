@@ -298,7 +298,9 @@ def action():
     control.head(1.5)
     turn()
 
-    fighting_flag.set()  # 开始战斗
+    # 开始战斗
+    execute_tactic_event.set()
+    fighting_flag.set()
 
     while True:
         fight_time = (datetime.now() - start_fight_time).total_seconds()  # 战斗用时

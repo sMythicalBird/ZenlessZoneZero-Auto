@@ -67,6 +67,14 @@ class TargetMap(BaseModel):
     def Level(self):
         return ZoneMap[self.zone]["level"][self.level]
 
+    def reward_count(self):
+        if self.zone == 1 and self.level < 3:
+            return 1
+        elif self.zone == 2 and self.level == 1:
+            return 1
+        else:
+            return 2
+
 
 class Config(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
@@ -81,3 +89,4 @@ class Config(BaseModel):
         description="角色池，用于载入角色战斗模块，空则载入默认战斗模块",
     )
     maxFightCount: int = Field(None, description="最大战斗次数")
+    teamMates: int = Field(2, description="队友数量")
