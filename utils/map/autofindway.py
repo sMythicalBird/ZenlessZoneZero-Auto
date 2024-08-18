@@ -76,7 +76,7 @@ def bi_bfs(
     # 2、起点处获取下一步结果
     (x, y) = start
     step = visited[x][y]
-    neighbours = [(x + 1, y), (x - 1, y), (x, y - 1), (x, y + 1)]
+    neighbours = [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
     for x_n, y_n in neighbours:
         if 0 <= x_n < rows and 0 <= y_n < cols:
             # 找到下一步
