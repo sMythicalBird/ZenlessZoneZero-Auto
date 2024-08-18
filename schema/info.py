@@ -44,6 +44,8 @@ class StatusInfo(BaseModel):
     clickCount: int = Field(0, title="点击次数")
     teamMate: int = Field(2, title="队友数量")
     rewardCount: int = Field(0, title="奖励次数")
+    stage2Count: int = Field(0, title="向业绩移动的情况")
+    stage1flag: int = Field(0, title="是否在第一阶段")
 
 
 info = StatusInfo()

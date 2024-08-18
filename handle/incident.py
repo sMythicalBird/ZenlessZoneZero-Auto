@@ -116,14 +116,17 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
     # 进入战斗
     if utils.config.modeSelect == 1:  # 全通模式(无业绩)
-        info.currentStage = 5  # 向下拖拽
+        info.currentStage = 1  # 直接往上走
+        info.stage1flag = 1  # 执行第二层逻辑
     elif utils.config.modeSelect == 2:  # 业绩模式
-        info.currentStage = 1  # 左下拖
+        info.currentStage = 2  # 去业绩
+        info.stage2Count = 6  # 移动六组防止无业绩bug
         set_weight("零号业绩", 10)
     elif utils.config.modeSelect == 3:  # 银行模式
-        info.currentStage = 2  # 右下拖
+        info.currentStage = 3  # 去银行
     elif utils.config.modeSelect == 4:  # 全通模式(带业绩)
-        info.currentStage = 1  # 左下拖
+        info.currentStage = 2  # 去业绩
+        info.stage2Count = 6  # 移动六组防止无业绩bug
         set_weight("零号业绩", 10)
 
 

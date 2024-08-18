@@ -49,11 +49,26 @@ def grid_map(screen: np.ndarray):
     # 零号业绩相关的判断
     # 根据模式判断逻辑
     if config.modeSelect == 1:
-        if info.currentStage == 5 and (k := find_current()):
-            control.press("w", duration=0.05)  # 向上走
+        if info.stage1flag == 1:  # 向上走
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            info.stage1flag = 2
+            return
+        elif info.stage1flag == 2:
+            for i in range(3):
+                control.press("w", duration=0.05)
+                time.sleep(0.3)
+            info.stage1flag = 3
+            return
+        elif info.stage1flag == 3:
+            for i in range(4):
+                control.press("w", duration=0.05)
+                time.sleep(0.3)
+            info.stage1flag = 0
+            return
     elif config.modeSelect == 3:
         # 快速拿银行
-        if info.currentStage == 2 and (k := find_current()):
+        if info.currentStage == 3:
             control.press("a", duration=0.05)
             time.sleep(0.3)
             control.press("w", duration=0.05)
@@ -61,14 +76,19 @@ def grid_map(screen: np.ndarray):
             return
     elif config.modeSelect == 4 or config.modeSelect == 2:
         # 快速拿业绩
-        if info.currentStage == 1 and (k := find_current()):
-            control.press("d", duration=0.05)
-            time.sleep(0.3)
-            control.press("w", duration=0.05)
-            time.sleep(0.3)
-            return
+        if info.currentStage == 2:
+            if info.stage2Count > 0:  # 向业绩移动
+                info.stage2Count -= 1
+                control.press("d", duration=0.05)
+                time.sleep(0.3)
+                control.press("w", duration=0.05)
+                time.sleep(0.3)
+                return
+            else:  # 当无业绩时才会执行此处逻辑，此时将调整状态，进入下一层
+                info.currentStage = 10
+                return
         # 业绩拿完后，进入下一层
-        elif info.currentStage == 10 and (k := find_current()):
+        elif info.currentStage == 10:
             control.press("s", duration=0.05)
             time.sleep(0.3)
             for i in range(3):
@@ -83,6 +103,7 @@ def grid_map(screen: np.ndarray):
             control.press("w", duration=0.05)
             time.sleep(0.3)
             info.currentStage = 0  # 还原状态
+            return
 
     # 获取地图信息
     map_info = get_map_info(screen)
