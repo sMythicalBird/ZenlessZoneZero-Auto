@@ -239,7 +239,7 @@ def get_map_info(screen: np.ndarray = None) -> MapInfo | None:
                     map_component.y = y_group["y"]
                     map_component.x = x_group["x"]
                     map_info.components[y_group["y"]][x_group["x"]] = map_component
-    for each in map_info.components:
-        print(each)
-    input()
+    # for each in map_info.components:
+    #     print(each)
+    # input()
     return map_info

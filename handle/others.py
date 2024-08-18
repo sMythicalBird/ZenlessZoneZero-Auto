@@ -44,31 +44,49 @@ def grid_map(screen: np.ndarray):
         control.esc()
         return
     control.scroll(-5)
-    # 全通和零号业绩拆开做
+
     # 零号业绩相关的判断
-    # 旧都列车地图需要移动，其他地图不需要拖动
-    if map_name == "旧都列车":
-        if config.modeSelect == 1:  # 向下拖动
-            if info.currentStage == 5 and (k := find_current()):
-                control.move_at(k.x, k.y, 640, 500)
-                control.press("w", duration=0.05)  # 向上走
-        # elif config.modeSelect == 2:  # 向左下拖动
-        #     if info.currentStage == 1 and (k := find_current()):
-        #         control.move_at(k.x, k.y, 360, 500)
-        #         control.press("d", duration=0.05)  # 向右走快速拿业绩
-        elif config.modeSelect == 3:  # 向右下拖动
-            if info.currentStage == 2 and (k := find_current()):
-                control.move_at(k.x, k.y, 900, 500)
-                control.press("a", duration=0.05)  # 向左走快速拿银行
-        elif config.modeSelect == 4 or config.modeSelect == 2:  #  先左下拖后右下拖
-            if info.currentStage == 1 and (k := find_current()):
-                control.move_at(k.x, k.y, 360, 500)
-                control.press("d", duration=0.05)  # 向右走快速拿业绩
-            elif info.currentStage == 2 and (k := find_current()):
-                control.move_at(k.x, k.y, 900, 500)
+    # 根据模式判断逻辑
+    if config.modeSelect == 1:
+        if info.currentStage == 5 and (k := find_current()):
+            control.press("w", duration=0.05)  # 向上走
+    elif config.modeSelect == 3:
+        # 快速拿银行
+        if info.currentStage == 2 and (k := find_current()):
+            control.press("a", duration=0.05)
+            time.sleep(0.5)
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            return
+    elif config.modeSelect == 4 or config.modeSelect == 2:
+        # 快速拿业绩
+        if info.currentStage == 1 and (k := find_current()):
+            control.press("d", duration=0.05)
+            time.sleep(0.5)
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            return
+        # 业绩拿完后，进入下一层
+        elif info.currentStage == 10 and (k := find_current()):
+            time.sleep(1)  # 等待地图稳定
+            control.press("s", duration=0.05)
+            time.sleep(0.5)
+            for i in range(3):
+                control.press("a", duration=0.05)
+                time.sleep(0.5)
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            control.press("a", duration=0.05)
+            time.sleep(0.5)
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            control.press("w", duration=0.05)
+            time.sleep(0.5)
+            info.currentStage = 0  # 还原状态
+
     # 获取地图信息
     # 防止地图初始化的时候提前开始截图，但是其他情况下又不需要，这延迟多了也不是，少了也不是
-    time.sleep(0.3)
+    time.sleep(0.5)
     map_info = get_map_info(screen)
     if not map_info:
         logger.debug("未识别到地图信息")

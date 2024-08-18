@@ -381,7 +381,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
-    info.currentStage = 2  # 改为向右下拖拽
+    info.currentStage = 10  # 拿完业绩，开始默认行动
     info.rewardCount -= 1
     if info.rewardCount == 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
         info.exitFlag = True
