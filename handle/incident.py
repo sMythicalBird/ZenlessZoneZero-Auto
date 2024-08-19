@@ -229,9 +229,11 @@ def action(positions: Dict[str, Position]):
 
 
 # 降低压力值 回复生命值 获得齿轮硬币
-@task.page(name="回复生命值", target_texts=["^回复生命值"])
+@task.page(name="回复生命值", target_texts=["^回复生命值", "降低压力值"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^回复生命值")
+    control.click(pos.x, pos.y)
+    pos = positions.get("降低压力值")
     control.click(pos.x, pos.y)
 
 
