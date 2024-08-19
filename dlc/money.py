@@ -5,45 +5,63 @@
 @author:    sMythicalBird
 """
 import time
-import numpy as np
 from typing import Dict
 from schema import Position
-from utils import control, screenshot, RootPath
-from utils.task import task, ImageMatch
-from pathlib import Path
-from re import template
-from PIL import Image
+from utils import control
+from utils.task import task
+from .coditional import stage
 from pydirectinput import (
     press,
-    click,
-    moveTo,
     mouseDown,
     mouseUp,
     keyDown,
     keyUp,
-    scroll,
     moveRel,
 )
 
-fflag = 0
+
+# 选择委托
+@task.page(name="选择委托", target_texts=["^战斗委托$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^战斗委托$")
+    control.click(pos.x, pos.y)
+    time.sleep(0.1)
+    control.click(pos.x, pos.y)
 
 
-def get_pos(text: str):
-    text = template(text)
-    img = screenshot()  # 截图
-    ocr_Results = task.ocr(img)  # OCR识别
-    # print(ocr_Results)
-    positions = []
-    for ocr_result in ocr_Results:
-        if text.search(ocr_result.text):
-            # print(ocr_result)
-            positions.append(
-                [
-                    (ocr_result.position[0] + ocr_result.position[2]) / 2,
-                    (ocr_result.position[1] + ocr_result.position[3]) / 2,
-                ]
-            )
-    return positions
+# 选择关卡
+@task.page(name="选择关卡", target_texts=["真·拿命验收$", "^下一步$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("真·拿命验收$")
+    control.click(pos.x, pos.y)
+    time.sleep(0.5)
+    pos = positions.get("^下一步$")
+    control.click(pos.x, pos.y)
+
+
+@task.page(name="选择关卡_滚动", priority=6, target_texts=["零号空洞的挑战"])
+def action():
+    time.sleep(0.3)
+    control.move_at(1000, 500, 1000, 200)
+
+
+@task.page(name="选择关卡_滚动", priority=2, target_texts=["关键敌情", "委托详情"])
+def action():
+    time.sleep(0.3)
+    control.move_at(1000, 500, 1000, 200)
+
+
+@task.page(name="出战", target_texts=["^出战$"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^出战$")
+    control.click(pos.x, pos.y)
+    stage.moneyFightFlag = True  # 更改战斗标志
+
+
+@task.page(name="出战_等级低", target_texts=["平均等级较低", "^确定"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确定")
+    control.click(pos.x, pos.y)
 
 
 def money_fight():
@@ -73,63 +91,31 @@ def money_go(t1: float, t2: float, t3: int):
 # 战斗
 @task.page(name="战斗中", target_texts=["^Space$"])
 def action():
-    global fflag
     time.sleep(0.3)
     # 击碎箱子
     money_fight()
     # 交付任务
     money_go(3.2, 0.8, 5)
-    fflag = 1
+    control.esc()  # 若未找到对话则退出
+
+
+# 高坂对话
+@task.page(name="高坂对话", target_texts=["高坂"])
+def action(positions: Dict[str, Position]):
     for i in range(5):
-        control.click(1020, 440)
-        time.sleep(0.2)
-    press("esc", duration=0.1)
-
-
-# 选择委托
-@task.page(name="选择委托", target_texts=["^战斗委托$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^战斗委托$")
-    control.click(pos.x, pos.y)
-    time.sleep(0.1)
-    control.click(pos.x, pos.y)
-
-
-# 选择关卡
-@task.page(name="选择关卡", target_texts=["真·拿命验收$", "^下一步$"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("真·拿命验收$")
-    control.click(pos.x, pos.y)
-    time.sleep(0.5)
-    pos = positions.get("^下一步$")
-    control.click(pos.x, pos.y)
-
-@task.page(name="选择关卡_滚动", priority=6, target_texts=["零号空洞的挑战"])
-def action():
-    time.sleep(0.3)
-    control.move_at(1000, 500, 1000, 200)
-
-@task.page(name="选择关卡_滚动", priority=2, target_texts=["关键敌情", "委托详情"])
-def action():
-    time.sleep(0.3)
-    control.move_at(1000, 500, 1000, 200)
-
-
-@task.page(name="出战", target_texts=["^出战$"])
-def action(positions: Dict[str, Position]):
-    global fflag
-    pos = positions.get("^出战$")
-    control.click(pos.x, pos.y)
-    fflag = 0
+        control.press("space", duration=0.1)
+        time.sleep(0.1)
+        control.press("1", duration=0.1)
+        time.sleep(0.1)
 
 
 # 通关
-@task.page(name="通关", priority=2,target_texts=["^完成$"])
+@task.page(name="通关", priority=2, target_texts=["^完成$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^完成$")
     control.click(pos.x, pos.y)
+    stage.moneyFightFlag = False  # 通关后退出战斗标志
     time.sleep(0.1)
-    control.click(pos.x, pos.y)
 
 
 # 重新开始
@@ -137,45 +123,44 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^重新开始$")
     control.click(pos.x, pos.y)
-    global fflag
-    fflag = 0
 
 
-@task.page(name="确认", target_texts=["^确认"])
+# 重新开始
+@task.page(name="重新开始_确认", target_texts=["是否重新开始战斗", "^确认$"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认")
+    pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
 
 
-def move1():
-    moveRel(600, 0, relative=True)
-    time.sleep(0.5)
-    keyDown("w")
-    time.sleep(0.18)
-    moveRel(500, 0, relative=True)
-    time.sleep(0.8)
-    moveRel(-500, 0, relative=True)
-    time.sleep(0.3)
-    keyUp("w")
-    time.sleep(0.3)
-    press("f", duration=0.1)
+# 点击HDD
+@task.page(name="传送HDD", target_texts=["H.D.D"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("H.D.D")
+    control.click(pos.x, pos.y)
 
 
-def move2():
-    moveRel(1000, 0, relative=True)
+# 优先级最低，必定可以匹配上，用来跳过一些无用对话,战斗过程中禁用
+@task.page(name="默认匹配项", priority=0)
+def action():
+    if stage.moneyFightFlag:  # 处于战斗状态则跳出不执行
+        time.sleep(0.2)
+        return
+    control.press("space", duration=0.1)
     time.sleep(0.1)
-    keyDown("w")
-    time.sleep(1)
-    moveRel(-500, 0, relative=True)
-    time.sleep(1.8)
-    keyUp("w")
-    time.sleep(0.3)
-    press("f", duration=0.1)
 
 
-mflag = 1
+# 传送到HDD并打开
+@task.page(name="传送_确认", target_texts=["^确认", "是否传送至该地点"])
+def action(positions: Dict[str, Position]):
+    pos = positions.get("^确认")
+    control.click(pos.x, pos.y)
+    time.sleep(2)
+    for i in range(3):
+        time.sleep(0.2)
+        press("f", duration=0.1)
 
 
+# 不知道有没有用，先留着
 @task.page(name="休息_离开", target_texts=["^离开$"])
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
@@ -183,10 +168,10 @@ def action(positions: Dict[str, Position]):
     time.sleep(1)
 
 
-@task.page(name="选择地图", target_texts=["^影像档案架$", "柜台"])
-def action(positions: Dict[str, Position]):
-    pos = positions.get("^影像档案架$")
-    control.click(pos.x, pos.y)
+# 当看到档案架则打开地图开始传送
+@task.page(name="选择地图", target_texts=["^影像档案架$"])
+def action():
+    control.press("m", duration=0.1)
 
 
 # 领取月卡
@@ -197,36 +182,3 @@ def action(positions: Dict[str, Position]):
     time.sleep(1)
     press("esc", duration=0.1)
     time.sleep(1)
-
-
-@task.page(
-    name="主界面",
-    priority=2,
-    target_texts=["星期"],
-
-)
-def action():
-    global mflag
-    time.sleep(2)
-    if mflag:
-        move1()
-    else:
-        move2()
-    time.sleep(2)
-    pos = get_pos("^战斗委托$")
-    if pos:
-        mflag = 1
-        control.click(pos[0][0], pos[0][1])
-        time.sleep(0.1)
-        control.click(pos[0][0], pos[0][1])
-    else:
-        mflag = 0
-        press("m", duration=0.1)
-
-
-@task.page(name="可能对话", priority=0)
-def action():
-    global fflag
-    if fflag:
-        press("space", duration=0.1)
-    time.sleep(0.1)

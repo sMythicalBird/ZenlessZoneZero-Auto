@@ -67,7 +67,7 @@ if Hwnd == 0:
     Hwnd = win32gui.FindWindow("UnityWndClass", "ZenlessZoneZero")
 if Hwnd == 0:
     logger.error("未找到游戏窗口")
-    # wait_exit()
+    wait_exit()
 else:
     # 将游戏窗口移动到屏幕左上角
     rect = win32gui.GetWindowRect(Hwnd)  # 获取窗口区域
@@ -101,11 +101,9 @@ else:
         f"游戏窗口宽度为{w}，高度为{h},缩放因子为{ScaleFactor},实际宽度为{RealWidth},实际高度为{RealHeight}"
     )
     logger.info(f"菜单栏高度为{menu_height},左上角偏移量为({OffsetX},{OffsetY})")
-    if not (RealWidth == 1280 and RealHeight == 720):
-        logger.warning(
-            "游戏窗口分辨率不是1280x720，请修改游戏显示模式为“1280x720 窗口”"
-        )
-        wait_exit()
+    # if not(RealWidth == 1280 and RealHeight == 720):
+    #     logger.warning("游戏窗口分辨率不是1280x720，请修改游戏显示模式为“1280x720 窗口”")
+    #     wait_exit()
 
 # 判断能否使用GPU
 if "CUDAExecutionProvider" in rt.get_available_providers():
