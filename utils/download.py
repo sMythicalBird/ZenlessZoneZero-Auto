@@ -48,6 +48,7 @@ DownLoadPath = RootPath / "download"
 if not DownLoadPath.exists():
     DownLoadPath.mkdir()
 DownLoadBaseUrl = [
+    "https://alist.caiyun.fun/d/download/zzz/",
     "https://zzz.caiyun.fun/",
     "https://download.caiyun.fun/",
     "http://pan.caiyun.fun/1655577/zzz/",
@@ -58,7 +59,7 @@ def check_file(retry_count=0):
     """
     检查文件列表中的文件是否存在，不存在则下载
     """
-    index = (retry_count // 3) % len(DownLoadBaseUrl)
+    index = (retry_count // 2) % len(DownLoadBaseUrl)
     fileListUrl = DownLoadBaseUrl[index] + "filelist.json"
     file_list = requests.get(fileListUrl, timeout=3).json()
     for item in file_list:
@@ -89,14 +90,14 @@ def check_file_task():
     """
     retry_count = 0
     check_success = False
-    for i in range(9):
+    for i in range(8):
         try:
             logger.debug("开始检查文件！")
             check_file(retry_count)
             check_success = True
             break
-        except:
-            logger.error("检查文件失败！")
+        except Exception as e:
+            logger.error("检查文件失败！" + str(e))
             retry_count += 1
             continue
     if not check_success:
