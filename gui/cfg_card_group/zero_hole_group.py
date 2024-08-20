@@ -5,7 +5,7 @@
 @author:    sMythicalBird
 """
 from qfluentwidgets import SettingCardGroup, FluentIcon
-from ..components import ComboBoxSettingCard1
+from ..components.combo_box_card import ChoiceSettingCard, ComboBoxSettingCard1
 
 
 class ZeroHoleGroup(SettingCardGroup):
@@ -19,11 +19,10 @@ class ZeroHoleGroup(SettingCardGroup):
         self.init_layout()
 
     def init_card(self):
-        self.card1 = ComboBoxSettingCard1(
-            "instance_type",
+        self.card1 = ChoiceSettingCard(
+            "zero_level_selection",
             FluentIcon.ALIGNMENT,
-            self.tr("区域"),
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
+            self.tr("副本选择"),
         )
         self.card2 = ComboBoxSettingCard1(
             "instance_type",
