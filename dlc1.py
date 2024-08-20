@@ -51,5 +51,4 @@ key_thread.start()
 
 
 if __name__ == "__main__":
-    task.pause()
     task.run()
