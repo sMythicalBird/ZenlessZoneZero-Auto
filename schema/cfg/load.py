@@ -21,7 +21,7 @@ def load_config(info_path: str, config: type):
     加载系统配置
     """
     config_path = RootPath / info_path
-    logger.info(f"加载配置文件 {config_path}")
+    logger.info(f"加载配置文件 {info_path}")
     # 判断配置文件是否存在
     if not config_path.exists():
         logger.error(f"{info_path} 未在 {config_path} 发现")
@@ -32,7 +32,7 @@ def load_config(info_path: str, config: type):
         config_temp: dict = safe_load(f)
 
     config_temp: config = config(**config_temp)
-    logger.info(f"配置文件加载成功")
+    logger.info(f"配置文件 {info_path} 加载成功")
     return config_temp
 
 
