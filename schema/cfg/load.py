@@ -13,10 +13,14 @@ from yaml import safe_load, safe_dump
 from loguru import logger
 from pathlib import Path
 
-RootPath = Path(__file__).parent.parent / "yaml"
 InfoPath = Path(__file__).parent.parent / "yaml"
+FightPath = (
+    Path(__file__).parent.parent.parent / "resources/fight_logic/char_logic_group"
+)
+FightDefaultPath = Path(__file__).parent.parent.parent / "resources/fight_logic/default"
 
 
+# 读取配置文件
 def load_config(data_path: str, config: type):
     """
     加载系统配置
@@ -37,6 +41,7 @@ def load_config(data_path: str, config: type):
     return config_temp
 
 
+# 保存配置文件
 def save_config(save_path: str, config):
     """
     保存系统配置
@@ -46,6 +51,22 @@ def save_config(save_path: str, config):
     with open(config_path, "w", encoding="utf-8") as f:
         safe_dump(config.model_dump(), f, allow_unicode=True)
     logger.info(f"配置文件 {save_path} 保存成功")
+
+
+# 加载个角色对应的战斗目录
+def get_fight_logic():
+    # 获取所有子目录的名称
+    subdirectories = [d.name for d in FightPath.iterdir() if d.is_dir()]
+    fight_logic_dict = {}
+    for each in subdirectories:
+        subdir = FightPath / each
+        fight_logic_dict[each] = {
+            "path": subdir,
+            "logic_dir": [d.name for d in subdir.iterdir() if d.is_dir()],
+        }
+        fight_logic_dict[each]["logic_dir"].append("默认逻辑")
+
+    return fight_logic_dict
 
 
 def load_tactics():

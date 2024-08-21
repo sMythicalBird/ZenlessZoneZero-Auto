@@ -4,9 +4,7 @@
 @time:      2024/8/13 上午1:57
 @author:    sMythicalBird
 """
-from paddle.tensor.manipulation import zero_
 from qfluentwidgets import SettingCardGroup, FluentIcon
-from sympy import false
 
 from schema.cfg.info import zero_cfg
 from ..components.combo_box_card import (
@@ -16,6 +14,7 @@ from ..components.combo_box_card import (
     MultiSelectCard,
 )
 from schema.cfg.load import save_config
+from schema.cfg.info import char_list, buff_list
 
 
 class ZeroHoleGroup(SettingCardGroup):
@@ -91,26 +90,7 @@ class ZeroHoleGroup(SettingCardGroup):
             FluentIcon.ALIGNMENT,
             self.tr("鸣徽类型(至多5个)"),
             zero_cfg.selBuff,
-            [
-                "以太",
-                "冻结",
-                "暴击",
-                "引燃",
-                "感电",
-                "能量",
-                "强袭",
-                "支援",
-                "决斗",
-                "护盾",
-                "协助",
-                "通用",
-                "闪避",
-                "研究",
-                "邦布",
-                "空洞",
-                "诡术",
-                "契合",
-            ],
+            buff_list,
             5,
             (350, 40),
         )
@@ -120,26 +100,7 @@ class ZeroHoleGroup(SettingCardGroup):
             FluentIcon.ALIGNMENT,
             self.tr("代理人选择(至多3个)"),
             zero_cfg.characters,
-            [
-                "青衣",
-                "朱鸢",
-                "艾莲",
-                "莱卡恩",
-                "猫又",
-                "11号",
-                "丽娜",
-                "珂蕾妲",
-                "格莉丝",
-                "露西",
-                "派派",
-                "妮可",
-                "比利",
-                "本",
-                "仓角",
-                "安比",
-                "可琳",
-                "安东",
-            ],
+            char_list,
             3,
             (300, 40),
         )

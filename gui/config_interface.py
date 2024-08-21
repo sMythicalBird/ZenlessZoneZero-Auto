@@ -60,7 +60,7 @@ class ConfigInterface(ScrollArea):
         self.vBoxLayout.setContentsMargins(40, 80, 36, 0)  # 设置卡组内容位置
         # 添加卡组
         self.add_sub_group(self.zero_hole_group, "ZeroGroup", self.tr("零号空洞"))
-        self.add_sub_group(self.fight_group, "OneGroup", self.tr("战斗"))
+        self.add_sub_group(self.fight_group, "FightGroup", self.tr("战斗配置"))
         # 设置卡组切换
         self.stackedWidget.currentChanged.connect(self.on_current_index_changed)
         self.pivot.setCurrentItem(self.stackedWidget.currentWidget().objectName())
