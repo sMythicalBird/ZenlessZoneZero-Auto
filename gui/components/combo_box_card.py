@@ -4,8 +4,8 @@
 @time: 2024/8/12
 @auther: sMythicalBird
 """
-from PySide6.QtWidgets import QComboBox, QHBoxLayout
-from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QComboBox, QHBoxLayout, QLineEdit
+from PySide6.QtGui import QIcon, QIntValidator
 from PySide6.QtCore import Qt
 from qfluentwidgets import SettingCard, FluentIconBase, ComboBox
 from typing import Union
@@ -14,20 +14,17 @@ from schema.cfg.info import zero_cfg
 data = {
     "旧都列车": {1: "外围", 2: "前线", 3: "内部", 4: "腹地", 5: "核心"},
     "施工废墟": {1: "前线", 2: "内部", 3: "腹地", 4: "核心"},
-    "巨骸大厦": {1: "内部", 2: "腹地", 3: "核心"},
+    "巨厦": {1: "内部", 2: "腹地", 3: "核心"},
 }
 
 
-class ChoiceSettingCard(SettingCard):
-    """Setting card with a combo box"""
-
+class ZeroLevelSelectCard(SettingCard):
     def __init__(
         self,
         name: str,
         icon: Union[str, QIcon, FluentIconBase],
         title,
         content=None,
-        texts=None,
         parent=None,
     ):
         super().__init__(icon, title, content, parent)
@@ -42,7 +39,6 @@ class ChoiceSettingCard(SettingCard):
         # 添加选项
         self.comboBox1.addItems(data.keys())
         self.comboBox1.currentIndexChanged.connect(self.update_value_combo_box)
-        print(zero_cfg.targetMap.Zone)
         self.comboBox1.setCurrentText(zero_cfg.targetMap.Zone)
         self.update_value_combo_box(zero_cfg.targetMap.zone - 1)
         self.comboBox2.setCurrentText(zero_cfg.targetMap.Level)
@@ -52,6 +48,49 @@ class ChoiceSettingCard(SettingCard):
         values = data[key].values()
         self.comboBox2.clear()
         self.comboBox2.addItems(values)
+
+
+class ModeSelectCard(SettingCard):
+    def __init__(
+        self,
+        name: str,
+        icon: Union[str, QIcon, FluentIconBase],
+        title,
+        index: int,
+        texts: list[str],
+        content=None,
+        parent=None,
+    ):
+        super().__init__(icon, title, content, parent)
+        self.name = name
+        self.comboBox = ComboBox(self)
+        self.hBoxLayout.addWidget(self.comboBox, 0, Qt.AlignmentFlag.AlignRight)
+        self.hBoxLayout.addSpacing(16)
+        self.comboBox.addItems(texts)
+        self.comboBox.setCurrentText(texts[index])
+
+
+class NumTextCard(SettingCard):
+    def __init__(
+        self,
+        name: str,
+        icon: Union[str, QIcon, FluentIconBase],
+        title,
+        init_value: int,
+        content=None,
+        parent=None,
+    ):
+        super().__init__(icon, title, content, parent)
+        self.name = name
+        self.lineEdit = QLineEdit(self)
+        self.lineEdit.setValidator(QIntValidator())  # 只能输入整数
+        self.hBoxLayout.addWidget(self.lineEdit, 0, Qt.AlignmentFlag.AlignRight)
+        self.hBoxLayout.addSpacing(16)
+        self.lineEdit.setText(str(init_value))
+
+    # 获取当前值
+    def get_value(self):
+        return int(self.lineEdit.text())
 
 
 class ComboBoxSettingCard1(SettingCard):

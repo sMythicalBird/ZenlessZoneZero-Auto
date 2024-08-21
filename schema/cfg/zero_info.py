@@ -6,7 +6,6 @@
 """
 from typing import List
 from pydantic import BaseModel, Field, model_validator
-from .load import load_config
 
 
 ZoneMap = {
@@ -19,7 +18,7 @@ ZoneMap = {
         "level": {1: "前线", 2: "内部", 3: "腹地", 4: "核心"},
     },
     3: {
-        "name": "巨骸大厦",
+        "name": "巨厦",
         "level": {1: "内部", 2: "腹地", 3: "核心"},
     },
 }
@@ -78,7 +77,7 @@ class TargetMap(BaseModel):
 
 class Config(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
-    modeSelect: int = Field(2, description="模式选择")
+    modeSelect: int = Field(1, description="模式选择")
     maxFightTime: int = Field(200, description="最大战斗时间（单位秒）")
     maxMapTime: int = Field(25 * 60, description="在地图内最大时间（单位秒）")
     hasBoom: bool = Field(False, description="是否有炸弹")
