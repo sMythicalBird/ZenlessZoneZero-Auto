@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt
 from qfluentwidgets import SettingCard, FluentIconBase, ComboBox
 from typing import Union
 from schema.cfg.info import zero_cfg
+from ..base.MultiSelectComboBox import MultiSelectComboBox
 
 data = {
     "旧都列车": {1: "外围", 2: "前线", 3: "内部", 4: "腹地", 5: "核心"},
@@ -91,6 +92,35 @@ class NumTextCard(SettingCard):
     # 获取当前值
     def get_value(self):
         return int(self.lineEdit.text())
+
+
+class MultiSelectCard(SettingCard):
+    def __init__(
+        self,
+        name: str,
+        icon: Union[str, QIcon, FluentIconBase],
+        title,
+        selected_items: list[str],
+        options: list[str],
+        max_sel_num: int = 10000,
+        size: (int, int) = None,
+        content=None,
+        parent=None,
+    ):
+        super().__init__(icon, title, content, parent)
+        self.name = name
+        self.multiSelectComboBox = MultiSelectComboBox(
+            selected_items, options, max_sel_num, self
+        )
+        self.multiSelectComboBox.set_width(size[0])
+        self.multiSelectComboBox.set_height(size[1])
+        self.hBoxLayout.addWidget(
+            self.multiSelectComboBox, 0, Qt.AlignmentFlag.AlignRight
+        )
+        self.hBoxLayout.addSpacing(16)
+
+    def get_value(self):
+        return self.multiSelectComboBox.selected_items  # 获取当前选中的选项
 
 
 class ComboBoxSettingCard1(SettingCard):

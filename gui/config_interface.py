@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QStackedWidget,
     QSpacerItem,
-    QSizePolicy,
+    QPushButton,
 )
 from PySide6.QtCore import Qt
 from qfluentwidgets import Pivot, ScrollArea, SettingCardGroup, FluentIcon
@@ -26,7 +26,7 @@ class ConfigInterface(ScrollArea):
         self.vBoxLayout = QVBoxLayout(self.scrollWidget)
         self.pivot = Pivot(self)
         self.stackedWidget = QStackedWidget(self)
-
+        self.change_btn = QPushButton(self.tr("保存配置"), self)
         self.settingLabel = QLabel(self.tr("配置"), self)
         self.settingLabel.setStyleSheet(
             "font: 33px 'Microsoft YaHei Light';"
@@ -53,19 +53,31 @@ class ConfigInterface(ScrollArea):
 
     def init_layout(self):
         self.settingLabel.move(36, 30)
-        self.pivot.move(40, 80)  # 设置导航栏位置
+        # 设置导航栏
+        self.pivot.move(40, 80)
+        # 设置卡组视图
         self.vBoxLayout.addWidget(self.stackedWidget, 0, Qt.AlignmentFlag.AlignTop)
         self.vBoxLayout.setContentsMargins(40, 80, 36, 0)  # 设置卡组内容位置
-
         # 添加卡组
         self.add_sub_group(self.zero_hole_group, "ZeroGroup", self.tr("零号空洞"))
         self.add_sub_group(self.fight_group, "OneGroup", self.tr("战斗"))
-
+        # 设置卡组切换
         self.stackedWidget.currentChanged.connect(self.on_current_index_changed)
         self.pivot.setCurrentItem(self.stackedWidget.currentWidget().objectName())
         self.stackedWidget.setFixedHeight(
             self.stackedWidget.currentWidget().sizeHint().height()
         )
+        # 设置参数更新键
+        self.change_btn.setObjectName("change_btn")
+        self.change_btn.move(200, 40)
+        self.change_btn.setStyleSheet(
+            "background-color: #d3d3d3;"
+            "border-radius: 5px;"
+            "font: 18px 'Microsoft YaHei';"
+            "border: 1px solid black;"
+            "padding: 3px;"
+        )
+        self.change_btn.clicked.connect(self.on_change_btn_clicked)
 
     def add_sub_group(self, widget: SettingCardGroup, object_name, text):
         def remove_spacing(layout):
@@ -95,3 +107,6 @@ class ConfigInterface(ScrollArea):
         self.stackedWidget.setFixedHeight(
             self.stackedWidget.currentWidget().sizeHint().height()
         )
+
+    def on_change_btn_clicked(self):
+        self.zero_hole_group.update()

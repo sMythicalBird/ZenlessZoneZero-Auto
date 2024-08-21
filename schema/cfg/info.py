@@ -5,8 +5,8 @@
 @author:    sMythicalBird
 """
 
-from .zero_info import Config
+from .zero_info import Zero_Config
 from .load import load_config
 
 
-zero_cfg = load_config("zero.yaml", Config)
+zero_cfg = load_config("zero.yaml", Zero_Config)

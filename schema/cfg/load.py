@@ -14,17 +14,18 @@ from loguru import logger
 from pathlib import Path
 
 RootPath = Path(__file__).parent.parent / "yaml"
+InfoPath = Path(__file__).parent.parent / "yaml"
 
 
-def load_config(info_path: str, config: type):
+def load_config(data_path: str, config: type):
     """
     加载系统配置
     """
-    config_path = RootPath / info_path
-    logger.info(f"加载配置文件 {info_path}")
+    config_path = InfoPath / data_path
+    logger.info(f"加载配置文件 {data_path}")
     # 判断配置文件是否存在
     if not config_path.exists():
-        logger.error(f"{info_path} 未在 {config_path} 发现")
+        logger.error(f"{data_path} 未在 {config_path} 发现")
         with open(config_path, "w", encoding="utf-8") as f:
             safe_dump(config().model_dump(), f, allow_unicode=True)
         logger.info(f"已生成默认配置文件 config.yaml")
@@ -32,8 +33,19 @@ def load_config(info_path: str, config: type):
         config_temp: dict = safe_load(f)
 
     config_temp: config = config(**config_temp)
-    logger.info(f"配置文件 {info_path} 加载成功")
+    logger.info(f"配置文件 {data_path} 加载成功")
     return config_temp
+
+
+def save_config(save_path: str, config):
+    """
+    保存系统配置
+    """
+    config_path = InfoPath / save_path
+    logger.info(f"保存配置文件 {save_path}")
+    with open(config_path, "w", encoding="utf-8") as f:
+        safe_dump(config.model_dump(), f, allow_unicode=True)
+    logger.info(f"配置文件 {save_path} 保存成功")
 
 
 def load_tactics():
