@@ -1,0 +1,39 @@
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+# 平A第3段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.4
+
+# 施放e
+-   key: "e"
+    type: "press"
+    duration: 0.1
+    delay: 0.5
+
+# 平A第4段
+-   key: "w"
+    type: "down"
+    delay: 0
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.8
+-   key: "w"
+    type: "up"
+    delay: 0
+
+# 施放e
+-   key: "e"
+    type: "press"
+    duration: 0.1
+    delay: 0.5

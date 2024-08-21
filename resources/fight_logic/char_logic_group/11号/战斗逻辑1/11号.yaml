@@ -1,0 +1,54 @@
+# 进场e
+-   key: "e"
+    type: "press"
+    duration: 0.1
+    delay: 0.1
+    repeat: 2   # 重复以保证按到
+
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.3
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.3
+# 平A第3段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.6
+# 平A第4段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 1
+
+# 平A第1段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.3
+# 平A第2段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.3
+# 平A第3段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 0.6
+# 平A第4段
+-   key: "left"
+    type: "press"
+    duration: 0.025
+    delay: 1
+
+# q
+-   key: "q"
+    type: "press"
+    duration: 0.1
+    delay: 0.1

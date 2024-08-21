@@ -75,7 +75,7 @@ class TargetMap(BaseModel):
             return 2
 
 
-class Zero_Config(BaseModel):
+class ZeroConfig(BaseModel):
     targetMap: TargetMap = Field(TargetMap())
     modeSelect: int = Field(1, description="模式选择")
     maxFightTime: int = Field(200, description="最大战斗时间（单位秒）")

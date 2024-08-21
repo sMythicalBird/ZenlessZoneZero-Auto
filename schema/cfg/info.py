@@ -5,12 +5,13 @@
 @author:    sMythicalBird
 """
 
-from .zero_info import Zero_Config
+from .zero_info import ZeroConfig
+from .fight_info import FightConfig
 from .load import load_config, get_fight_logic
 
-zero_cfg = load_config("zero.yaml", Zero_Config)
-
-fight_logic = get_fight_logic()
+zero_cfg = load_config("zero.yaml", ZeroConfig)
+fight_cfg = load_config("fight.yaml", FightConfig)
+fight_logic_all = get_fight_logic()
 
 buff_list = [
     "以太",
