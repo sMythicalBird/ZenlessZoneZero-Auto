@@ -27,6 +27,7 @@ def load_config(data_path: str, config: type):
     """
     加载系统配置
     """
+    os.makedirs(InfoPath, exist_ok=True)
     config_path = InfoPath / data_path
     logger.info(f"加载配置文件 {data_path}")
     # 判断配置文件是否存在,不存在则生成默认配置文件
@@ -73,8 +74,6 @@ def save_diy(char_name: str, tactic_logic):
     save_file_cnt = count_yaml_files_in_directory(save_dir) + 1
     save_path = save_dir / f"{save_file_cnt}.yaml"
     logger.info(f"保存配置逻辑 {save_path}")
-    print(save_path)
-    print(tactic_logic)
     with open(save_path, "w", encoding="utf-8") as f:
         yaml.dump(tactic_logic, f, allow_unicode=True, default_flow_style=False)
     logger.info(f"配置逻辑 {save_path} 保存成功")
