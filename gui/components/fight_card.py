@@ -4,7 +4,6 @@
 @time:      2024/8/29 15:32
 @author:    sMythicalBird
 """
-import copy
 
 from PySide6.QtWidgets import (
     QComboBox,
@@ -103,4 +102,3 @@ class FightCfgCard(SettingCard):
         self.config.second.logic = self.fight_sel_box2.comboBox2.currentText()
         self.config.third.char = self.fight_sel_box3.comboBox1.currentText()
         self.config.third.logic = self.fight_sel_box3.comboBox2.currentText()
-        print(self.config.first)

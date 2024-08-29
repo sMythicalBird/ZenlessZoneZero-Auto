@@ -15,8 +15,6 @@ class FightGroup(SettingCardGroup):
         super().__init__("战斗", parent)
         self.zero_fight_card = None
         self.daily_fight_card = None
-        self.card3 = None
-        self.card4 = None
         self.init_card()
         self.init_layout()
 
@@ -43,6 +41,4 @@ class FightGroup(SettingCardGroup):
     def update(self):
         self.zero_fight_card.get_value()
         self.daily_fight_card.get_value()
-        print(fight_cfg)
         save_config("fight.yaml", fight_cfg)
-        print("fight_cfg更新成功")
