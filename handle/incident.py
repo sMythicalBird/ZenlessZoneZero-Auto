@@ -8,7 +8,6 @@ import time
 from typing import Dict
 
 import numpy as np
-from numpy.distutils.command.config import config
 
 from schema import Position, info
 from utils import control, screenshot, logger, RootPath

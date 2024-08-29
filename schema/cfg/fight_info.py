@@ -16,13 +16,13 @@ class LogicInfo(BaseModel):
 
 class EventInfo(BaseModel):
     first: LogicInfo = Field(
-        LogicInfo(char="艾莲", logic="默认逻辑"), description="首次"
+        LogicInfo(char="艾莲", logic="默认逻辑"), description="1号位"
     )
     second: LogicInfo = Field(
-        LogicInfo(char="莱卡恩", logic="默认逻辑"), description="首次"
+        LogicInfo(char="莱卡恩", logic="默认逻辑"), description="2号位"
     )
     third: LogicInfo = Field(
-        LogicInfo(char="苍角", logic="默认逻辑"), description="首次"
+        LogicInfo(char="苍角", logic="默认逻辑"), description="3号位"
     )
 
 

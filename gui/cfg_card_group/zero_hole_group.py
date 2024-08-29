@@ -28,7 +28,7 @@ class ZeroHoleGroup(SettingCardGroup):
         self.card6 = None
         self.card7 = None
         self.card8 = None
-        self.card9 = None
+        # self.card9 = None
         self.init_card()
         self.init_layout()
 
@@ -94,16 +94,16 @@ class ZeroHoleGroup(SettingCardGroup):
             5,
             (350, 40),
         )
-        # 鸣徽类型选择
-        self.card9 = MultiSelectCard(
-            "char_type",
-            FluentIcon.ALIGNMENT,
-            self.tr("代理人选择(至多3个)"),
-            zero_cfg.characters,
-            char_list,
-            3,
-            (300, 40),
-        )
+        # # 鸣徽类型选择
+        # self.card9 = MultiSelectCard(
+        #     "char_type",
+        #     FluentIcon.ALIGNMENT,
+        #     self.tr("代理人选择(至多3个)"),
+        #     zero_cfg.characters,
+        #     char_list,
+        #     3,
+        #     (300, 40),
+        # )
 
     def init_layout(self):
         self.addSettingCard(self.card1)
@@ -114,7 +114,7 @@ class ZeroHoleGroup(SettingCardGroup):
         self.addSettingCard(self.card6)
         self.addSettingCard(self.card7)
         self.addSettingCard(self.card8)
-        self.addSettingCard(self.card9)
+        # self.addSettingCard(self.card9)
 
     # 更新当前参数值
     def update(self):
@@ -130,8 +130,8 @@ class ZeroHoleGroup(SettingCardGroup):
         zero_cfg.maxFightTime = self.card6.get_value()
         zero_cfg.maxFightCount = self.card7.get_value()
         zero_cfg.selBuff = self.card8.get_value()
-        zero_cfg.characters = self.card9.get_value()
-        for each in zero_cfg:
-            print(each)
+        # zero_cfg.characters = self.card9.get_value()
+        # for each in zero_cfg:
+        #     print(each)
         save_config("zero.yaml", zero_cfg)
-        print("更新成功")
+        print("zero_cfg更新成功")

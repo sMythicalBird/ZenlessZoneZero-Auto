@@ -121,26 +121,3 @@ class MultiSelectCard(SettingCard):
 
     def get_value(self):
         return self.multiSelectComboBox.selected_items  # 获取当前选中的选项
-
-
-class ComboBoxSettingCard1(SettingCard):
-    """Setting card with a combo box"""
-
-    def __init__(
-        self,
-        name: str,
-        icon: Union[str, QIcon, FluentIconBase],
-        title,
-        content=None,
-        texts=None,
-        parent=None,
-    ):
-        super().__init__(icon, title, content, parent)
-        self.name = name
-        self.comboBox = ComboBox(self)
-        self.hBoxLayout.addWidget(self.comboBox, 0, Qt.AlignmentFlag.AlignRight)
-        self.hBoxLayout.addSpacing(16)
-        for text, option in zip(texts, texts):
-            self.comboBox.addItem(text)
-
-        self.comboBox.setCurrentText(texts[0])

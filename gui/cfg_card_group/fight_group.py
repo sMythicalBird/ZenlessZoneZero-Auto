@@ -5,33 +5,44 @@
 @author:    sMythicalBird
 """
 from qfluentwidgets import SettingCardGroup, FluentIcon
-from ..components import ComboBoxSettingCard1
+from ..components.fight_card import FightCfgCard
+from schema.cfg.load import save_config
+from schema.cfg.info import fight_cfg
 
 
 class FightGroup(SettingCardGroup):
     def __init__(self, parent=None):
         super().__init__("战斗", parent)
-        self.card1 = None
-        self.card2 = None
+        self.zero_fight_card = None
+        self.daily_fight_card = None
         self.card3 = None
         self.card4 = None
         self.init_card()
         self.init_layout()
 
     def init_card(self):
-        self.card1 = ComboBoxSettingCard1(
-            "instance_type",
+        self.zero_fight_card = FightCfgCard(
+            "zero_fight",
             FluentIcon.ALIGNMENT,
-            self.tr("区域"),
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
+            self.tr("零号战斗配置"),
+            fight_cfg.zero_fight,
+            parent=self,
         )
-        self.card2 = ComboBoxSettingCard1(
-            "instance_type",
+        self.daily_fight_card = FightCfgCard(
+            "daily_fight",
             FluentIcon.ALIGNMENT,
-            self.tr("区域"),
-            texts=["旧都列车", "施工废墟", "巨骸大厦"],
+            self.tr("日常战斗配置"),
+            fight_cfg.daily_fight,
+            parent=self,
         )
 
     def init_layout(self):
-        self.addSettingCard(self.card1)
-        self.addSettingCard(self.card2)
+        self.addSettingCard(self.zero_fight_card)
+        self.addSettingCard(self.daily_fight_card)
+
+    def update(self):
+        self.zero_fight_card.get_value()
+        self.daily_fight_card.get_value()
+        print(fight_cfg)
+        save_config("fight.yaml", fight_cfg)
+        print("fight_cfg更新成功")

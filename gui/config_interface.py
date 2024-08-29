@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from qfluentwidgets import Pivot, ScrollArea, SettingCardGroup, FluentIcon
-from .components import ComboBoxSettingCard1
+
 from .cfg_card_group import ZeroHoleGroup, FightGroup
 
 
@@ -110,3 +110,4 @@ class ConfigInterface(ScrollArea):
 
     def on_change_btn_clicked(self):
         self.zero_hole_group.update()
+        self.fight_group.update()
