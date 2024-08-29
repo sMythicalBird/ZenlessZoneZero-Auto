@@ -214,6 +214,13 @@ class _Task(BaseModel):
     _pause: bool = False  # title="是否暂停"
     lastPageName: str = ""  # title="上次页面名称"
 
+    def clear_task(self):
+        """
+        每次执行前清理task的页面和条件操作
+        """
+        self._pages = []
+        self._conditionalActions = []
+
     def page(
         self,
         name: str,
