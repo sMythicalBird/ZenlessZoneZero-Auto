@@ -8,6 +8,7 @@ import os
 from typing import List
 
 import numpy as np
+import yaml
 from PIL import Image
 from yaml import safe_load, safe_dump
 from loguru import logger
@@ -18,6 +19,7 @@ FightPath = (
     Path(__file__).parent.parent.parent / "resources/fight_logic/char_logic_group"
 )
 FightDefaultPath = Path(__file__).parent.parent.parent / "resources/fight_logic/default"
+DiyPath = Path(__file__).parent.parent.parent / "resources/fight_logic/diy"
 
 
 # 读取配置文件
@@ -27,7 +29,7 @@ def load_config(data_path: str, config: type):
     """
     config_path = InfoPath / data_path
     logger.info(f"加载配置文件 {data_path}")
-    # 判断配置文件是否存在
+    # 判断配置文件是否存在,不存在则生成默认配置文件
     if not config_path.exists():
         logger.error(f"{data_path} 未在 {config_path} 发现")
         with open(config_path, "w", encoding="utf-8") as f:
@@ -51,6 +53,31 @@ def save_config(save_path: str, config):
     with open(config_path, "w", encoding="utf-8") as f:
         safe_dump(config.model_dump(), f, allow_unicode=True)
     logger.info(f"配置文件 {save_path} 保存成功")
+
+
+# 检查目录
+def count_yaml_files_in_directory(path):
+    """
+    检查路径下是否存在需要的文件夹，不存在则创建，返回该路径下的文件数量
+    """
+    if not path.exists():
+        os.makedirs(path)
+        return 0
+    yaml_file_count = len(list(path.glob("*.yaml")))
+    return yaml_file_count
+
+
+# 保存diy设计文件
+def save_diy(char_name: str, tactic_logic):
+    save_dir = DiyPath / char_name / "test"
+    save_file_cnt = count_yaml_files_in_directory(save_dir) + 1
+    save_path = save_dir / f"{save_file_cnt}.yaml"
+    logger.info(f"保存配置逻辑 {save_path}")
+    print(save_path)
+    print(tactic_logic)
+    with open(save_path, "w", encoding="utf-8") as f:
+        yaml.dump(tactic_logic, f, allow_unicode=True, default_flow_style=False)
+    logger.info(f"配置逻辑 {save_path} 保存成功")
 
 
 # 加载个角色对应的战斗目录

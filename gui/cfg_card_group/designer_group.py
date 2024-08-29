@@ -60,6 +60,17 @@ class DesignerGroup(QWidget):
         h = self.card_num * 50 + 46
         self.resize(self.width(), h)
 
-    # 保存信息
-    def save_logic(self):
-        pass
+    # 返回配置信息
+    def get_logic(self):
+        tactic_logic = []
+        for card in self.card_list:
+            tactic_logic.append(
+                {
+                    "key": card.info_designer1.edit.text(),
+                    "type": card.info_designer2.comboBox.currentText(),
+                    "duration": float(card.info_designer3.edit.text()),
+                    "delay": float(card.info_designer4.edit.text()),
+                    "repeat": int(card.info_designer5.comboBox.currentText()),
+                }
+            )
+        return tactic_logic
