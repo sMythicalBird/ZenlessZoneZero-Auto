@@ -29,6 +29,7 @@ from PIL import Image
 import numpy as np
 
 from .init_cfg import home_img_path
+from start_task import start_task, task1
 
 
 class BannerWidget(QWidget):
@@ -158,15 +159,12 @@ class HomeInterface(ScrollArea):
         task_card_view = TaskCardView(self.tr("任务 >"), self.view)
         task_card_view.add_task_card(
             icon=str(home_img_path / "安比.jpg"),
-            title="测试-sig",
-            action=lambda: self.test_fun1("测试-sig"),
+            title="零号空洞",
+            action=lambda: start_task("task1"),
         )
         task_card_view.add_task_card(
             icon=str(home_img_path / "安比.jpg"),
-            title="测试-mul",
-            action={
-                "test1": lambda: self.test_fun1("测试-mul-1"),
-                "test2": lambda: self.test_fun2("测试-mul-2"),
-            },
+            title="拿命验收",
+            action=lambda: self.test_fun1("拿命验收"),
         )
         self.vBoxLayout.addWidget(task_card_view)
