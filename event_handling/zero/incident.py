@@ -19,22 +19,6 @@ import utils
 from utils.map.components import set_weight
 
 
-def get_pos(text: str):
-    text = template(text)
-    img = screenshot()  # 截图
-    ocr_Results = task.ocr(img)  # OCR识别
-    positions = []
-    for ocr_result in ocr_Results:
-        if text.search(ocr_result.text):
-            positions.append(
-                [
-                    (ocr_result.position[0] + ocr_result.position[2]) / 2,
-                    (ocr_result.position[1] + ocr_result.position[3]) / 2,
-                ]
-            )
-    return positions
-
-
 DownloadPath: Path = RootPath / "download"
 OptionImgPath = [
     image_path
