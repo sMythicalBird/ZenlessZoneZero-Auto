@@ -60,7 +60,7 @@ class ZeroHoleGroup(SettingCardGroup):
             FluentIcon.ALIGNMENT,
             self.tr("是否解锁炸弹"),
             index=zero_cfg.hasBoom,
-            texts=["是", "否"],
+            texts=["否", "是"],
         )
         # 单次进去地图最大时间
         self.card5 = NumTextCard(
@@ -110,14 +110,12 @@ class ZeroHoleGroup(SettingCardGroup):
         zero_cfg.targetMap.level = self.card1.comboBox2.currentIndex() + 1
         zero_cfg.modeSelect = self.card2.comboBox.currentIndex() + 1
         zero_cfg.teamMates = self.card3.comboBox.currentIndex()
-        print(self.card4.comboBox.currentIndex())
         if self.card4.comboBox.currentIndex():
-            zero_cfg.hasBoom = False
-        else:
             zero_cfg.hasBoom = True
+        else:
+            zero_cfg.hasBoom = False
         zero_cfg.maxMapTime = self.card5.get_value()
         zero_cfg.maxFightTime = self.card6.get_value()
         zero_cfg.maxFightCount = self.card7.get_value()
         zero_cfg.selBuff = self.card8.get_value()
         save_config("zero.yaml", zero_cfg)
-        print("zero_cfg更新成功")
