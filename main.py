@@ -28,7 +28,7 @@ print("使用说明：\n   F10  恢复运行\n   F11  暂停运行\n   F12  结�
 
 from threading import Thread
 from pynput.keyboard import Key, Listener
-from utils.task import task
+from utils.task import task_zero as task
 from handle import *
 from fight import *
 

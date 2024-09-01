@@ -9,11 +9,16 @@ from .zero_info import ZeroConfig
 from .fight_info import FightConfig
 from .load import load_config, get_fight_logic, load_tactics
 
-zero_cfg = load_config("zero.yaml", ZeroConfig)
-fight_cfg = load_config("fight.yaml", FightConfig)
-fight_logic_all = get_fight_logic()
-fight_zero = load_tactics(fight_cfg.zero_fight, fight_logic_all)
+zero_cfg = load_config("zero.yaml", ZeroConfig)  # 零号空洞配置信息
+fight_cfg = load_config("fight.yaml", FightConfig)  # 战斗配置信息
 
+# 战斗逻辑读取
+fight_logic_all = get_fight_logic()  # 角色战斗逻辑存储位置列表
+fight_zero = load_tactics(fight_cfg.zero_fight, fight_logic_all)  # 零号空洞战斗读取
+fight_daily = load_tactics(fight_cfg.daily_fight, fight_logic_all)  # 日常战斗读取
+
+
+# 选择项列表
 buff_list = [
     "以太",
     "冻结",

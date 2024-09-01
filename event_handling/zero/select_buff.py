@@ -4,13 +4,12 @@
 @time:      2024/8/30 上午2:16
 @author:    sMythicalBird
 """
-import utils
 from utils import control, screenshot
 from utils.task import task_zero as task
 from re import template
+from schema.cfg.info import zero_cfg
 
-
-selBuff = utils.config.selBuff
+selBuff = zero_cfg.selectBuff  # 选择buff列表
 
 
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突
@@ -18,7 +17,6 @@ selBuff = utils.config.selBuff
 def action():
     img = screenshot()  # 截图
     ocr_Results = task.ocr(img)  # OCR识别
-    # print(ocr_Results)
     sel_text = template("^选择$")
     sel_list = []
     for ocr_result in ocr_Results:

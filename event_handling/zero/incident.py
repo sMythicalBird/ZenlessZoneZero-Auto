@@ -9,21 +9,26 @@ from typing import Dict
 
 import numpy as np
 
-from schema import Position, info
-from utils import control, screenshot, logger, RootPath
+from schema import Position
+from schema.cfg.zero_info import state_zero
+from schema.cfg.info import zero_cfg
+
+from utils import control, screenshot, logger
 from pathlib import Path
 from utils.task import find_template
 from utils.task import task_zero as task
 from PIL import Image
 from re import template
-import utils
+
+# import utils
 from utils.map.components import set_weight
 
 
-DownloadPath: Path = RootPath / "download"
+# 获取通用事件图片
+opt_img_path = Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero"
 OptionImgPath = [
     image_path
-    for image_path in DownloadPath.glob("*.png")
+    for image_path in opt_img_path.glob("*.png")
     if "option" in image_path.stem or image_path.stem == "red_exit"
 ]
 OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImgPath]
@@ -34,7 +39,7 @@ OptionImageMatch = [np.array(Image.open(image_path)) for image_path in OptionImg
     name="通用点击事件",
     priority=1,
     target_texts=["背包", "^当前层数"],
-    target_image="tv_spot.png",
+    target_image=opt_img_path / "tv_spot.png",
     exclude_texts=["零号银行", "呼叫增援", "进入特殊区域"],
 )
 def action():
@@ -99,18 +104,18 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^确认继续$")
     control.click(pos.x, pos.y)
     # 进入战斗
-    if utils.config.modeSelect == 1:  # 全通模式(无业绩)
-        info.currentStage = 1  # 直接往上走
-        info.stage1flag = 1  # 执行第二层逻辑
-    elif utils.config.modeSelect == 2:  # 业绩模式
-        info.currentStage = 2  # 去业绩
-        info.stage2Count = 6  # 移动六组防止无业绩bug
+    if zero_cfg.modeSelect == 1:  # 全通模式(无业绩)
+        state_zero.currentStage = 1  # 直接往上走
+        state_zero.stage1flag = 1  # 执行第二层逻辑
+    elif zero_cfg.modeSelect == 2:  # 业绩模式
+        state_zero.currentStage = 2  # 去业绩
+        state_zero.stage2Count = 6  # 移动六组防止无业绩bug
         set_weight("零号业绩", 10)
-    elif utils.config.modeSelect == 3:  # 银行模式
-        info.currentStage = 3  # 去银行
-    elif utils.config.modeSelect == 4:  # 全通模式(带业绩)
-        info.currentStage = 2  # 去业绩
-        info.stage2Count = 6  # 移动六组防止无业绩bug
+    elif zero_cfg.modeSelect == 3:  # 银行模式
+        state_zero.currentStage = 3  # 去银行
+    elif zero_cfg.modeSelect == 4:  # 全通模式(带业绩)
+        state_zero.currentStage = 2  # 去业绩
+        state_zero.stage2Count = 6  # 移动六组防止无业绩bug
         set_weight("零号业绩", 10)
 
 
@@ -139,9 +144,9 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^接应支援代理人$")
     control.click(pos.x, pos.y)
-    info.teamMate -= 1
+    state_zero.teamMate -= 1
     # 若已经召唤两个队友，则不再召唤队友
-    if info.teamMate == 0:
+    if state_zero.teamMate == 0:
         set_weight("呼叫增援", 3)
 
 
@@ -275,9 +280,9 @@ def action(screen: np.ndarray):
         for special_area in special_areas:
             if special_area.search(ocr_result.text):
                 logger.debug("当前位于特殊区域:" + special_area.pattern + "，无法寻路")
-                info.exitFlag = True
+                state_zero.exitFlag = True
                 break
-        if info.exitFlag:
+        if state_zero.exitFlag:
             break
         # 部分特殊区域的处理
         if "0044" in ocr_result.text:
@@ -361,9 +366,9 @@ def action(positions: Dict[str, Position]):
     # 业绩优先级置低，改变拖拽位置
     set_weight("零号业绩", 0)
     control.press("space")
-    info.currentStage = 5  # 向下拖拽
-    info.rewardCount -= 1
-    info.exitFlag = True  # 拿不到业绩直接退出
+    state_zero.currentStage = 5  # 向下拖拽
+    state_zero.rewardCount -= 1
+    state_zero.exitFlag = True  # 拿不到业绩直接退出
     # if info.rewardCount <= 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
     #     info.exitFlag = True
 
@@ -373,10 +378,10 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^确认$")
     control.click(pos.x, pos.y)
-    info.currentStage = 10  # 拿完业绩，开始默认行动
-    info.rewardCount -= 1
-    if info.rewardCount == 0 and utils.config.modeSelect == 2:  # 拿完奖励或者业绩模式
-        info.exitFlag = True
+    state_zero.currentStage = 10  # 拿完业绩，开始默认行动
+    state_zero.rewardCount -= 1
+    if state_zero.rewardCount == 0 and zero_cfg.modeSelect == 2:  # 拿完奖励或者业绩模式
+        state_zero.exitFlag = True
 
 
 # 零号银行
@@ -400,7 +405,7 @@ def action(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("^离开$")
     control.click(pos.x, pos.y)
-    info.exitFlag = True  # 存完钱准备离开
+    state_zero.exitFlag = True  # 存完钱准备离开
 
 
 @task.page(

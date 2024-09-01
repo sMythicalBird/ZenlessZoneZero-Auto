@@ -8,15 +8,19 @@ import time
 from datetime import datetime
 from typing import Dict
 import numpy as np
-from schema import Position, info
+from schema import Position
+from schema.cfg.info import zero_cfg
+from schema.cfg.zero_info import state_zero
+
 from utils import control, get_map_info, auto_find_way, logger
 from utils.task import task_zero as task
+
 from utils.detect.current import find_current
-from utils.config import config
+
 from utils.map.components import set_weight
 
-map_name = config.targetMap.Zone
-map_level = config.targetMap.Level
+map_name = zero_cfg.targetMap.Zone
+map_level = zero_cfg.targetMap.Level
 logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
@@ -34,11 +38,13 @@ def grid_map(screen: np.ndarray):
         control.press("space")
         return
     # 检查离开标志
-    if info.exitFlag:
+    if state_zero.exitFlag:
         control.esc()
         return
     # 超过地图最大时间
-    if (datetime.now() - info.entryMapTime).total_seconds() > config.maxMapTime:
+    if (
+        datetime.now() - state_zero.entryMapTime
+    ).total_seconds() > state_zero.maxMapTime:
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
         return
@@ -47,47 +53,47 @@ def grid_map(screen: np.ndarray):
     time.sleep(0.5)
     # 零号业绩相关的判断
     # 根据模式判断逻辑
-    if config.modeSelect == 1:
-        if info.stage1flag == 1:  # 向上走
+    if zero_cfg.modeSelect == 1:
+        if state_zero.stage1flag == 1:  # 向上走
             control.press("w", duration=0.05)
             time.sleep(0.5)
-            info.stage1flag = 2
+            state_zero.stage1flag = 2
             return
-        elif info.stage1flag == 2:
+        elif state_zero.stage1flag == 2:
             for i in range(3):
                 control.press("w", duration=0.05)
                 time.sleep(0.3)
-            info.stage1flag = 3
+            state_zero.stage1flag = 3
             return
-        elif info.stage1flag == 3:
+        elif state_zero.stage1flag == 3:
             for i in range(4):
                 control.press("w", duration=0.05)
                 time.sleep(0.3)
-            info.stage1flag = 0
+            state_zero.stage1flag = 0
             return
-    elif config.modeSelect == 3:
+    elif zero_cfg.modeSelect == 3:
         # 快速拿银行
-        if info.currentStage == 3:
+        if state_zero.currentStage == 3:
             control.press("a", duration=0.05)
             time.sleep(0.3)
             control.press("w", duration=0.05)
             time.sleep(0.3)
             return
-    elif config.modeSelect == 4 or config.modeSelect == 2:
+    elif zero_cfg.modeSelect == 4 or zero_cfg.modeSelect == 2:
         # 快速拿业绩
-        if info.currentStage == 2:
-            if info.stage2Count > 0:  # 向业绩移动
-                info.stage2Count -= 1
+        if state_zero.currentStage == 2:
+            if state_zero.stage2Count > 0:  # 向业绩移动
+                state_zero.stage2Count -= 1
                 control.press("d", duration=0.05)
                 time.sleep(0.3)
                 control.press("w", duration=0.05)
                 time.sleep(0.3)
                 return
             else:  # 当无业绩时才会执行此处逻辑，此时将调整状态，进入下一层
-                info.currentStage = 10
+                state_zero.currentStage = 10
                 return
         # 业绩拿完后，进入下一层
-        elif info.currentStage == 10:
+        elif state_zero.currentStage == 10:
             control.press("s", duration=0.05)
             time.sleep(0.3)
             for i in range(3):
@@ -101,7 +107,7 @@ def grid_map(screen: np.ndarray):
             time.sleep(0.3)
             control.press("w", duration=0.05)
             time.sleep(0.3)
-            info.currentStage = 0  # 还原状态
+            state_zero.currentStage = 0  # 还原状态
             return
 
     # 获取地图信息
@@ -117,17 +123,17 @@ def grid_map(screen: np.ndarray):
         return
     (mc, dirct) = next_way  # 获取下一个格子信息和移动方向
     # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
-    if mc.name == "怪物" and info.hasBoom:
-        info.hasBoom = False
+    if mc.name == "怪物" and state_zero.hasBoom:
+        state_zero.hasBoom = False
         control.press("r", duration=0.1)
         time.sleep(1.5)  # 防止炸弹未点出来就跳过
         return
     # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
     if mc.name == "终点":
-        info.currentStage = 0  # 重置偏移量
+        state_zero.currentStage = 0  # 重置偏移量
     control.press(str(dirct), duration=0.1)
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
-    info.lastMoveTime = datetime.now()
+    state_zero.lastMoveTime = datetime.now()
 
 
 # 炸弹使用
@@ -142,18 +148,18 @@ def select_map(positions: Dict[str, Position]):
 def action(positions: Dict[str, Position]):
     pos = positions.get("出战")
     control.click(pos.x, pos.y)
-    info.entryMapTime = datetime.now()  # 进入地图时间
-    info.fightCount += 1  # 战斗次数记录
-    info.currentStage = 0  # 进入战斗，无偏移
-    info.hasBoom = config.hasBoom  # 是否有炸弹
-    info.exitFlag = False  # 离开标志
-    info.teamMate = config.teamMates  # 获取队友数量
+    state_zero.entryMapTime = datetime.now()  # 进入地图时间
+    state_zero.fightCount += 1  # 战斗次数记录
+    state_zero.currentStage = 0  # 进入战斗，无偏移
+    state_zero.hasBoom = zero_cfg.hasBoom  # 是否有炸弹
+    state_zero.exitFlag = False  # 离开标志
+    state_zero.teamMate = zero_cfg.teamMates  # 获取队友数量
     if (
-        config.modeSelect == 2 or config.modeSelect == 4
+        zero_cfg.modeSelect == 2 or zero_cfg.modeSelect == 4
     ):  # 需要拾取业绩，则将业绩优先级调高
-        info.rewardCount = config.targetMap.reward_count()  # 获取奖励次数
+        state_zero.rewardCount = zero_cfg.targetMap.reward_count()  # 获取奖励次数
         set_weight("零号业绩", 10)
-    if info.teamMate:  # 需要队友，则将队友优先级调高
+    if state_zero.teamMate:  # 需要队友，则将队友优先级调高
         set_weight("呼叫增援", 10)
 
 

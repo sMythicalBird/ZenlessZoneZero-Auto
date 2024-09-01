@@ -24,6 +24,7 @@ DiyPath = Path(__file__).parent.parent.parent / "resources/fight_logic/diy"
 default_path = (
     Path(__file__).parent.parent.parent / "resources/fight_logic/default"
 )  # 默认战斗逻辑路径
+char_img_path = Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/char"
 
 
 # 读取配置文件
@@ -128,42 +129,20 @@ def load_tactics(fight_info, fight_logic_all):
     """
     logic_path_list = get_logic_path(fight_info, fight_logic_all)
     tactic_cfg = TacticsConfig()
-    print(logic_path_list)
     for char, path in logic_path_list.items():
         tactic_list = TacticList()
         for yaml_file in path.glob("*.yaml"):
             with open(yaml_file, "r", encoding="utf-8") as f:
-                fightTactics: List[dict] = safe_load(f)
-            tactic_list.tac_list = [Tactic(**item) for item in fightTactics]
+                fight_tactics: List[dict] = safe_load(f)
+            tactic_list.tac_list = [Tactic(**item) for item in fight_tactics]
         tactic_cfg.tactics[char] = tactic_list
+        print(char_img_path / f"{char}.png")
+        tactic_cfg.char_icons[char] = np.array(
+            Image.open(char_img_path / f"{char}.png")
+        )
     # for each in tactic_cfg.tactics:
     #     print(each)
     #     print(tactic_cfg.tactics[each])
     #     print("=====================================")
 
     return tactic_cfg
-
-
-def load_characters():
-    """
-    加载角色头像进行模板匹配
-    """
-    characterIconsTemp = {}
-    character_dir = RootPath / "fight/characters"
-    logger.info(f"加载人物头像 {character_dir}")
-    if not character_dir.exists():
-        os.makedirs(character_dir)
-    # 读取配置文件角色头像
-    for chara in config.characters:
-        png_file = character_dir / f"{chara}.png"
-        if not png_file.exists():  # 不存在使用默认配置
-            logger.info(f"暂不支持{chara}战斗模块")
-            continue
-        image = np.array(Image.open(png_file))
-        characterIconsTemp[chara] = image
-    return characterIconsTemp
-
-
-# config = load_config()
-# fightTacticsDict = load_tactics()
-# characterIcons = load_characters()

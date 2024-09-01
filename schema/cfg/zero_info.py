@@ -6,7 +6,8 @@
 """
 from typing import List
 from pydantic import BaseModel, Field, model_validator
-
+from datetime import datetime
+from enum import Enum
 
 ZoneMap = {
     1: {
@@ -85,3 +86,33 @@ class ZeroConfig(BaseModel):
     selBuff: List[str] = Field(["冻结", "暴击", "决斗", "闪避"], description="选择buff")
     maxFightCount: int = Field(10000, description="最大战斗次数")
     teamMates: int = Field(2, description="队友数量")
+
+
+class Dirct(Enum):
+    up = "w"
+    down = "s"
+    left = "a"
+    right = "d"
+
+    def __str__(self):
+        return self.value
+
+
+class StatusInfo(BaseModel):
+    currentPageName: str = Field("", title="当前页面名称")
+    lastMoveTime: datetime = Field(datetime.now(), title="上次移动时间")
+    fightCount: int = Field(0, description="战斗次数记录")
+    entryMapTime: datetime = Field(datetime.now(), title="进入地图时间")
+    currentStage: int = Field(
+        0, title="当前阶段"
+    )  # 0、无偏移     1、左下        2、右下         5、下          6、左
+    hasBoom: bool = Field(True, title="是否有炸弹")
+    exitFlag: bool = Field(False, title="是否退出")
+    clickCount: int = Field(0, title="点击次数")
+    teamMate: int = Field(2, title="队友数量")
+    rewardCount: int = Field(0, title="奖励次数")
+    stage2Count: int = Field(0, title="向业绩移动的情况")
+    stage1flag: int = Field(0, title="是否在第一阶段")
+
+
+state_zero = StatusInfo()
