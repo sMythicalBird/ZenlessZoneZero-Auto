@@ -82,7 +82,7 @@ class ZeroConfig(BaseModel):
     maxFightTime: int = Field(200, description="最大战斗时间（单位秒）")
     maxMapTime: int = Field(25 * 60, description="在地图内最大时间（单位秒）")
     hasBoom: bool = Field(False, description="是否有炸弹")
-    useGpu: bool = Field(True, description="是否使用GPU")
+    useGpu: bool = Field(False, description="是否使用GPU")
     selBuff: List[str] = Field(["冻结", "暴击", "决斗", "闪避"], description="选择buff")
     maxFightCount: int = Field(10000, description="最大战斗次数")
     teamMates: int = Field(2, description="队友数量")
