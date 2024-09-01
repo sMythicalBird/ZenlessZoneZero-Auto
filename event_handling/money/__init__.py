@@ -5,5 +5,6 @@
 @author:    sMythicalBird
 """
 from .conditional import *
+from .incident import *
 
 __all__ = []

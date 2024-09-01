@@ -141,12 +141,6 @@ class HomeInterface(ScrollArea):
         # 设置view的样式表去掉边框
         self.view.setStyleSheet("border: none;")
 
-    def test_fun1(self, task_name: str):
-        print(task_name)
-
-    def test_fun2(self, task_name: str):
-        print(task_name)
-
     def load_samples(self):
         # 添加横幅小组件
         banner = BannerWidget(self)
@@ -162,6 +156,6 @@ class HomeInterface(ScrollArea):
         task_card_view.add_task_card(
             icon=str(home_img_path / "安比.jpg"),
             title="拿命验收",
-            action=lambda: self.test_fun1("拿命验收"),
+            action=lambda: start_task("money"),
         )
         self.vBoxLayout.addWidget(task_card_view)

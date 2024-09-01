@@ -8,7 +8,7 @@ import time
 from typing import Dict
 from schema import Position
 from utils import control
-from utils.task import task
+from utils.task import task_money as task
 from .conditional import stage
 from pydirectinput import (
     press,
