@@ -9,7 +9,7 @@ from utils.task import task_zero as task
 from re import template
 from schema.cfg.info import zero_cfg
 
-selBuff = zero_cfg.selectBuff  # 选择buff列表
+selBuff = zero_cfg.selBuff  # 选择buff列表
 
 
 # 选择类，出现同类持有的选择事件，主要选择鸣徽或者邦布，诡术鸣徽(如果遇到的话)，优先级降低一级，避免与不可触碰之物冲突

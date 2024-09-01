@@ -26,7 +26,9 @@ from schema.cfg.info import fight_logic_zero, zero_cfg
 from .light_detector import detector
 from .combo_detect import combo_detect  # 连携技的判断
 
-img_path = Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero"
+img_path = (
+    Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero/yuan.png"
+)
 image_to_quan = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
 
 

@@ -20,8 +20,7 @@ from utils.task import task_zero as task
 from PIL import Image
 from re import template
 
-# import utils
-from utils.map.components import set_weight
+from utils.zero_api.components import set_weight
 
 
 # 获取通用事件图片

@@ -11,16 +11,17 @@ import numpy as np
 from schema import Position
 from schema.cfg.info import zero_cfg
 from schema.cfg.zero_info import state_zero
-
-from utils import control, get_map_info, auto_find_way, logger
+from utils import control, logger
 from utils.task import task_zero as task
 
 from utils.detect.current import find_current
 
-from utils.map.components import set_weight
+from utils.zero_api.components import set_weight, get_map_info
+from utils.zero_api.auto_find_way import auto_find_way
 
 map_name = zero_cfg.targetMap.Zone
 map_level = zero_cfg.targetMap.Level
+print(map_name, map_level)
 logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
@@ -42,14 +43,12 @@ def grid_map(screen: np.ndarray):
         control.esc()
         return
     # 超过地图最大时间
-    if (
-        datetime.now() - state_zero.entryMapTime
-    ).total_seconds() > state_zero.maxMapTime:
+    if (datetime.now() - state_zero.entryMapTime).total_seconds() > zero_cfg.maxMapTime:
+        print("超过地图最大时间")
         logger.debug("长时间处于地图中，退出地图")
         control.esc()
         return
     control.scroll(-5)
-
     time.sleep(0.5)
     # 零号业绩相关的判断
     # 根据模式判断逻辑
@@ -123,6 +122,7 @@ def grid_map(screen: np.ndarray):
         return
     (mc, dirct) = next_way  # 获取下一个格子信息和移动方向
     # 炸弹判断:当下一关是战斗且解锁炸弹,炸掉
+    print(mc.name)
     if mc.name == "怪物" and state_zero.hasBoom:
         state_zero.hasBoom = False
         control.press("r", duration=0.1)

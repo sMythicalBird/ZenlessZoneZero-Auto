@@ -110,10 +110,11 @@ class ZeroHoleGroup(SettingCardGroup):
         zero_cfg.targetMap.level = self.card1.comboBox2.currentIndex() + 1
         zero_cfg.modeSelect = self.card2.comboBox.currentIndex() + 1
         zero_cfg.teamMates = self.card3.comboBox.currentIndex()
+        print(self.card4.comboBox.currentIndex())
         if self.card4.comboBox.currentIndex():
-            zero_cfg.hasBoom = True
-        else:
             zero_cfg.hasBoom = False
+        else:
+            zero_cfg.hasBoom = True
         zero_cfg.maxMapTime = self.card5.get_value()
         zero_cfg.maxFightTime = self.card6.get_value()
         zero_cfg.maxFightCount = self.card7.get_value()
