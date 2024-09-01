@@ -13,6 +13,7 @@ from PIL import Image
 from yaml import safe_load, safe_dump
 from loguru import logger
 from pathlib import Path
+from .fight_info import TacticsConfig, Tactic, TacticList
 
 InfoPath = Path(__file__).parent.parent / "yaml"
 FightPath = (
@@ -20,6 +21,9 @@ FightPath = (
 )
 FightDefaultPath = Path(__file__).parent.parent.parent / "resources/fight_logic/default"
 DiyPath = Path(__file__).parent.parent.parent / "resources/fight_logic/diy"
+default_path = (
+    Path(__file__).parent.parent.parent / "resources/fight_logic/default"
+)  # 默认战斗逻辑路径
 
 
 # 读取配置文件
@@ -95,29 +99,49 @@ def get_fight_logic():
     return fight_logic_dict
 
 
-def load_tactics():
-    """
-    加载战斗逻辑
-    """
-    fightTacticsDictTemp = {}
-    tactics_dir = RootPath / "fight/tactics"
-    if not tactics_dir.exists() or len(list(tactics_dir.glob("*.yaml"))) == 0:
-        logger.info(
-            f"未检测到 {tactics_dir} 目录，请在 {tactics_dir} 目录下添加战斗策略文件"
+def get_logic_path(fight_info, fight_logic_all):
+    logic_path_dic = {}
+    if fight_info.first.logic == "默认逻辑":
+        logic_path_dic[fight_info.first.char] = default_path / "默认逻辑"
+    else:
+        logic_path_dic[fight_info.first.char] = (
+            fight_logic_all[fight_info.first.char]["path"] / fight_info.first.logic
         )
-        tactics_dir = RootPath / "fight/tactics_defaults"
-        logger.info(f"将使用 {tactics_dir} 默认目录加载战斗策略文件")
+    if fight_info.second.logic == "默认逻辑":
+        logic_path_dic[fight_info.second.char] = default_path / "默认逻辑"
+    else:
+        logic_path_dic[fight_info.second.char] = (
+            fight_logic_all[fight_info.second.char]["path"] / fight_info.second.logic
+        )
+    if fight_info.third.logic == "默认逻辑":
+        logic_path_dic[fight_info.third.char] = default_path / "默认逻辑"
+    else:
+        logic_path_dic[fight_info.third.char] = (
+            fight_logic_all[fight_info.third.char]["path"] / fight_info.third.logic
+        )
+    return logic_path_dic
 
-    for yaml_file in tactics_dir.glob("*.yaml"):
-        logger.info(f"加载战斗策略文件 {yaml_file}")
-        with open(yaml_file, "r", encoding="utf-8") as f:
-            fightTactics: List[dict] = safe_load(f)
-        if not fightTactics:
-            logger.error(f"战斗策略为空，请检查战斗策略文件 {yaml_file}")
-            continue
-        fightTactics: List[Tactic] = [Tactic(**item) for item in fightTactics]
-        fightTacticsDictTemp[yaml_file.stem] = fightTactics
-    return fightTacticsDictTemp
+
+def load_tactics(fight_info, fight_logic_all):
+    """
+    加载战斗逻辑和角色图像
+    """
+    logic_path_list = get_logic_path(fight_info, fight_logic_all)
+    tactic_cfg = TacticsConfig()
+    print(logic_path_list)
+    for char, path in logic_path_list.items():
+        tactic_list = TacticList()
+        for yaml_file in path.glob("*.yaml"):
+            with open(yaml_file, "r", encoding="utf-8") as f:
+                fightTactics: List[dict] = safe_load(f)
+            tactic_list.tac_list = [Tactic(**item) for item in fightTactics]
+        tactic_cfg.tactics[char] = tactic_list
+    # for each in tactic_cfg.tactics:
+    #     print(each)
+    #     print(tactic_cfg.tactics[each])
+    #     print("=====================================")
+
+    return tactic_cfg
 
 
 def load_characters():
@@ -140,7 +164,6 @@ def load_characters():
     return characterIconsTemp
 
 
-print("Executing utils module")
 # config = load_config()
 # fightTacticsDict = load_tactics()
 # characterIcons = load_characters()

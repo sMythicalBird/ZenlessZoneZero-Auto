@@ -7,11 +7,12 @@
 
 from .zero_info import ZeroConfig
 from .fight_info import FightConfig
-from .load import load_config, get_fight_logic
+from .load import load_config, get_fight_logic, load_tactics
 
 zero_cfg = load_config("zero.yaml", ZeroConfig)
 fight_cfg = load_config("fight.yaml", FightConfig)
 fight_logic_all = get_fight_logic()
+fight_zero = load_tactics(fight_cfg.zero_fight, fight_logic_all)
 
 buff_list = [
     "以太",

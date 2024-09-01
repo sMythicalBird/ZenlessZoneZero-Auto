@@ -10,7 +10,7 @@ from typing import Dict
 import numpy as np
 from schema import Position, info
 from utils import control, get_map_info, auto_find_way, logger
-from utils.task import task
+from utils.task import task_zero as task
 from utils.detect.current import find_current
 from utils.config import config
 from utils.map.components import set_weight

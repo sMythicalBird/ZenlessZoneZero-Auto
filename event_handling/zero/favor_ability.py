@@ -7,7 +7,7 @@
 from typing import Dict
 from schema import Position
 from utils import control
-from utils.task import task
+from utils.task import task_zero as task
 
 
 # 好感度系列

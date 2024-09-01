@@ -7,7 +7,8 @@
 from typing import Dict
 from schema import Position
 from utils import control
-from utils.task import task, ImageMatch
+from utils.task import ImageMatch
+from utils.task import task_zero as task
 
 
 # 增加邦布商人等事件的红叉选择

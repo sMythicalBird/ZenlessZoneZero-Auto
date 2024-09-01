@@ -6,7 +6,7 @@
 """
 import utils
 from utils import control, screenshot
-from utils.task import task
+from utils.task import task_zero as task
 from re import template
 
 

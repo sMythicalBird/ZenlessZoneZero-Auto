@@ -7,6 +7,7 @@
 
 from typing import List
 from pydantic import BaseModel, Field, model_validator
+from pathlib import Path
 
 
 class LogicInfo(BaseModel):
@@ -60,3 +61,12 @@ class Tactic(BaseModel):
             raise ValueError(
                 f"Invalid type: {self.type_}, must be one of ['press', 'down', 'up']"
             )
+
+
+class TacticList(BaseModel):
+    tac_list: List[Tactic] = Field([], description="战斗逻辑配置")
+
+
+class TacticsConfig(BaseModel):
+    char_icons: dict = Field({}, description="角色头像")
+    tactics: dict = Field({}, description="战斗逻辑配置")

@@ -12,7 +12,8 @@ import numpy as np
 from schema import Position, info
 from utils import control, screenshot, logger, RootPath
 from pathlib import Path
-from utils.task import task, find_template
+from utils.task import find_template
+from utils.task import task_zero as task
 from PIL import Image
 from re import template
 import utils

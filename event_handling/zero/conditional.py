@@ -4,7 +4,7 @@
 @time:      2024/8/30 上午2:20
 @author:    sMythicalBird
 """
-from utils.task import task
+from utils.task import task_zero as task
 from utils.config import config
 from utils import logger
 from schema import info
