@@ -134,12 +134,20 @@ def load_tactics(fight_info, fight_logic_all):
         for yaml_file in path.glob("*.yaml"):
             with open(yaml_file, "r", encoding="utf-8") as f:
                 fight_tactics: List[dict] = safe_load(f)
-            tactic_list.tac_list = [Tactic(**item) for item in fight_tactics]
+            tactic_list.tac_list.append([Tactic(**item) for item in fight_tactics])
         tactic_cfg.tactics[char] = tactic_list
-        print(char_img_path / f"{char}.png")
         tactic_cfg.char_icons[char] = np.array(
             Image.open(char_img_path / f"{char}.png")
         )
+    # 获取红黄光和连携
+    for yaml_file in default_path.glob("*.yaml"):
+        tactic_list = TacticList()
+        yaml_name = yaml_file.name.split(".")[0]
+        with open(yaml_file, "r", encoding="utf-8") as f:
+            fight_tactics: List[dict] = safe_load(f)
+        tactic_list.tac_list.append([Tactic(**item) for item in fight_tactics])
+        tactic_cfg.tactics[yaml_name] = tactic_list
+
     # for each in tactic_cfg.tactics:
     #     print(each)
     #     print(tactic_cfg.tactics[each])

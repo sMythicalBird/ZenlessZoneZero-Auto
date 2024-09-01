@@ -10,31 +10,29 @@ import time
 from datetime import datetime
 from re import template
 from threading import Thread
-from typing import Dict
 import cv2
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from schema import Position, info
 from schema.config import Tactic
 from utils import (
-    fightTacticsDict,
-    RootPath,
-    characterIcons,
-    config,
     control,
     screenshot,
     logger,
 )
-from utils.task import task, find_template
+from utils.task import find_template
+from utils.task import task_zero as task
+from pathlib import Path
+from schema.cfg.info import fight_logic_zero, zero_cfg
+
 from .light_detector import detector
 from .combo_detect import combo_detect  # 连携技的判断
 
-image_path = RootPath / "download" / "yuan.png"
-image_to_quan = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
+img_path = Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero"
+image_to_quan = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
 
 
 def is_not_fight(text: str):
     """
-    判断是否还在战斗中
+    判断是否还在战斗中,检测空格键是否存在
     """
     text = template(text)
     img = screenshot()  # 截图
@@ -101,7 +99,7 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
         elif results["yellow"]["rect"]:
             execute_tactic_event.clear()  # 阻塞战斗，如果有的话
             logger.debug(f"进入黄光战斗模式")
-            for tactic in fightTacticsDict["黄光"]:
+            for tactic in fight_logic_zero.tactics["黄光"].get_cur_logic():
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
                     if tactic.delay:
@@ -109,7 +107,7 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
             execute_tactic_event.set()  # 释放战斗
         elif results["red"]["rect"]:
             logger.debug(f"进入红光战斗模式")
-            for tactic in fightTacticsDict["红光"]:
+            for tactic in fight_logic_zero.tactics["红光"].get_cur_logic():
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
                     if tactic.delay:
@@ -118,7 +116,6 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
 
 # 定义战斗逻辑
 def fight_login(
-    fight_counts: dict,
     run_flag: threading.Event,
     execute_tactic_event: threading.Event,
     fighting_flag: threading.Event,
@@ -132,20 +129,13 @@ def fight_login(
 
         # 检测在场角色
         cur_character = current_character()
-
-        fight_tactics = fightTacticsDict[cur_character]
+        if cur_character == "默认":  # 未找到角色头像(可能被其他动画挡住了),等待0.2s
+            time.sleep(0.2)
+            continue
         logger.debug(f"进入{cur_character}战斗模式")
 
-        # 选择当前角色攻击模式
-        if cur_character in fight_counts:
-            if fight_counts[cur_character] >= 2:  # 每两次攻击，释放一次技能
-                if cur_character + "技能" in fightTacticsDict:
-                    fight_tactics = fightTacticsDict[cur_character + "技能"]
-                    logger.debug(f"进入{cur_character}技能战斗模式")
-                fight_counts[cur_character] = 0
-            else:
-                fight_counts[cur_character] += 1
-
+        # 获取当前角色战斗逻辑
+        fight_tactics = fight_logic_zero.tactics[cur_character].get_cur_logic()
         # 执行攻击
         continue_flag = False
         for tactic in fight_tactics:
@@ -179,12 +169,11 @@ def current_character():
     获取当前角色
     """
     img = screenshot()
-    for chara, chara_icon in characterIcons.items():
+    for chara, chara_icon in fight_logic_zero.char_icons.items():
         img_position = find_template(img, chara_icon, (0, 0, 200, 120), threshold=0.9)
-        if img_position is not None:
-            if chara in fightTacticsDict:
-                return chara
-    return "默认"
+        if img_position is not None:  # 找到角色头像
+            return chara
+    return "默认"  # 未找到角色头像
 
 
 def calc_angle(x, y, w, h):
@@ -282,15 +271,10 @@ def action():
     det_task = Thread(target=detector_task, args=(run_flag, execute_tactic_event))
     det_task.start()
 
-    # 这部分有时间再重做
-    # 分别记录不同角色普通战斗模块执行次数，达到一定次数后执行技能战斗模块
-    # 若角色技能战斗模块为空，则执行角色普通模块
-    fight_counts = {chara: 0 for chara in characterIcons}
-
     # 启动战斗逻辑
     fight_task = Thread(
         target=fight_login,
-        args=(fight_counts, run_flag, execute_tactic_event, fighting_flag),
+        args=(run_flag, execute_tactic_event, fighting_flag),
     )
     fight_task.start()
 
@@ -304,14 +288,14 @@ def action():
 
     while True:
         fight_time = (datetime.now() - start_fight_time).total_seconds()  # 战斗用时
-        if fight_time > config.maxFightTime:  # 超出最大战斗时间，直接退出
+        if fight_time > zero_cfg.maxFightTime:  # 超出最大战斗时间，直接退出
             run_flag.clear()
             control.esc()
             return  # 退出战斗
         if fight_time > time_interval:  # 每隔约20s播报一次战斗用时
             logger.debug(
                 f"当前战斗时长{fight_time:.2f}s"
-                f" 剩余战斗时间{config.maxFightTime - fight_time:.2f}s"
+                f" 剩余战斗时间{zero_cfg.maxFightTime - fight_time:.2f}s"
             )
             time_interval += 20
 

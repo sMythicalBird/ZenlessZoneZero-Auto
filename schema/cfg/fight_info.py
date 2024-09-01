@@ -64,7 +64,15 @@ class Tactic(BaseModel):
 
 
 class TacticList(BaseModel):
-    tac_list: List[Tactic] = Field([], description="战斗逻辑配置")
+    tac_list: List[List[Tactic]] = Field([], description="战斗逻辑配置")
+    cur_pos: int = Field(0, description="列表序号")
+
+    # 获取当前的战斗逻辑
+    def get_cur_logic(self):
+        list_len = len(self.tac_list)
+        self.cur_pos %= list_len
+        self.cur_pos += 1
+        return self.tac_list[self.cur_pos - 1]
 
 
 class TacticsConfig(BaseModel):

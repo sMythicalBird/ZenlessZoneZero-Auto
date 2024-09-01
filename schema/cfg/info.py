@@ -14,8 +14,12 @@ fight_cfg = load_config("fight.yaml", FightConfig)  # 战斗配置信息
 
 # 战斗逻辑读取
 fight_logic_all = get_fight_logic()  # 角色战斗逻辑存储位置列表
-fight_zero = load_tactics(fight_cfg.zero_fight, fight_logic_all)  # 零号空洞战斗读取
-fight_daily = load_tactics(fight_cfg.daily_fight, fight_logic_all)  # 日常战斗读取
+fight_logic_zero = load_tactics(
+    fight_cfg.zero_fight, fight_logic_all
+)  # 零号空洞战斗读取
+fight__logic_daily = load_tactics(
+    fight_cfg.daily_fight, fight_logic_all
+)  # 日常战斗读取
 
 
 # 选择项列表
