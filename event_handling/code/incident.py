@@ -6,7 +6,7 @@
 """
 import time
 
-from utils.task import task
+from utils.task import task_code as task
 from utils import control, logger
 from typing import Dict
 from schema import Position

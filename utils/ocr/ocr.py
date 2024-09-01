@@ -271,3 +271,6 @@ def cal_ocr_word_box(rec_str: str, box: Position, rec_word_info: tuple):
             )
             word_box_list.append(p)
     return sorted(word_box_list, key=lambda pos: pos.x1)
+
+
+paddle_ocr = Ocr()

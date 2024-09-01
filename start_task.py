@@ -6,11 +6,10 @@
 """
 from threading import Thread
 from pynput.keyboard import Key, Listener
+from utils.task import task_code
 
-from utils.task import task
 
-
-def key_event():
+def key_event(task):
     def on_press(key):
         if key == Key.f12:
             task.stop()
@@ -27,15 +26,14 @@ def key_event():
 
 def redemption_code():
     # 监听运行状态
-    key_thread = Thread(target=key_event)
+    key_thread = Thread(target=key_event, args=(task_code,))
     key_thread.start()
-    # 清空task的任务
-    # task.clear_task()
+
     # 导入任务
     import event_handling.code
 
     # 任务开始
-    task.run()
+    task_code.run()
 
 
 def task1():

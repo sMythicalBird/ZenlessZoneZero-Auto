@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 from schema import Position, OcrResult, info
 from .init import logger, RootPath
-from .ocr import Ocr
+from .ocr import Ocr, paddle_ocr
 from .utils import find_template, screenshot
 
 
@@ -504,4 +504,8 @@ class _Task(BaseModel):
         return None
 
 
-task = _Task()
+# 统一使用paddle_ocr
+task1 = _Task(ocr=paddle_ocr)
+task2 = _Task(ocr=paddle_ocr)
+task3 = _Task(ocr=paddle_ocr)
+task_code = _Task(ocr=paddle_ocr)
