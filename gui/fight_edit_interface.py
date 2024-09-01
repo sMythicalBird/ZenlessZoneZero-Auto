@@ -1,166 +1,105 @@
 # -*- coding: utf-8 -*-
 """
-@file: fight_edit_interface.py
-@time: 2024/8/12
-@auther: sMythicalBird
+@file:      fight_test
+@time:      2024/8/29 18:16
+@author:    sMythicalBird
 """
-from PySide6.QtGui import QIcon
-from qfluentwidgets import ScrollArea
-from PySide6.QtWidgets import (
-    QWidget,
-    QHBoxLayout,
-    QFrame,
-    QSizePolicy
-    
-)
+
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QFrame, QSizePolicy, QLabel
 
 from PySide6.QtCore import Qt
-from qfluentwidgets import ComboBox, VBoxLayout, PushButton, TitleLabel, BodyLabel, SpinBox, ExpandGroupSettingCard, FluentIcon, LineEdit, DoubleSpinBox, ScrollArea
-from qfluentwidgets.common.icon import FluentIcon as FIF
-import yaml
+from qfluentwidgets import (
+    ComboBox,
+    VBoxLayout,
+    PushButton,
+    TitleLabel,
+    BodyLabel,
+    SpinBox,
+    ExpandGroupSettingCard,
+    FluentIcon,
+    LineEdit,
+    DoubleSpinBox,
+    ScrollArea,
+)
+from .cfg_card_group.designer_group import DesignerGroup
+from schema.cfg.load import save_diy
+from schema.cfg.info import char_list
+
 
 class FightEditInterface(ScrollArea):
     def __init__(self):
         super().__init__()
         self.setObjectName("FightEditInterface")
-        # 添加窗口和布局
-        self.view = QWidget(self)
-        # 给view设置布局
-        self.vBoxLayout = VBoxLayout(self.view)
-        self.BattleSettingWidget()
+        self.scrollWidget = QWidget()
+        self.vBoxLayout = VBoxLayout(self.scrollWidget)
+        self.settingLabel = QLabel(self.tr("战斗设计"), self)
+        self.settingLabel.setStyleSheet(
+            "font: 33px 'Microsoft YaHei Light';"
+            "background-color: transparent;"
+            "color: black;"
+        )
+        self.designer_group = DesignerGroup(self.scrollWidget)
+        self.select_label = QLabel("选择角色:", self)
+        self.select_combobox = ComboBox(self)
+        self.enter_btn = PushButton(self.tr("保存逻辑"), self)
+        self.add_btn = PushButton(self.tr("增加配置"), self)
+        self.delete_btn = PushButton(self.tr("减少配置"), self)
         self.init_ui()
-    
-    def BattleSettingWidget(self):
-        self.Expand_Card = ExpandGroupSettingCard(FluentIcon.SETTING, "战斗设置", "自定义你的战斗")
-
-        # 键位设置
-        self.Keyboard_Label = BodyLabel("按下按键")
-        self.Keyboard_Entry = LineEdit()
-        self.Keyboard_Entry.setFixedWidth(200)
-        # 按键选项
-        self.Action_Label = BodyLabel("按键选项")
-        self.Action_ComboBox = ComboBox()
-        self.Action_ComboBox.addItems(['press', 'down', 'up'])
-        self.Action_ComboBox.setFixedWidth(200)
-        # 持续时间
-        self.Duraction_Label = BodyLabel("持续时间")
-        self.Duraction_Spinbox = DoubleSpinBox()
-        self.Duraction_Spinbox.setRange(0, 100)
-        self.Duraction_Spinbox.setValue(1)
-        self.Duraction_Spinbox.setFixedWidth(200)
-        # 间隔时间
-        self.Delay_Label = BodyLabel("间隔时间")
-        self.Delay_Spinbox = DoubleSpinBox()
-        self.Delay_Spinbox.setRange(0, 100)
-        self.Delay_Spinbox.setValue(1)
-        self.Delay_Spinbox.setFixedWidth(200)
-        # 重复次数
-        self.Repeat_Label = BodyLabel("重复次数")
-        self.Repeat_Spinbox = SpinBox()
-        self.Repeat_Spinbox.setRange(0, 100)
-        self.Repeat_Spinbox.setValue(1)
-        self.Repeat_Spinbox.setFixedWidth(200)
-
-        # 监听数值改变信号
-        self.Duraction_Spinbox.valueChanged.connect(lambda value: print("当前值：", value))
-
-        # 添加 ExpandCard 的组件
-        self.add(self.Keyboard_Label, self.Keyboard_Entry)
-        self.add(self.Action_Label, self.Action_ComboBox)
-        self.add(self.Duraction_Label, self.Duraction_Spinbox)
-        self.add(self.Delay_Label, self.Delay_Spinbox)
-        self.add(self.Repeat_Label, self.Repeat_Spinbox)
-        
-        return self.Expand_Card
-        
-       
-
-    def add(self, label, widget):
-        self.w = QWidget()
-        self.w.setFixedHeight(60)
-
-        self.layout = QHBoxLayout(self.w)
-        self.layout.setContentsMargins(48, 12, 48, 12)
-
-        self.layout.addWidget(label)
-        self.layout.addStretch(1)
-        self.layout.addWidget(widget)
-
-        # 添加组件到设置卡
-        self.Expand_Card.addGroupWidget(self.w)
-    # 仅为测试, 事实上, 每一个 ExpandCard 的内容要被做成字典然后添加到一个列表中, 再导出    
-    # def export_yaml(self):
-    #     data = {
-    #         "key": self.Keyboard_Entry.text(),
-    #         "duraction": self.Duraction_Spinbox.value(),
-    #         "delay": self.Delay_Spinbox.value(),
-    #         "repeat": self.Repeat_Spinbox.value()
-    #     }
-
-    #     yaml_data = yaml.dump([data], allow_unicode=True)
-    #     print(yaml_data)
-
-    def get_contents(self):
-        return {
-            "key": self.Keyboard_Entry.text(),
-            "duraction": self.Duraction_Spinbox.value(),
-            "delay": self.Delay_Spinbox.value(),
-            "repeat": self.Repeat_Spinbox.value()
-        }
+        self.init_layout()
 
     def init_ui(self):
-        # 创建主布局为竖向布局
-        self.main_layout = VBoxLayout(self)
-        # 设置排布方式为向上排布
-        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        # Widget 控件可被拉伸
+        self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
+        self.setViewportMargins(0, 50, 0, 5)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scrollWidget.setObjectName("scrollWidget")
+        self.settingLabel.setObjectName("settingLabel")
+        self.setStyleSheet("background-color: transparent;")
 
-        # 创建容器和布局，用于放置可滚动的内容
-        self.container_widget = QWidget()
-        # 创建容器内的竖向布局
-        self.container_layout = VBoxLayout(self.container_widget)
-        # 设置为向上排布
-        self.container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        # 中间间隔 10 像素
-        self.container_layout.setSpacing(10)
-        # 设置容器的主布局为 container_layout
-        self.container_widget.setLayout(self.container_layout)
-        # 配置布局填充模式为填满
-        self.container_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        # 将view设为中心部件
-        self.setWidget(self.container_widget)
-        # 设置填充模式为填满
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.select_label.setFixedWidth(100)
+        self.select_combobox.setFixedWidth(80)
+        self.select_combobox.addItems(char_list)
 
-        # 将容器设置为滑动区域的中心部件
-        # scroll_area.setWidget(container_widget)
-        # scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.enter_btn.setFixedWidth(100)
+        self.add_btn.setFixedWidth(100)
+        self.delete_btn.setFixedWidth(100)
 
-        # 添加标题为 战斗设计
-        self.titlebar = TitleLabel("战斗设计")
-        # 添加到容器布局
-        self.container_layout.addWidget(self.titlebar)
+    def init_layout(self):
+        self.settingLabel.move(20, 20)
+        # 添加控件
+        h_layout_left = QHBoxLayout()
+        h_layout_left.addWidget(self.select_label)
+        h_layout_left.addWidget(self.select_combobox)
+        h_layout_right = QHBoxLayout()
+        h_layout_right.addWidget(self.enter_btn)
+        h_layout_right.addWidget(self.add_btn)
+        h_layout_right.addWidget(self.delete_btn)
+        h_layout = QHBoxLayout()
+        h_layout.addLayout(h_layout_left)
+        h_layout.addLayout(h_layout_right)
+        h_layout_left.setAlignment(Qt.AlignmentFlag.AlignLeft)  # 靠左对齐
+        h_layout_right.setAlignment(Qt.AlignmentFlag.AlignRight)  # 靠右对齐
+        self.vBoxLayout.addLayout(h_layout)
 
-        # 配置选择角色框
-        self.character_combobox = ComboBox()
-        # 设置下拉框内容
-        self.character_combobox.addItems(['朱鸢', '安比', '妮可'])
-        # 在容器内绘制
-        self.container_layout.addWidget(self.character_combobox)
-        self.character_combobox.setFixedHeight(40)
+        self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        # 创建自定义控件
-        self.fight_1 = self.BattleSettingWidget()
-        self.fight_2 = self.BattleSettingWidget()
+        # 添加配置卡组信息
+        self.vBoxLayout.setContentsMargins(20, 20, 20, 20)  # 设置卡组内容位置
+        self.vBoxLayout.addWidget(self.designer_group)
 
-        self.container_layout.addWidget(self.fight_1)
-        self.container_layout.addWidget(self.fight_2)
-        self.container_layout.addStretch()
+        # 添加点击事件
+        self.add_btn.clicked.connect(self.on_add_button_click)
+        self.delete_btn.clicked.connect(self.on_delete_button_click)
+        self.enter_btn.clicked.connect(self.on_enter_button_click)
 
-        
-        
+    def on_add_button_click(self):
+        self.designer_group.add_card()
 
-        
+    def on_delete_button_click(self):
+        self.designer_group.remove_card()
 
-    
+    def on_enter_button_click(self):
+        char_name = self.select_combobox.currentText()
+        tactic_logic = self.designer_group.get_logic()
+        save_diy(char_name, tactic_logic)
+        pass

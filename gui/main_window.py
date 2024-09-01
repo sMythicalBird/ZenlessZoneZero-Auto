@@ -11,6 +11,7 @@ from .home_interface import HomeInterface
 from .setting_interface import SettingInterface
 from .config_interface import ConfigInterface
 from .fight_edit_interface import FightEditInterface
+from .code_interface import CodeInterface
 from .api.check_update import check_update
 
 
@@ -35,7 +36,9 @@ class MainWindow(MSFluentWindow):
         # 添加战斗编辑页面
         self.addSubInterface(FightEditInterface(), FluentIcon.EDIT, self.tr("战斗设计"))
 
-        # 添加配置导航页
+        self.addSubInterface(CodeInterface(), FluentIcon.CODE, self.tr("兑换码"))
+
+        # 添加配置页面
         self.addSubInterface(
             ConfigInterface(),
             FluentIcon.SAVE,
@@ -43,7 +46,7 @@ class MainWindow(MSFluentWindow):
             position=NavigationItemPosition.BOTTOM,
         )
 
-        # 添加设置导航页
+        # 添加设置页面
         self.addSubInterface(
             SettingInterface(),
             FluentIcon.SETTING,

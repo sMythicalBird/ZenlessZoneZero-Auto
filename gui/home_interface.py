@@ -8,15 +8,12 @@ from qfluentwidgets import (
     ScrollArea,
     FluentIcon,
     TitleLabel,
-    LargeTitleLabel,
-    qconfig,
     setTheme,
     Theme,
 )
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
-    QLabel,
     QHBoxLayout,
     QGraphicsDropShadowEffect,
 )
@@ -29,6 +26,7 @@ from PIL import Image
 import numpy as np
 
 from .init_cfg import home_img_path
+from start_task import start_task
 
 
 class BannerWidget(QWidget):
@@ -37,7 +35,7 @@ class BannerWidget(QWidget):
         self.setFixedHeight(570)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = TitleLabel(f"绝区零自动化", self)
-        font = QFont("MiSans", 30, QFont.Bold)
+        font = QFont("MiSans", 30, QFont.Weight.Bold)
         self.galleryLabel.setFont(font)
         setTheme(Theme.AUTO)
 
@@ -143,12 +141,6 @@ class HomeInterface(ScrollArea):
         # 设置view的样式表去掉边框
         self.view.setStyleSheet("border: none;")
 
-    def test_fun1(self, task_name: str):
-        print(task_name)
-
-    def test_fun2(self, task_name: str):
-        print(task_name)
-
     def load_samples(self):
         # 添加横幅小组件
         banner = BannerWidget(self)
@@ -158,15 +150,12 @@ class HomeInterface(ScrollArea):
         task_card_view = TaskCardView(self.tr("任务 >"), self.view)
         task_card_view.add_task_card(
             icon=str(home_img_path / "安比.jpg"),
-            title="测试-sig",
-            action=lambda: self.test_fun1("测试-sig"),
+            title="零号空洞",
+            action=lambda: start_task("zero"),
         )
         task_card_view.add_task_card(
             icon=str(home_img_path / "安比.jpg"),
-            title="测试-mul",
-            action={
-                "test1": lambda: self.test_fun1("测试-mul-1"),
-                "test2": lambda: self.test_fun2("测试-mul-2"),
-            },
+            title="拿命验收",
+            action=lambda: start_task("money"),
         )
         self.vBoxLayout.addWidget(task_card_view)

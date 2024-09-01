@@ -65,7 +65,7 @@ class TaskCard(CardWidget):
         TeachingTip.create(
             target=self.iconWidget,
             icon=InfoBarIcon.SUCCESS,
-            title="执行完成(＾∀＾●)",
+            title="开始执行(＾∀＾●)",
             content="",
             isClosable=False,
             tailPosition=TeachingTipTailPosition.BOTTOM,
@@ -99,15 +99,13 @@ class TaskCard(CardWidget):
     def mouseReleaseEvent(self, e):
         super().mouseReleaseEvent(e)
         try:
-            if callable(self.action):
+            if callable(self.action):  # 传递进来的是一个函数，检测到鼠标释放则直接执行
                 self.show_bottom_teaching_tip()
                 self.action()
-            elif isinstance(self.action, dict):
+            elif isinstance(self.action, dict):  # 当传递进来的是一个函数列表
                 self.create_menu(e.globalPos())  # 运行程序
         except Exception as e:
-            # pass
-            print("执行失败")
-            # log.warning(f"执行失败：{e}")
+            pass
 
     # 重载鼠标进入事件
     def enterEvent(self, event):

@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 from schema import Position, OcrResult, info
 from .init import logger, RootPath
-from .ocr import Ocr
+from .ocr import Ocr, paddle_ocr
 from .utils import find_template, screenshot
 
 
@@ -213,6 +213,13 @@ class _Task(BaseModel):
     _running: bool = False  # title="是否运行中"
     _pause: bool = False  # title="是否暂停"
     lastPageName: str = ""  # title="上次页面名称"
+
+    def clear_task(self):
+        """
+        每次执行前清理task的页面和条件操作
+        """
+        self._pages = []
+        self._conditionalActions = []
 
     def page(
         self,
@@ -497,4 +504,8 @@ class _Task(BaseModel):
         return None
 
 
-task = _Task()
+# 统一使用paddle_ocr
+task_zero = _Task(ocr=paddle_ocr)
+task_money = _Task(ocr=paddle_ocr)
+task3 = _Task(ocr=paddle_ocr)
+task_code = _Task(ocr=paddle_ocr)
