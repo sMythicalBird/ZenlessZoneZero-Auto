@@ -1,0 +1,13 @@
+# 键盘按键e按住0.5s，如果未设置 delay 默认为0.1，如果未设置 clicks 默认为1
+-   key: "e"        # 按键
+    type: "press"   # 按住
+    duration: 0.5   # 按住时间
+# 按键盘按键space
+# q
+-   key: "q"
+    type: "press"
+    duration: 0.3
+    delay: 0.2
+
+-   key: "space"        # 按键
+    type: "press"   # 点击
