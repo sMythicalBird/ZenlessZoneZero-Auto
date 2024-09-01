@@ -12,7 +12,6 @@ from re import template
 from threading import Thread
 import cv2
 from pydirectinput import press, keyDown, keyUp, mouseDown, mouseUp, moveRel
-from schema.config import Tactic
 from utils import (
     control,
     screenshot,
@@ -22,6 +21,7 @@ from utils.task import find_template
 from utils.task import task_zero as task
 from pathlib import Path
 from schema.cfg.info import fight_logic_zero, zero_cfg
+from schema.cfg.zero_info import Tactic
 
 from .light_detector import detector
 from .combo_detect import combo_detect  # 连携技的判断
