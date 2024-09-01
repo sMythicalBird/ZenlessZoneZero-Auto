@@ -21,7 +21,6 @@ from utils.zero_api.auto_find_way import auto_find_way
 
 map_name = zero_cfg.targetMap.Zone
 map_level = zero_cfg.targetMap.Level
-logger.debug(f"地图名称: {map_name}, 地图等级: {map_level}")
 
 
 # 进入地图读取信息

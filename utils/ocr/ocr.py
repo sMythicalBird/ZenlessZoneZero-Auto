@@ -13,7 +13,7 @@ from schema import OcrResult, Position, OcrWordResult
 from .constant import ModelsPath
 from .download import maybe_download
 from ..init import logger
-from ..config import config
+from schema.cfg.info import zero_cfg
 
 models = {
     "ch_PP-OCRv4_rec_server_infer": "https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_rec_server_infer.tar",
@@ -76,8 +76,8 @@ class Ocr:
         self.interval = interval
         # 判断GPU是否可用
         use_gpu = is_compiled_with_cuda()
-        # TODO: check if we want to read the value (utils.config.useGpu) modified by GUI
-        device = "GPU" if use_gpu and config.useGpu else "CPU"
+        # 判断是否使用cpu
+        device = "GPU" if use_gpu and zero_cfg.useGpu else "CPU"
         logger.debug(f"使用{device}进行OCR识别")
         self.paddleOCR = PaddleOCR(
             use_angle_cls=False,

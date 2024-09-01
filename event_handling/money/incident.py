@@ -18,7 +18,7 @@ from pydirectinput import (
     keyUp,
     moveRel,
 )
-from schema import info
+from schema.cfg.zero_info import state_zero
 
 
 # 选择委托
@@ -57,7 +57,7 @@ def action(positions: Dict[str, Position]):
     pos = positions.get("^出战$")
     control.click(pos.x, pos.y)
     stage.moneyFightFlag = True  # 更改战斗标志
-    info.fightCount += 1  # 战斗次数+1
+    state_zero.fightCount += 1  # 战斗次数+1
 
 
 @task.page(name="出战_等级低", target_texts=["平均等级较低", "出战$"])

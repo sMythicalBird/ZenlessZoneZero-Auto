@@ -9,7 +9,7 @@ from typing import List, Tuple
 from itertools import groupby
 
 import numpy as np
-from schema.info import Dirct
+from schema.cfg.zero_info import Dirct
 from schema import MapComponent, MapInfo
 
 
