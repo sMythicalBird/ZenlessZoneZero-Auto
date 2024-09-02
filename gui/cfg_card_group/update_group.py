@@ -14,4 +14,4 @@ from .readme_group import BaseGroup
 
 class UpdateGroup(BaseGroup):
     def __init__(self, parent=None):
-        super().__init__(self.tr("更新"), parent)
+        super().__init__(parent)

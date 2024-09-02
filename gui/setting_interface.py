@@ -8,12 +8,14 @@
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QLabel,
     QStackedWidget,
     QSpacerItem,
     QPushButton,
 )
 from PySide6.QtCore import Qt
+from pandas import pivot
 from qfluentwidgets import Pivot, ScrollArea, SettingCardGroup, FluentIcon
 
 from .cfg_card_group import ReadmeGroup, UpdateGroup
@@ -57,7 +59,7 @@ class SettingInterface(ScrollArea):
         self.pivot.move(40, 80)
         # 设置卡组视图
         self.vBoxLayout.addWidget(self.stackedWidget, 0, Qt.AlignmentFlag.AlignTop)
-        self.vBoxLayout.setContentsMargins(40, 80, 36, 0)  # 设置卡组内容位置
+        self.vBoxLayout.setContentsMargins(40, 100, 40, 10)  # 设置卡组内容位置
 
         # 添加卡组
         self.add_sub_group(self.readme_group, "readme_group", "说明")
@@ -79,7 +81,6 @@ class SettingInterface(ScrollArea):
                     break
 
         remove_spacing(widget.layout())
-        widget.titleLabel.hide()
 
         widget.setObjectName(object_name)
         self.stackedWidget.addWidget(widget)
@@ -98,7 +99,3 @@ class SettingInterface(ScrollArea):
         self.stackedWidget.setFixedHeight(
             self.stackedWidget.currentWidget().sizeHint().height()
         )
-
-    def on_change_btn_clicked(self):
-        self.zero_hole_group.update()
-        self.fight_group.update()
