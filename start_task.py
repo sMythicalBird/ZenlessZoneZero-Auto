@@ -9,6 +9,8 @@ from pynput.keyboard import Key, Listener
 
 from utils.task import task_zero, task_money, task_code
 
+# 测试更新情况
+
 
 def key_event(task):
     def on_press(key):
