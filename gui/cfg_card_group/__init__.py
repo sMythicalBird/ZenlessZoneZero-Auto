@@ -6,5 +6,9 @@
 """
 from .zero_hole_group import ZeroHoleGroup
 from .fight_group import FightGroup
+from .designer_group import DesignerGroup
+from .readme_group import ReadmeGroup
+from .update_group import UpdateGroup
 
-__all__ = ["ZeroHoleGroup", "FightGroup"]
+
+__all__ = ["ZeroHoleGroup", "FightGroup", "DesignerGroup", "ReadmeGroup", "UpdateGroup"]

@@ -27,7 +27,7 @@ class MainWindow(MSFluentWindow):
 
     def init_ui(self):
         self.setWindowTitle("主窗口")
-        self.resize(1080, 720)
+        self.resize(720, 540)
 
     def init_navigation(self):
         # 添加主页导航页

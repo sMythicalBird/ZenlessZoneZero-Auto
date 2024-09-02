@@ -26,6 +26,3 @@ __all__ = [
     "wait_text",
 ]
 logger.debug("初始化utils模块完成")
-
-version = "240806"
-logger.info(f"当前版本：{version}")

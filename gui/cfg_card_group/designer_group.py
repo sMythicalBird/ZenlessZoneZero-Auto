@@ -21,7 +21,6 @@ class DesignerGroup(QWidget):
 
         self.vBoxLayout.addSpacing(12)
 
-        self.card_group = None
         self.card_num = 0
         self.card_list = []
         self.init_card()
