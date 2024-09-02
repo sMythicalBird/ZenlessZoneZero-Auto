@@ -85,17 +85,13 @@ def check_update():
     if not os.path.exists("version.json"):
         with open("version.json", "w") as f:
             json.dump(cur_version, f)
-        print("首次运行，已记录版本信息")
     pre_version = load_version()
     if cur_version["tag_name"] != pre_version["tag_name"]:
-        print(cur_version["tag_name"] + "版本已发布,请前往" + release_url + "下载")
-        return
+        return 0, cur_version["tag_name"] + "版本已发布,请前往" + release_url + "下载"
     if cur_version["cur_update"] != pre_version["cur_update"]:
-        print("检测到新版本，正在下载")
-        return
-    print("当前为最新版本")
+        return 1, "检测到新版本，正在下载"
+    return 0, "当前为最新版本"
 
 
 if __name__ == "__main__":
-    check_update()
-    # download()
+    check_update()  # 打包时生成一份版本文档
