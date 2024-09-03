@@ -66,14 +66,14 @@ class ZeroHoleGroup(SettingCardGroup):
         self.card5 = NumTextCard(
             "max_map_time",
             FluentIcon.ALIGNMENT,
-            self.tr("单次进入地图最大时间"),
+            self.tr("单次进入地图最大时间(s)"),
             zero_cfg.maxMapTime,
         )
         # 单场战斗最大用时
         self.card6 = NumTextCard(
             "max_fight_time",
             FluentIcon.ALIGNMENT,
-            self.tr("单场战斗最大用时"),
+            self.tr("单场战斗最大用时(s)"),
             zero_cfg.maxFightTime,
         )
         # 运行次数

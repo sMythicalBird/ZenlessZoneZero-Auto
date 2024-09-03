@@ -5,7 +5,7 @@
 @author:    sMythicalBird
 """
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QTextEdit
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QFontMetrics
 from PySide6.QtWidgets import QFrame
 
@@ -23,6 +23,8 @@ class BaseGroup(QWidget):
 
 
 class AutoAdjustTextEdit(QTextEdit):
+    heightChanged = Signal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.textChanged.connect(self.adjust_edit_height)
@@ -41,6 +43,7 @@ class AutoAdjustTextEdit(QTextEdit):
             line_count += (font_metrics.horizontalAdvance(line) // text_edit_width) + 1
         line_height = font_metrics.lineSpacing()
         self.setFixedHeight(line_count * (line_height + 3) + 2)
+        self.heightChanged.emit()
 
 
 class ReadmeCard(QWidget):
@@ -49,7 +52,8 @@ class ReadmeCard(QWidget):
         self.area = QWidget()
         self.title_label = QLabel(title)
         self.text_edit = AutoAdjustTextEdit()
-        self.v_layout = QVBoxLayout(self.area)
+        self.a_layout = QVBoxLayout(self.area)
+        self.v_layout = QVBoxLayout(self)
         self.init_ui()
 
     def init_ui(self):
@@ -66,8 +70,8 @@ class ReadmeCard(QWidget):
 
         lay2 = QVBoxLayout()
         lay2.addWidget(self.text_edit)
-        self.v_layout.addLayout(lay1)
-        self.v_layout.addLayout(lay2)
+        self.a_layout.addLayout(lay1)
+        self.a_layout.addLayout(lay2)
 
         self.text_edit.setFrameShape(QFrame.Shape.NoFrame)
         self.text_edit.setVerticalScrollBarPolicy(
@@ -78,8 +82,8 @@ class ReadmeCard(QWidget):
         )  # 禁用水平滚动条
 
         # 设置内边距和外边距
-        self.v_layout.setContentsMargins(5, 5, 5, 5)  # 左, 上, 右, 下
-        self.v_layout.setSpacing(5)  # 控件之间的间距
+        self.a_layout.setContentsMargins(5, 5, 5, 5)  # 左, 上, 右, 下
+        self.a_layout.setSpacing(5)  # 控件之间的间距
 
         self.area.setStyleSheet(
             """
@@ -87,12 +91,7 @@ class ReadmeCard(QWidget):
             border-radius: 5px;
             """
         )
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.area.setFixedHeight(
-            self.text_edit.height() + self.title_label.height() + 20
-        )
+        self.v_layout.addWidget(self.area)
 
     # 调整标签宽度以适应文本
     def adjust_label_width(self, font):
@@ -132,25 +131,12 @@ class ReadmeGroup(BaseGroup):
             "9. 目前脚本只支持游戏语言设置为简中，暂未对其他语言进行适配\n"
             "10. 游戏字体设置为细体"
         )
-
-    # def resizeEvent(self, event):
-    #     super().resizeEvent(event)
-    #     current_width = self.width()
-    #     if current_width != self.previous_width:
-    #         self.previous_width = current_width
-    #         self.adjust_height()
+        self.prj_edit_card.text_edit.adjust_edit_height()
+        self.setting_edit_card.text_edit.adjust_edit_height()
 
     def init_layout(self):
         self.vBoxLayout.setSpacing(10)
-        self.vBoxLayout.addWidget(self.prj_edit_card.area)
-        self.vBoxLayout.addWidget(self.setting_edit_card.area)
-
-    # def adjust_height(self):
-    #     total_height = (
-    #         self.prj_edit_card.area.height()
-    #         + self.setting_edit_card.area.height()
-    #         + self.titleLabel.height()
-    #         + 20  # 额外的间距
-    #     )
-    #     print(total_height)
-    #     self.setFixedHeight(total_height)
+        card_layout = QVBoxLayout()
+        card_layout.addWidget(self.prj_edit_card)
+        card_layout.addWidget(self.setting_edit_card)
+        self.vBoxLayout.addLayout(card_layout)

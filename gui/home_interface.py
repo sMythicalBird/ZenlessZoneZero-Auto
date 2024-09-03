@@ -32,22 +32,12 @@ from start_task import start_task
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(570)  # 初始高度，后续会调整
+        self.setFixedHeight(362)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
-        self.galleryLabel = TitleLabel(f"绝区零自动化", self)
-        font = QFont("MiSans", 30, QFont.Weight.Bold)
+        self.galleryLabel = TitleLabel(f"绝区零自动化v2.4.0", self)
+        font = QFont("MiSans", 24, QFont.Weight.Bold)
         self.galleryLabel.setFont(font)
         setTheme(Theme.AUTO)
-
-        # 创建阴影效果
-        shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)  # 阴影模糊半径
-        shadow.setColor(Qt.GlobalColor.black)  # 阴影颜色
-        shadow.setOffset(1.2, 1.2)  # 阴影偏移量
-
-        # 将阴影效果应用于小部件
-        self.galleryLabel.setGraphicsEffect(shadow)
-        self.galleryLabel.setObjectName("galleryLabel")
 
         # 获取背景图片
         self.img = Image.open(str(home_img_path / "bg.jpg"))
@@ -56,28 +46,40 @@ class BannerWidget(QWidget):
         self.path = None
 
         # 添加链接卡片
-        self.link_card_view = LinkCardView(self)
-        self.link_card_view.setContentsMargins(0, 0, 0, 36)
+        self.link_card_view1 = LinkCardView(self)
+        self.link_card_view1.setContentsMargins(10, 10, 10, 10)
+        self.link_card_view2 = LinkCardView(self)
+        self.link_card_view2.setContentsMargins(10, 10, 10, 10)
+
         # 添加垂直布局
         link_card_layout = QHBoxLayout()
-        link_card_layout.addWidget(self.link_card_view)
+        link_card_layout.addWidget(self.link_card_view1)
+        link_card_layout.addWidget(self.link_card_view2)
+        link_card_layout.setSpacing(10)
         link_card_layout.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignBottom
         )
 
         self.vBoxLayout.setSpacing(0)
-        self.vBoxLayout.setContentsMargins(0, 20, 0, 0)
+        self.vBoxLayout.setContentsMargins(10, 10, 10, 10)
         self.vBoxLayout.addWidget(self.galleryLabel)
         self.vBoxLayout.addLayout(link_card_layout)
+
         self.vBoxLayout.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
         )
 
-        self.link_card_view.add_card(
+        self.link_card_view1.add_card(
             FluentIcon.GITHUB,
             self.tr("GitHub repo"),
-            self.tr("喜欢就给个星星吧\n拜托求求你啦|･ω･)"),
+            self.tr("喜欢就给个星星吧"),
             "https://github.com/sMythicalBird/ZenlessZoneZero-Auto",
+        )
+        self.link_card_view2.add_card(
+            FluentIcon.GLOBE,
+            self.tr("项目主页"),
+            self.tr("自动化框架介绍"),
+            "https://fairy.autoscript.site/zh/",
         )
 
     # 画笔绘制背景
@@ -149,13 +151,18 @@ class HomeInterface(ScrollArea):
         # 添加功能组件
         task_card_view = TaskCardView(self.tr("任务 >"), self.view)
         task_card_view.add_task_card(
-            icon=str(home_img_path / "安比.jpg"),
+            icon=str(home_img_path / "zero.jpg"),
             title="零号空洞",
             action=lambda: start_task("zero"),
         )
         task_card_view.add_task_card(
-            icon=str(home_img_path / "安比.jpg"),
+            icon=str(home_img_path / "money.jpg"),
             title="拿命验收",
             action=lambda: start_task("money"),
+        )
+        task_card_view.add_task_card(
+            icon=str(home_img_path / "fight.jpg"),
+            title="战斗任务",
+            action=lambda: start_task("fight"),
         )
         self.vBoxLayout.addWidget(task_card_view)

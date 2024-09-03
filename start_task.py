@@ -7,7 +7,8 @@
 from threading import Thread
 from pynput.keyboard import Key, Listener
 
-from utils.task import task_zero, task_money, task_code
+from utils.task import task_zero, task_money, task_code, task_fight
+
 
 # 测试更新情况
 
@@ -42,7 +43,7 @@ def zero_task():
 
 
 # 任务-拿命验收
-def zero_money():
+def money_task():
     # 监听运行状态
     key_thread = Thread(target=key_event, args=(task_money,))
     key_thread.start()
@@ -52,6 +53,18 @@ def zero_money():
 
     # 任务开始
     task_money.run()
+
+
+def fight_task():
+    # 监听运行状态
+    key_thread = Thread(target=key_event, args=(task_fight,))
+    key_thread.start()
+
+    # 导入任务
+    import event_handling.fight.fight_only
+
+    # 任务开始
+    task_fight.run()
 
 
 # 任务——兑换码
@@ -73,4 +86,7 @@ def start_task(action):
         zero_task()
     elif action == "money":
         print("start money task")
-        zero_money()
+        money_task()
+    elif action == "fight":
+        print("start fight task")
+        fight_task()

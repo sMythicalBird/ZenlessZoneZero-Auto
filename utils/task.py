@@ -510,5 +510,5 @@ class _Task(BaseModel):
 # 统一使用paddle_ocr
 task_zero = _Task(ocr=paddle_ocr)
 task_money = _Task(ocr=paddle_ocr)
-task3 = _Task(ocr=paddle_ocr)
+task_fight = _Task(ocr=paddle_ocr)
 task_code = _Task(ocr=paddle_ocr)
