@@ -37,8 +37,7 @@ jobs:
       run: |
         # 下载模型，更新当前版本号
         .\py310\python.exe release_prepare.py
-        Remove-Item download.py
-        
+
     - name: 打包
       run: |
         # 7z压缩
