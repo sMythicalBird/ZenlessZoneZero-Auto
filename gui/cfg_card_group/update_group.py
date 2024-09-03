@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
 )
 
 from .readme_group import BaseGroup
-from ..api.check_update import check_update
+from ..api.check_update import check_update, download
 
 
 class UpdateGroup(BaseGroup):
@@ -50,8 +50,7 @@ class UpdateGroup(BaseGroup):
         num, res = check_update()
         self.check_label.setText(res)
         if num == 1:
-            print("有更新")
-
+            download()
             self.show_restart_dialog()
 
     def show_restart_dialog(self):

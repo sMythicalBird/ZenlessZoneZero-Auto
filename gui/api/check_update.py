@@ -79,6 +79,8 @@ def check_update():
     ):
         return 0, cur_version["tag_name"] + "版本已发布,请前往" + release_url + "下载"
     if cur_version["cur_update"] != pre_version["cur_update"]:
+        with open(version_path, "w") as f:
+            json.dump(cur_version, f)
         return 1, "检测到新版本，正在下载"
     return 0, "当前为最新版本"
 
