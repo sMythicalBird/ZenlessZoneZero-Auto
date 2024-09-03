@@ -22,8 +22,8 @@ class MainWindow(MSFluentWindow):
         self.init_ui()
         # 初始化窗口导航
         self.init_navigation()
-        # 检查更新
-        check_update()
+        # # 检查更新
+        # check_update()
 
     def init_ui(self):
         self.setWindowTitle("主窗口")

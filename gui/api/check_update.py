@@ -39,15 +39,6 @@ def get_version():
     return version_get
 
 
-def load_version():
-    with open("version.json", "r") as load_f:
-        try:
-            load_dict = json.load(load_f)
-            return load_dict
-        except:
-            print("本地版本信息错误")
-
-
 def move_and_overwrite(source_dir, target_dir):
     for item in os.listdir(source_dir):
         source_path = os.path.join(source_dir, item)
@@ -80,10 +71,23 @@ def download():
     shutil.rmtree(source_dir)
 
 
+version_path = Path(__file__).parent / "version.json"
+
+
+def load_version():
+    with open(version_path, "r") as load_f:
+        try:
+            load_dict = json.load(load_f)
+            return load_dict
+        except:
+            print("本地版本信息错误")
+
+
 def check_update():
     cur_version = get_version()
-    if not os.path.exists("version.json"):
-        with open("version.json", "w") as f:
+    print(version_path)
+    if not version_path.exists():
+        with open(version_path, "w") as f:
             json.dump(cur_version, f)
     pre_version = load_version()
     if cur_version["tag_name"] != pre_version["tag_name"]:
