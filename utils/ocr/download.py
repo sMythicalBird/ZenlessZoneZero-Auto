@@ -8,7 +8,7 @@
 import tarfile
 from pathlib import Path
 
-from ..download import download_with_progressbar
+from schema.download import download_with_progressbar
 
 
 def maybe_download(model_storage_directory: Path, url: str) -> str:
