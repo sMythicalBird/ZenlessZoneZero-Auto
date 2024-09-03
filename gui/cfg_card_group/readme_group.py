@@ -4,7 +4,7 @@
 @time:      2024/9/2 12:16
 @author:    sMythicalBird
 """
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QTextEdit
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QFontMetrics
 from PySide6.QtWidgets import QFrame
@@ -27,7 +27,7 @@ class AutoAdjustTextEdit(QTextEdit):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.textChanged.connect(self.adjust_edit_height)
+        # self.textChanged.connect(self.adjust_edit_height)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -36,13 +36,13 @@ class AutoAdjustTextEdit(QTextEdit):
     def adjust_edit_height(self):
         font_metrics = QFontMetrics(self.font())
         text = self.toPlainText()
-        line_spacing = font_metrics.lineSpacing()
         text_edit_width = self.viewport().width()
         line_count = 0
         for line in text.split("\n"):
             line_count += (font_metrics.horizontalAdvance(line) // text_edit_width) + 1
         line_height = font_metrics.lineSpacing()
-        self.setFixedHeight(line_count * (line_height + 3) + 2)
+        cur_height = line_count * (line_height + 2) + 2
+        self.setFixedHeight(cur_height)
         self.heightChanged.emit()
 
 
@@ -115,7 +115,8 @@ class ReadmeGroup(BaseGroup):
         prj_edit_edit.setPlainText(
             "本项目基于Python3.10进行开发，使用图像分类、模板匹配、OCR识别进行零号空洞自动寻路和相关事件处理\n"
             "！！！本项目开源免费，如果您遇到任何收费情况都属于被他人欺骗，请勿上当！！！\n"
-            "本软件开源、免费，仅供学习交流使用，禁止用于商业用途。使用本软件产生的所有问题与本项目与开发者无关。若您遇到商家使用本软件进行代练并收费，可能是设备与时间等费用，产生的问题及后果与本软件无关。"
+            "本软件开源、免费，仅供学习交流使用，禁止用于商业用途。使用本软件产生的所有问题与本项目与开发者无关。若您遇到商家使用本软件进行代练并收费，可能是设备与时间等费用，产生的问题及后果与本软件无关。\n"
+            "bug提交地址：https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues"
         )
         setting_edit_edit = self.setting_edit_card.text_edit
         setting_edit_edit.setReadOnly(True)
@@ -131,8 +132,12 @@ class ReadmeGroup(BaseGroup):
             "9. 目前脚本只支持游戏语言设置为简中，暂未对其他语言进行适配\n"
             "10. 游戏字体设置为细体"
         )
-        self.prj_edit_card.text_edit.adjust_edit_height()
-        self.setting_edit_card.text_edit.adjust_edit_height()
+        h1 = 40 + 7 * 17 + 20
+        h2 = 40 + 10 * 17 + 20
+        self.prj_edit_card.setFixedHeight(h1)
+        self.setting_edit_card.setFixedHeight(h2)
+        # self.prj_edit_card.text_edit.adjust_edit_height()
+        # self.setting_edit_card.text_edit.adjust_edit_height()
 
     def init_layout(self):
         self.vBoxLayout.setSpacing(10)
