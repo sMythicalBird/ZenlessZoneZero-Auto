@@ -21,4 +21,6 @@ tactics.yaml
 script
 screenshot
 tactics/
+schema/yaml
+gui/api/*json
 
