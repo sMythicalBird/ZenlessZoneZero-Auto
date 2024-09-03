@@ -5,7 +5,7 @@
 @author:    sMythicalBird
 """
 import sys
-from pathlib import Path
+from loguru import logger
 
 import requests
 from tqdm import tqdm
@@ -22,7 +22,7 @@ def download_with_progressbar(url: str, save_path: Path):
     :param save_path:  保存路径
     :return:
     """
-    print(f"下载链接：{url}, 保存路径：{save_path}")
+    logger.debug(f"下载链接：{url}, 保存路径：{save_path}")
     try:
         response = requests.get(url, stream=True)
         if response.status_code != 200:
@@ -36,10 +36,10 @@ def download_with_progressbar(url: str, save_path: Path):
                 file.write(data)
         progress_bar.close()
     except:
-        print("下载文件失败！可尝试手动下载！")
-        print("下载链接：" + url)
+        logger.error("下载文件失败！可尝试手动下载！")
+        logger.error("下载链接：" + url)
         modelsPath = save_path.parent
-        print(f"解压后保存路径：{modelsPath}")
+        logger.error(f"解压后保存路径：{modelsPath}")
         if save_path.exists():
             save_path.unlink()
         raise Exception("下载文件失败！")
@@ -76,12 +76,12 @@ def check_file(retry_count=0):
             file_path.unlink(missing_ok=True)
             need_download = True
         if need_download:
-            print(f"下载文件：{file}")
+            logger.info(f"下载文件：{file}")
             download_with_progressbar(
                 f"{DownLoadBaseUrl[index]}{file}",
                 file_path,
             )
-    print("文件检查完成！")
+    logger.debug("文件检查完成！")
 
 
 def check_file_task():
@@ -93,14 +93,14 @@ def check_file_task():
     check_success = False
     for i in range(8):
         try:
-            print("开始检查文件！")
+            logger.debug("开始检查文件！")
             check_file(retry_count)
             check_success = True
             break
         except Exception as e:
-            print("检查文件失败！" + str(e))
+            logger.error("检查文件失败！" + str(e))
             retry_count += 1
             continue
     if not check_success:
-        print("检查文件失败！请检查网络连接后重新启动！")
+        logger.error("检查文件失败！请检查网络连接后重新启动！")
         sys.exit(1)
