@@ -4,11 +4,16 @@
 @time:      2024/9/2 13:11
 @author:    sMythicalBird
 """
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from qfluentwidgets import SettingCardGroup, FluentIcon
-from ..components.designer_card import DesignerCard
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QMessageBox,
+    QApplication,
+)
+
 from .readme_group import BaseGroup
 from ..api.check_update import check_update
 
@@ -46,3 +51,23 @@ class UpdateGroup(BaseGroup):
         self.check_label.setText(res)
         if num == 1:
             print("有更新")
+
+            self.show_restart_dialog()
+
+    def show_restart_dialog(self):
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Icon.Information)
+        msg_box.setText("更新已下载，是否立即重启程序？")
+        msg_box.setWindowTitle("更新完成")
+        msg_box.setStandardButtons(
+            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel
+        )
+        msg_box.buttonClicked.connect(self.handle_restart)
+        msg_box.exec()
+
+    def handle_restart(self, button):
+        if button.text() == "OK":
+            self.restart_program()
+
+    def restart_program(self):
+        QApplication.quit()
