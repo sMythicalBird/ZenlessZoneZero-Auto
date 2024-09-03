@@ -19,8 +19,6 @@ class BaseGroup(QWidget):
         self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.vBoxLayout.setSpacing(0)
 
-        self.vBoxLayout.addSpacing(12)
-
 
 class AutoAdjustTextEdit(QTextEdit):
     heightChanged = Signal()
@@ -105,6 +103,7 @@ class ReadmeGroup(BaseGroup):
         super().__init__(parent)
         self.prj_edit_card = ReadmeCard(self.tr("项目说明"))
         self.setting_edit_card = ReadmeCard(self.tr("配置说明"))
+        self.use_edit_card = ReadmeCard(self.tr("使用说明"))
         self.previous_width = self.width()
         self.init_ui()
         self.init_layout()
@@ -132,16 +131,31 @@ class ReadmeGroup(BaseGroup):
             "9. 目前脚本只支持游戏语言设置为简中，暂未对其他语言进行适配\n"
             "10. 游戏字体设置为细体"
         )
+        use_edit_edit = self.use_edit_card.text_edit
+        use_edit_edit.setReadOnly(True)
+        use_edit_edit.setPlainText(
+            "主页选择相应功能模块点击运行\n"
+            "程序运行期间使用快捷键进行控制\n"
+            "   F10:继续运行(暂停期间使用)\n"
+            "   F11:暂停\n"
+            "   F12:退出\n"
+            "运行期间不要操作键盘鼠标,否则可能导致脚本运行异常\n"
+            "按F12退出脚本后,再进行其他操作，否则容易引起程序崩溃"
+        )
+
         h1 = 40 + 7 * 17 + 20
         h2 = 40 + 10 * 17 + 20
+        h3 = 40 + 7 * 17 + 20
         self.prj_edit_card.setFixedHeight(h1)
         self.setting_edit_card.setFixedHeight(h2)
+        self.use_edit_card.setFixedHeight(h3)
         # self.prj_edit_card.text_edit.adjust_edit_height()
         # self.setting_edit_card.text_edit.adjust_edit_height()
 
     def init_layout(self):
-        self.vBoxLayout.setSpacing(10)
+        # self.vBoxLayout.setSpacing(10)
         card_layout = QVBoxLayout()
         card_layout.addWidget(self.prj_edit_card)
+        card_layout.addWidget(self.use_edit_card)
         card_layout.addWidget(self.setting_edit_card)
         self.vBoxLayout.addLayout(card_layout)
