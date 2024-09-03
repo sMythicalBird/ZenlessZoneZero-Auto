@@ -39,36 +39,23 @@ def get_version():
     return version_get
 
 
-def move_and_overwrite(source_dir, target_dir):
-    for item in os.listdir(source_dir):
-        source_path = os.path.join(source_dir, item)
-        target_path = os.path.join(target_dir, item)
-
-        if os.path.exists(target_path):
-            if os.path.isdir(target_path):
-                shutil.rmtree(target_path)
-            else:
-                os.remove(target_path)
-
-        shutil.move(source_path, target_path)
-
-
 def download():
     url, data = get_data()  # data为byte字节
 
     _tmp_file = tempfile.TemporaryFile()  # 创建临时文件
     _tmp_file.write(data)  # byte字节数据写入临时文件
 
-    zf = zipfile.ZipFile(_tmp_file, mode="r")
-    for names in zf.namelist():
-        f = zf.extract(names, RootPath.parent)  # 解压到主目录下
-    zf.close()
-    # 覆盖当前项目文件
-    source_dir = RootPath.parent / "ZenlessZoneZero-Auto-master"
-    print("move")
-    move_and_overwrite(source_dir, RootPath)
-    # 删除多余文件
-    shutil.rmtree(source_dir)
+    with zipfile.ZipFile(_tmp_file, mode="r") as zf:
+        for member in zf.infolist():
+            # 替换最外层目录
+            extracted_path = RootPath.name / Path(*Path(member.filename).parts[1:])
+            target_path = RootPath.parent / extracted_path
+            if member.is_dir():
+                target_path.mkdir(parents=True, exist_ok=True)
+            else:
+                target_path.parent.mkdir(parents=True, exist_ok=True)
+                with zf.open(member) as source, open(target_path, "wb") as target:
+                    shutil.copyfileobj(source, target)
 
 
 version_path = Path(__file__).parent / "version.json"
@@ -98,4 +85,5 @@ def check_update():
 
 
 if __name__ == "__main__":
-    check_update()  # 打包时生成一份版本文档
+    # check_update()  # 打包时生成一份版本文档
+    download()
