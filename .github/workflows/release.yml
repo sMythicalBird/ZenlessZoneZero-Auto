@@ -35,20 +35,14 @@ jobs:
 
     - name: 预下载模型
       run: |
-        # 修补 download.py 使其可独立运行
-        $fileContent = Get-Content ".\utils\download.py"
-        $fileContent = $fileContent -replace 'from .init import logger, RootPath', 'from loguru import logger' 
-        $fileContent = $fileContent -replace 'DownLoadPath = RootPath / "download"', 'DownLoadPath = Path(__file__).parent / "download"'
-        Set-Content download.py $fileContent
-        .\py310\python.exe download.py
+        # 下载模型，更新当前版本号
+        .\py310\python.exe release_prepare.py
         Remove-Item download.py
         
     - name: 打包
       run: |
         # 7z压缩
-        # Set-Content "Start.bat" "chcp 65001 & cd /d %~dp0 & .\py310\python.exe main.py & pause"
         Start-BitsTransfer "http://pan.caiyun.fun/1655577/zzz/start.exe"
-        Copy-Item config.example.yaml config.yaml
         # 防止敏感信息泄露
         Remove-Item .git\ -Force -Recurse
         7z a -tzip zzzAuto-Onekey.zip ..
