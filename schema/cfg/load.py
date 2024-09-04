@@ -85,15 +85,16 @@ def save_diy(char_name: str, tactic_logic):
 
 
 # 加载个角色对应的战斗目录
-def get_fight_logic():
+def get_fight_logic(char_list):
     # 获取所有子目录的名称
-    subdirectories = [d.name for d in FightPath.iterdir() if d.is_dir()]
     fight_logic_dict = {}
-    for each in subdirectories:
-        subdir = FightPath / each
+    for each in char_list:
+        char_logic_path = FightPath / each
+        if not char_logic_path.exists():
+            os.makedirs(char_logic_path)
         fight_logic_dict[each] = {
-            "path": subdir,
-            "logic_dir": [d.name for d in subdir.iterdir() if d.is_dir()],
+            "path": char_logic_path,
+            "logic_dir": [d.name for d in char_logic_path.iterdir() if d.is_dir()],
         }
         fight_logic_dict[each]["logic_dir"].append("默认逻辑")
 
@@ -147,10 +148,5 @@ def load_tactics(fight_info, fight_logic_all):
             fight_tactics: List[dict] = safe_load(f)
         tactic_list.tac_list.append([Tactic(**item) for item in fight_tactics])
         tactic_cfg.tactics[yaml_name] = tactic_list
-
-    # for each in tactic_cfg.tactics:
-    #     print(each)
-    #     print(tactic_cfg.tactics[each])
-    #     print("=====================================")
 
     return tactic_cfg

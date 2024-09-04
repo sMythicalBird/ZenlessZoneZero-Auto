@@ -31,15 +31,15 @@ from start_task import start_task
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(362)  # 初始高度，后续会调整
+        self.setFixedHeight(270)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = TitleLabel(f"绝区零自动化v2.4.0", self)
+        self.galleryLabel.setStyleSheet("color: #FFFFFF;")
         font = QFont("MiSans", 24, QFont.Weight.Bold)
         self.galleryLabel.setFont(font)
-        setTheme(Theme.AUTO)
 
         # 获取背景图片
-        self.img = Image.open(str(home_img_path / "bg.jpg"))
+        self.img = Image.open(str(home_img_path / "bg.png"))
 
         self.banner = None
         self.path = None
