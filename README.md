@@ -12,7 +12,7 @@
 ## 目录：
 
 1. [项目简介](#项目简介)
-2. [使用教程-小白一键](#使用教程-小白一键)
+2. [使用教程](#使用教程)
 3. [使用教程-进阶](#使用教程-进阶)
 6. [免责声明](#免责声明)
 
@@ -35,15 +35,9 @@
 2. 重新调整参数和模块结构
 3. 更新零号空洞图片分类模型
 
-
-
 **TODO**
 
 其他功能
-
-
-
-
 
 往期优化内容详情见[更新日志 ](https://fairy.autoscript.site/zh/community/updatelog.html)
 
@@ -51,19 +45,21 @@
 
 交流QQ群：`985508983`
 
-项目详细使用说明可以查看项目主页：https://fairy.autoscript.site/zh/  
-
-特此感谢[IsSmallPigPig](https://github.com/IsSmallPigPig)为本项目编写了详细的文档说明
 
 
-
-## 使用教程-小白一键
+## 使用教程
 
 压缩包链接：[release链接](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/releases) | [夸克链接](https://pan.quark.cn/s/b33eaf2ffcfc)
 
 1. 通过上述链接选择一个直接下载最新版文件并解压
 2. 在项目目录下以管理员权限运行`start.exe`
 3. 按照使用说明配置好，选择3运行脚本
+
+部分功能视频演示见：https://space.bilibili.com/276027372
+
+项目详细使用说明可以查看项目主页：https://fairy.autoscript.site/zh/  
+
+特此感谢[IsSmallPigPig](https://github.com/IsSmallPigPig)为本项目编写了详细的文档说明
 
 
 
