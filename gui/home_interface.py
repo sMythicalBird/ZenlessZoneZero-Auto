@@ -31,7 +31,7 @@ from start_task import start_task
 class BannerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(270)  # 初始高度，后续会调整
+        self.setFixedHeight(372)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
         self.galleryLabel = TitleLabel(f"绝区零自动化v2.4.0", self)
         self.galleryLabel.setStyleSheet("color: #FFFFFF;")

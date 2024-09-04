@@ -143,7 +143,7 @@ class ReadmeGroup(BaseGroup):
             "按F12退出脚本后,再进行其他操作，否则容易引起程序崩溃"
         )
 
-        h1 = 40 + 7 * 17 + 20
+        h1 = 40 + 5 * 17 + 20
         h2 = 40 + 10 * 17 + 20
         h3 = 40 + 7 * 17 + 20
         self.prj_edit_card.setFixedHeight(h1)

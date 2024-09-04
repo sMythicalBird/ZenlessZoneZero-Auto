@@ -13,6 +13,10 @@ from .config_interface import ConfigInterface
 from .fight_edit_interface import FightEditInterface
 from .code_interface import CodeInterface
 from .api.check_update import check_update
+from pathlib import Path
+from PySide6.QtGui import QIcon
+
+app_icon = Path(__file__).parent.parent / "resources/img/gui/app.jpg"
 
 
 class MainWindow(MSFluentWindow):
@@ -26,8 +30,9 @@ class MainWindow(MSFluentWindow):
         # check_update()
 
     def init_ui(self):
-        self.setWindowTitle("主窗口")
-        self.resize(720, 540)
+        self.setWindowIcon(QIcon(str(app_icon)))
+        self.setWindowTitle("Fairy Auto")
+        self.resize(960, 640)
 
     def init_navigation(self):
         # 添加主页导航页
