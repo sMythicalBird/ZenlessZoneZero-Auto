@@ -194,11 +194,20 @@ def action():
     fighting_flag.set()
 
     while True:
+        if not task.is_running():
+            run_flag.clear()
+            return
         # 检查是否还在战斗,连续判断四次，防止因为战斗动画的原因产生误判退出
         if is_not_fight("Space"):
             time.sleep(1)
+            if not task.is_running():
+                run_flag.clear()
+                return
             if is_not_fight("Space"):
                 time.sleep(1)
+                if not task.is_running():
+                    run_flag.clear()
+                    return
                 if is_not_fight("Space"):
                     time.sleep(1)
                     if is_not_fight("Space"):

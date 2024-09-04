@@ -43,6 +43,18 @@ fight_logic_zero = load_tactics(
 fight_logic_daily = load_tactics(fight_cfg.daily_fight, fight_logic_all)  # 日常战斗读取
 
 
+# 配置热更新
+def update_fight_logic_all():
+    global fight_logic_all
+    fight_logic_all = get_fight_logic(char_list)
+
+
+def update_fight():
+    global fight_logic_zero, fight_logic_daily
+    fight_logic_zero = load_tactics(fight_cfg.zero_fight, fight_logic_all)
+    fight_logic_daily = load_tactics(fight_cfg.daily_fight, fight_logic_all)
+
+
 # 选择项列表
 buff_list = [
     "以太",

@@ -7,7 +7,7 @@
 from qfluentwidgets import SettingCardGroup, FluentIcon
 from ..components.fight_card import FightCfgCard
 from schema.cfg.load import save_config
-from schema.cfg.info import fight_cfg
+from schema.cfg.info import fight_cfg, update_fight, update_fight_logic_all
 
 
 class FightGroup(SettingCardGroup):
@@ -41,4 +41,5 @@ class FightGroup(SettingCardGroup):
     def update(self):
         self.zero_fight_card.get_value()
         self.daily_fight_card.get_value()
+        update_fight()
         save_config("fight.yaml", fight_cfg)

@@ -387,6 +387,15 @@ class _Task(BaseModel):
         """
         self._pause = False
 
+    def is_running(self):
+        """
+        是否运行中:给战斗程序调用，检查是否继续运行,暂停则返回False，否则返回self._running
+        """
+
+        if self._pause:
+            return False
+        return self._running
+
     def find_text(
         self,
         target: str | Pattern | TextMatch = None,

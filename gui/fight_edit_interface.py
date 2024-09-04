@@ -5,20 +5,13 @@
 @author:    sMythicalBird
 """
 
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QFrame, QSizePolicy, QLabel
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 from PySide6.QtCore import Qt
 from qfluentwidgets import (
     ComboBox,
     VBoxLayout,
     PushButton,
-    TitleLabel,
-    BodyLabel,
-    SpinBox,
-    ExpandGroupSettingCard,
-    FluentIcon,
-    LineEdit,
-    DoubleSpinBox,
     ScrollArea,
 )
 from .cfg_card_group.designer_group import DesignerGroup
@@ -102,4 +95,3 @@ class FightEditInterface(ScrollArea):
         char_name = self.select_combobox.currentText()
         tactic_logic = self.designer_group.get_logic()
         save_diy(char_name, tactic_logic)
-        pass
