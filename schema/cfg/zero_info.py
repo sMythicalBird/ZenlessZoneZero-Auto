@@ -86,7 +86,7 @@ class ZeroConfig(BaseModel):
     selBuff: List[str] = Field(["冻结", "暴击", "决斗", "闪避"], description="选择buff")
     maxFightCount: int = Field(10000, description="最大战斗次数")
     teamMates: int = Field(2, description="队友数量")
-
+    carry: dict = Field({"char":True,"point":3000}, description="主C（放终结技的角色）")
 
 class Dirct(Enum):
     up = "w"

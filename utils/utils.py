@@ -8,6 +8,7 @@
 import time
 from copy import deepcopy
 from ctypes import windll
+
 from re import Pattern, template
 from typing import Dict
 from threading import Lock
@@ -20,7 +21,6 @@ from loguru import logger
 
 from schema import ImgPosition, Position
 from .init import Hwnd, RealWidth, RealHeight
-
 
 def find_all_template(
     img: np.ndarray,
@@ -278,3 +278,4 @@ def retry(count: int = 3, interval: int = 1):
         return wrapper
 
     return decorator
+

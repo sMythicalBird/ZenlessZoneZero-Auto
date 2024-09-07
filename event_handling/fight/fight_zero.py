@@ -27,9 +27,20 @@ from .light_detector import detector
 from .combo_detect import combo_detect  # 连携技的判断
 
 img_path = (
-    Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero/yuan.png"
+        Path(__file__).parent.parent.parent / "resources/img/pic_1080x720/zero/yuan.png"
 )
 image_to_quan = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
+
+
+def waiting_optimization(max_time_seconds):
+    max_iterations = int(max_time_seconds / 0.05)  # 假设每次休眠0.1秒
+    iteration = 0
+    while combo_detect(screenshot()) and iteration < max_iterations:
+        time.sleep(0.05)  # 休眠0.1秒
+        iteration += 1
+
+    # if iteration == max_iterations:
+    #     print("Maximum wait time reached.")
 
 
 def is_not_fight(text: str):
@@ -45,17 +56,44 @@ def is_not_fight(text: str):
     return True
 
 
+def technique_full(point = '3000'):
+    """
+    判断终结技是否充满,满了释放终结技
+    识别充能是否达到3000
+    """
+    text = template(point)
+    img = screenshot()  # 截图
+    ocr_Results = task.ocr(img)  # OCR识别
+    for ocr_result in ocr_Results:
+        if text.search(ocr_result.text):
+            keyDown(key = 'q')
+            time.sleep(0.1)
+            keyUp(key = 'q')
+            time.sleep(3)
+
+
 def mouse_press(key: str, duration: float):
     """
     鼠标点击
     """
-    mouseDown(button=key)
+    mouseDown(button = key)
     time.sleep(duration)
-    mouseUp(button=key)
+    mouseUp(button = key)
 
 
 keyboard_map = {"down": keyDown, "up": keyUp}
 mouse_map = {"down": mouseDown, "up": mouseUp}
+
+
+def key_press(key: str, duration: float):
+    """
+    键盘点击
+    """
+    keyDown(key = key)
+    time.sleep(duration)
+    keyUp(key = key)
+
+
 
 
 def execute_tactic(tactic: Tactic):
@@ -69,11 +107,11 @@ def execute_tactic(tactic: Tactic):
         if tactic.type_ == "press":
             mouse_press(tactic.key, tactic.duration)
         else:
-            mouse_map[tactic.type_](button=tactic.key)
+            mouse_map[tactic.type_](button = tactic.key)
         return
     # key 为键盘操作
     if tactic.type_ == "press":
-        press(tactic.key, duration=tactic.duration)
+        press(tactic.key, duration = tactic.duration)
     else:
         keyboard_map[tactic.type_](tactic.key)
 
@@ -93,10 +131,16 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
         if combo_attack:
             execute_tactic_event.clear()  # 阻塞战斗，如果有的话
             logger.debug(f"进入连携技模式")
-            mouse_press("left", 0.05)
-            time.sleep(0.1)
-            mouse_press("left", 0.05)
-            time.sleep(0.1)
+            while waiting_optimization(2):
+                mouse_press("left", 0.05)
+                mouse_press("left", 0.05)
+
+            # mouse_press("left", 0.05)
+            # time.sleep(0.1)
+            logger.debug(f"退出连携技模式")
+            while not current_character() == zero_cfg.carry["char"]:
+                key_press(key = 'c', duration = 0.1)
+                time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         elif results["yellow"]["rect"]:
             execute_tactic_event.clear()  # 阻塞战斗，如果有的话
@@ -108,19 +152,21 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
                         time.sleep(tactic.delay)
             execute_tactic_event.set()  # 释放战斗
         elif results["red"]["rect"]:
+            execute_tactic_event.clear()  # 阻塞战斗，如果有的话
             logger.debug(f"进入红光战斗模式")
             for tactic in fight_logic_zero.tactics["红光"].get_cur_logic():
                 for _ in range(tactic.repeat):
                     execute_tactic(tactic)
                     if tactic.delay:
                         time.sleep(tactic.delay)
+            execute_tactic_event.set()  # 释放战斗
 
 
 # 定义战斗逻辑
 def fight_login(
-    run_flag: threading.Event,
-    execute_tactic_event: threading.Event,
-    fighting_flag: threading.Event,
+        run_flag: threading.Event,
+        execute_tactic_event: threading.Event,
+        fighting_flag: threading.Event,
 ):
     """
     进入战斗
@@ -128,12 +174,13 @@ def fight_login(
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
         mouse_press("middle", 0.05)
-
+        threshold = 0.9
         # 检测在场角色
-        cur_character = current_character()
-        if cur_character == "默认":  # 未找到角色头像(可能被其他动画挡住了),等待0.2s
+        cur_character = current_character(threshold)
+        while cur_character == "默认":  # 未找到角色头像(可能被其他动画挡住了),等待0.2s
             time.sleep(0.2)
-            continue
+            threshold = threshold-0.1
+            cur_character = current_character(threshold)
         logger.debug(f"进入{cur_character}战斗模式")
 
         # 获取当前角色战斗逻辑
@@ -153,26 +200,31 @@ def fight_login(
                     fighting_flag.wait()
                     break
                 # 执行逻辑
+                # key_press(key = 'middle',duration = 0.02)
+                # key_press(key = 'middle',duration = 0.02)
                 execute_tactic(tactic)
                 if tactic.delay:
                     time.sleep(tactic.delay)
+                # 判断终结技充满，并选人释放，默认直接释放
+                if cur_character == zero_cfg.carry["char"] or zero_cfg.carry["char"] not in fight_logic_zero.tactics:
+                    technique_full(zero_cfg.carry["point"])
         # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
         keyUp("w")
         keyUp("a")
         keyUp("s")
         keyUp("d")
         keyUp("shift")
-        mouseUp(button="left")
+        mouseUp(button = "left")
         mouse_press("middle", 0.05)
 
 
-def current_character():
+def current_character(threshold = 0.9):
     """
     获取当前角色
     """
     img = screenshot()
     for chara, chara_icon in fight_logic_zero.char_icons.items():
-        img_position = find_template(img, chara_icon, (0, 0, 200, 120), threshold=0.9)
+        img_position = find_template(img, chara_icon, (0, 0, 200, 120), threshold = threshold)
         if img_position is not None:  # 找到角色头像
             return chara
     return "默认"  # 未找到角色头像
@@ -206,7 +258,7 @@ def search_point():
     screen = screenshot()  # 截取当前屏幕
     h, w, _ = screen.shape  # 获取屏幕的宽高
     # 复制并裁剪屏幕图像，以减少计算量并提高匹配准确率
-    sub_screen = screen.copy()[h_crop : h - h_crop, w_crop : w - w_crop]
+    sub_screen = screen.copy()[h_crop: h - h_crop, w_crop: w - w_crop]
     h1, w1, _ = sub_screen.shape  # 获取裁剪后图像的宽高
 
     # 将裁剪后的图像转换为灰度图像，以便进行匹配
@@ -225,7 +277,7 @@ def turn():
     search_count = 0
     # 通过循环调整视角到最高处俯视，以便于计算圆点坐标夹角
     for i in range(3):
-        moveRel(xOffset=0, yOffset=300, relative=True, duration=0.2)
+        moveRel(xOffset = 0, yOffset = 300, relative = True, duration = 0.2)
     # 进入主循环，直到匹配成功或满足退出条件
     while True:
         search_count += 1  # 尝试次数加1
@@ -247,10 +299,10 @@ def turn():
             )
             mov_x *= sign  # 根据sign变量决定移动方向
             # 执行视角调整
-            moveRel(xOffset=mov_x, yOffset=0, relative=True, duration=0.2)
+            moveRel(xOffset = mov_x, yOffset = 0, relative = True, duration = 0.2)
             # 如果夹角差值小于等于2度，则认为视角调整成功，退出循环
             if delta_ang <= 2:
-                press("w", duration=2)
+                press("w", duration = 2)
         else:
             time.sleep(0.05)
             if search_count >= 10:
@@ -258,7 +310,7 @@ def turn():
 
 
 # 战斗逻辑
-@task.page(name="战斗中", target_texts=["^Space$"])
+@task.page(name = "战斗中", target_texts = ["^Space$"])
 def action():
     start_fight_time = datetime.now()
     time_interval = 20
@@ -270,13 +322,13 @@ def action():
     fighting_flag = threading.Event()  # 是否继续战斗
 
     # 启动弹反逻辑
-    det_task = Thread(target=detector_task, args=(run_flag, execute_tactic_event))
+    det_task = Thread(target = detector_task, args = (run_flag, execute_tactic_event))
     det_task.start()
 
     # 启动战斗逻辑
     fight_task = Thread(
-        target=fight_login,
-        args=(run_flag, execute_tactic_event, fighting_flag),
+        target = fight_login,
+        args = (run_flag, execute_tactic_event, fighting_flag),
     )
     fight_task.start()
 

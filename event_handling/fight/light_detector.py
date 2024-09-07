@@ -5,8 +5,8 @@ import numpy as np
 class lightDetector:
     def __init__(self):
         # 传入自定义的光效颜色范围参数：黄色
-        lower_hsv_yellow = np.array([15, 80, 160])
-        upper_hsv_yellow = np.array([35, 255, 255])
+        lower_hsv_yellow = np.array([25, 80, 160])
+        upper_hsv_yellow = np.array([33, 255, 255])
         # 传入自定义的光效颜色范围参数：红色
         lower_hsv_red_1 = np.array([170, 70, 255])  # 红色HSV范围对应0-180度，需分段处理
         upper_hsv_red_1 = np.array([180, 200, 255])
