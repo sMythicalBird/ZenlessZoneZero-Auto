@@ -33,14 +33,21 @@ image_to_quan = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
 
 
 def waiting_optimization(max_time_seconds):
-    max_iterations = int(max_time_seconds / 0.05)  # 假设每次休眠0.1秒
+    max_iterations = int(max_time_seconds / 0.05)  # 假设每次休眠0.05秒
     iteration = 0
-    while combo_detect(screenshot()) and iteration < max_iterations:
-        time.sleep(0.05)  # 休眠0.1秒
+    should_return_true = False  # 标志变量
+
+    while iteration < max_iterations:
+        if combo_detect(screenshot()):
+            should_return_true = True
+            break
+        time.sleep(0.05)  # 休眠0.05秒
         iteration += 1
 
-    # if iteration == max_iterations:
-    #     print("Maximum wait time reached.")
+    if should_return_true:
+        return True
+    else:
+        return False
 
 
 def is_not_fight(text: str):
