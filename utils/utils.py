@@ -8,7 +8,6 @@
 import time
 from copy import deepcopy
 from ctypes import windll
-
 from re import Pattern, template
 from typing import Dict
 from threading import Lock

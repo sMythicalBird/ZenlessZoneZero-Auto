@@ -40,7 +40,6 @@ def waiting_optimization(max_time_seconds):
         return False
 
 
-
 def is_not_fight(text: str):
     """
     判断是否还在战斗中,检测空格键是否存在
@@ -54,7 +53,7 @@ def is_not_fight(text: str):
     return True
 
 
-def technique_full(point = '3000'):
+def technique_full(point="3000"):
     """
     判断终结技是否充满,满了释放终结技
     识别充能是否达到3000
@@ -64,9 +63,9 @@ def technique_full(point = '3000'):
     ocr_Results = task.ocr(img)  # OCR识别
     for ocr_result in ocr_Results:
         if text.search(ocr_result.text):
-            keyDown(key = 'q')
+            keyDown(key="q")
             time.sleep(0.1)
-            keyUp(key = 'q')
+            keyUp(key="q")
             time.sleep(3)
 
 
@@ -74,9 +73,9 @@ def mouse_press(key: str, duration: float):
     """
     鼠标点击
     """
-    mouseDown(button = key)
+    mouseDown(button=key)
     time.sleep(duration)
-    mouseUp(button = key)
+    mouseUp(button=key)
 
 
 keyboard_map = {"down": keyDown, "up": keyUp}
@@ -87,9 +86,9 @@ def key_press(key: str, duration: float):
     """
     键盘点击
     """
-    keyDown(key = key)
+    keyDown(key=key)
     time.sleep(duration)
-    keyUp(key = key)
+    keyUp(key=key)
 
 
 def execute_tactic(tactic: Tactic):
@@ -103,11 +102,11 @@ def execute_tactic(tactic: Tactic):
         if tactic.type_ == "press":
             mouse_press(tactic.key, tactic.duration)
         else:
-            mouse_map[tactic.type_](button = tactic.key)
+            mouse_map[tactic.type_](button=tactic.key)
         return
     # key 为键盘操作
     if tactic.type_ == "press":
-        press(tactic.key, duration = tactic.duration)
+        press(tactic.key, duration=tactic.duration)
     else:
         keyboard_map[tactic.type_](tactic.key)
 
@@ -135,7 +134,7 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
             while not current_character() == zero_cfg.carry["char"]:
-                key_press(key = 'c', duration = 0.1)
+                key_press(key="c", duration=0.1)
                 time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         elif results["yellow"]["rect"]:
@@ -160,9 +159,9 @@ def detector_task(run_flag: threading.Event, execute_tactic_event: threading.Eve
 
 # 定义战斗逻辑
 def fight_login(
-        run_flag: threading.Event,
-        execute_tactic_event: threading.Event,
-        fighting_flag: threading.Event,
+    run_flag: threading.Event,
+    execute_tactic_event: threading.Event,
+    fighting_flag: threading.Event,
 ):
     """
     进入战斗
@@ -200,7 +199,10 @@ def fight_login(
                 if tactic.delay:
                     time.sleep(tactic.delay)
                 # 判断终结技充满，并选人释放，默认直接释放
-                if cur_character == zero_cfg.carry["char"] or zero_cfg.carry["char"] not in fight_logic_daily.tactics:
+                if (
+                    cur_character == zero_cfg.carry["char"]
+                    or zero_cfg.carry["char"] not in fight_logic_daily.tactics
+                ):
                     technique_full(zero_cfg.carry["point"])
         # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
         keyUp("w")
@@ -208,24 +210,26 @@ def fight_login(
         keyUp("s")
         keyUp("d")
         keyUp("shift")
-        mouseUp(button = "left")
+        mouseUp(button="left")
         mouse_press("middle", 0.05)
 
 
-def current_character(threshold = 0.9):
+def current_character(threshold=0.9):
     """
     获取当前角色
     """
     img = screenshot()
     for chara, chara_icon in fight_logic_daily.char_icons.items():
-        img_position = find_template(img, chara_icon, (0, 0, 200, 120), threshold = threshold)
+        img_position = find_template(
+            img, chara_icon, (0, 0, 200, 120), threshold=threshold
+        )
         if img_position is not None:  # 找到角色头像
             return chara
     return "默认"  # 未找到角色头像
 
 
 # 战斗逻辑
-@task.page(name = "战斗中", target_texts = ["^Space$"])
+@task.page(name="战斗中", target_texts=["^Space$"])
 def action():
     # 运行控制
     run_flag = threading.Event()  # 是否允许继续运行
@@ -235,13 +239,13 @@ def action():
     fighting_flag = threading.Event()  # 是否继续战斗
 
     # 启动弹反逻辑
-    det_task = Thread(target = detector_task, args = (run_flag, execute_tactic_event))
+    det_task = Thread(target=detector_task, args=(run_flag, execute_tactic_event))
     det_task.start()
 
     # 启动战斗逻辑
     fight_task = Thread(
-        target = fight_login,
-        args = (run_flag, execute_tactic_event, fighting_flag),
+        target=fight_login,
+        args=(run_flag, execute_tactic_event, fighting_flag),
     )
     fight_task.start()
 
@@ -272,6 +276,6 @@ def action():
         time.sleep(1)  # 每秒检查一次是否还在战斗
 
 
-@task.page(name = "非战斗状态", priority = 0)
+@task.page(name="非战斗状态", priority=0)
 def action():
     time.sleep(1)
