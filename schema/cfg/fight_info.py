@@ -42,7 +42,7 @@ class Tactic(BaseModel):
     duration: float | None = Field(None, description="按键持续时间（单位秒）", ge=0)
     delay: float | None = Field(None, description="按键间隔时间（单位秒）", ge=0)
     repeat: int = Field(1, description="重复操作次数", ge=1)
-
+    endure: bool = Field(False, description="霸体")
     def __init__(self, **data):
         # 如果设置了 key，但没有设置 duration 和 delay，则默认设置为 0.1
         if "key" in data and "duration" not in data:

@@ -1,10 +1,6 @@
 # 强化特殊技
 -   key: "e"
     type: "press"
-    duration: 0.03
-    delay: 0.03
--   key: "e"
-    type: "press"
     duration: 0.1
     delay: 1.2
 # 平A第3段充电
@@ -12,13 +8,13 @@
     type: "press"
     duration: 0.025
     delay: 0.025
-    repeat: 25
+    repeat: 33
 # 长按三秒蓄力五棒
 -   key: "left"
     type: "press"
     duration: 3
     delay: 0.3
-
+    endure: True
 # 平A第1段
 -   key: "left"
     type: "press"
@@ -40,6 +36,7 @@
     type: "press"
     duration: 3
     delay: 0.3
+    endure: True
 
 # 强化特殊技
 -   key: "e"
@@ -57,6 +54,7 @@
     type: "press"
     duration: 3
     delay: 0.3
+    endure: True
 
 ## 终结技
 #-   key: "q"
