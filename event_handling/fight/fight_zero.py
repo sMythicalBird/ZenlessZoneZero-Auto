@@ -147,9 +147,12 @@ def detector_task(
             # mouse_press("left", 0.05)
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
-            while not current_character() == zero_cfg.carry["char"]:
-                key_press(key="c", duration=0.1)
-                time.sleep(0.3)
+            if zero_cfg.carry["char"] == True:
+                ...
+            else:
+                while current_character() != zero_cfg.carry["char"]:
+                    key_press(key="c", duration=0.1)
+                    time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         # 终结技检测优先于检测光效
         if detector_task_event.is_set():
@@ -221,15 +224,16 @@ def fight_login(
                     execute_tactic(tactic)
                 if tactic.delay:
                     time.sleep(tactic.delay)
-
-        # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
-        keyUp("w")
-        keyUp("a")
-        keyUp("s")
-        keyUp("d")
-        keyUp("shift")
-        mouseUp(button="left")
-        mouse_press("middle", 0.05)
+        while execute_tactic_event.is_set():
+            # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
+            keyUp("w")
+            keyUp("a")
+            keyUp("s")
+            keyUp("d")
+            keyUp("shift")
+            mouseUp(button="left")
+            mouse_press("middle", 0.05)
+            break
 
 
 def technique_detection(
