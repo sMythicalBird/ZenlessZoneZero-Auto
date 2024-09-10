@@ -97,7 +97,7 @@ def execute_tactic(tactic: Tactic):
     # key 为鼠标操作
     if tactic.key in ["left", "right", "middle"]:
         if tactic.type_ == "press":
-            mouse_press(tactic.key， tactic.duration)
+            mouse_press(tactic.key，tactic.duration)
         else:
             mouse_map[tactic.type_](button=tactic.key)
         return
