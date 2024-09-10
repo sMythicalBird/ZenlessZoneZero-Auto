@@ -134,9 +134,7 @@ def detector_task(
             # mouse_press("left", 0.05)
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
-            if zero_cfg.carry["char"] == True:
-                ...
-            else:
+            if zero_cfg.carry["char"] != '默认':
                 while current_character() != zero_cfg.carry["char"]:
                     key_press(key="c", duration=0.1)
                     time.sleep(0.3)
