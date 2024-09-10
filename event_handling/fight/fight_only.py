@@ -97,7 +97,7 @@ def execute_tactic(tactic: Tactic):
     # key 为鼠标操作
     if tactic.key in ["left", "right", "middle"]:
         if tactic.type_ == "press":
-            mouse_press(tactic.key， tactic.duration)
+            mouse_press(tactic.key, tactic.duration)
         else:
             mouse_map[tactic.type_](button=tactic.key)
         return
@@ -134,7 +134,7 @@ def detector_task(
             # mouse_press("left", 0.05)
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
-            if zero_cfg.carry["char"] != '默认':
+            if zero_cfg.carry["char"] != "默认":
                 while current_character() != zero_cfg.carry["char"]:
                     key_press(key="c", duration=0.1)
                     time.sleep(0.3)
