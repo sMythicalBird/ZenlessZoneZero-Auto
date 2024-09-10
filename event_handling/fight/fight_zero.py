@@ -68,15 +68,12 @@ def technique_full(point="3000"):
     判断终结技是否充满,满了释放终结技
     识别充能是否达到3000
     """
-    text = template(point)
+    text = template(str(point))
     img = screenshot()  # 截图
     ocr_Results = task.ocr(img)  # OCR识别
     for ocr_result in ocr_Results:
         if text.search(ocr_result.text):
-            keyDown(key="q")
-            time.sleep(0.1)
-            keyUp(key="q")
-            time.sleep(3)
+            return True
 
 
 def mouse_press(key: str, duration: float):
@@ -182,6 +179,7 @@ def fight_login(
     execute_tactic_event: threading.Event,
     fighting_flag: threading.Event,
     detector_task_event: threading.Event,
+    technique_event: threading.Event,
 ):
     """
     进入战斗
@@ -215,8 +213,8 @@ def fight_login(
                     fighting_flag.wait()
                     break
                 # 执行逻辑
-                # 是否霸体
-                if tactic.endure:
+
+                if tactic.endure:  # 霸体强制连招
                     detector_task_event.clear()
                     execute_tactic(tactic)
                     detector_task_event.set()
@@ -224,7 +222,18 @@ def fight_login(
                     execute_tactic(tactic)
                 if tactic.delay:
                     time.sleep(tactic.delay)
-        while execute_tactic_event.is_set():
+                if (
+                    cur_character == zero_cfg.carry["char"]  # 判断为指定角色
+                    or zero_cfg.carry["char"]
+                    not in fight_logic_zero.tactics  # 未正确配置指定角色(直接释放)
+                    and technique_event.is_set()  # 判断终结技充满
+                ):
+                    detector_task_event.clear()  # 无视受击，强制释放
+                    key_press("q", 0.1)
+                    time.sleep(3)
+                    detector_task_event.set()
+
+        while execute_tactic_event.is_set():  # while循环防止middle键中断连携技
             # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
             keyUp("w")
             keyUp("a")
@@ -238,26 +247,12 @@ def fight_login(
 
 def technique_detection(
     run_flag: threading.Event,
-    detector_task_event: threading.Event,
-    fighting_flag: threading.Event,
+    technique_event: threading.Event,
 ):
-
     while run_flag.is_set():
-        threshold = 0.9
-        # 检测在场角色
-        cur_character = current_character(threshold)
-        while cur_character == "默认":  # 未找到角色头像(可能被其他动画挡住了),等待0.2s
-            time.sleep(0.2)
-            threshold = threshold - 0.1
-            cur_character = current_character(threshold)
-        # 判断终结技充满，并选人释放，默认直接释放
-        if (
-            cur_character == zero_cfg.carry["char"]
-            or zero_cfg.carry["char"] not in fight_logic_zero.tactics
-        ):
-            detector_task_event.clear()
-            technique_full(zero_cfg.carry["point"])
-            detector_task_event.set()
+        technique_event.clear()
+        while technique_full(zero_cfg.carry["point"]):
+            technique_event.set()
 
 
 def current_character(threshold=0.9):
