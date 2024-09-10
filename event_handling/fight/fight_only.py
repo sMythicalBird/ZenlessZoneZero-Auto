@@ -290,7 +290,7 @@ def action():
     # 启动终结技检测逻辑
     technique_task = Thread(
         target=technique_detection,
-        args=(run_flag, detector_task_event, technique_event),
+        args=(run_flag, technique_event),
     )
     technique_task.start()
     # 开始战斗

@@ -356,7 +356,7 @@ def action():
     execute_tactic_event = threading.Event()  # 检测到光效后阻塞战斗逻辑
     detector_task_event = threading.Event()  # 检测到终结技充满阻塞红黄光检测
     fighting_flag = threading.Event()  # 是否继续战斗
-
+    technique_event = threading.Event()  # 终结技充满事件
     # 启动弹反逻辑
     det_task = Thread(
         target=detector_task, args=(run_flag, execute_tactic_event, detector_task_event)
@@ -366,13 +366,20 @@ def action():
     # 启动战斗逻辑
     fight_task = Thread(
         target=fight_login,
-        args=(run_flag, execute_tactic_event, fighting_flag, detector_task_event),
+        args=(
+            run_flag,
+            execute_tactic_event,
+            fighting_flag,
+            detector_task_event,
+            technique_event,
+        ),
     )
     fight_task.start()
 
+    # 启动终结技检测逻辑
     technique_task = Thread(
         target=technique_detection,
-        args=(run_flag, detector_task_event, fighting_flag),
+        args=(run_flag, technique_event),
     )
     technique_task.start()
     # 开始战斗
