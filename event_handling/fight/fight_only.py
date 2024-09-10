@@ -225,6 +225,7 @@ def fight_login(
             mouse_press("middle", 0.05)
             break
 
+
 def technique_detection(
     run_flag: threading.Event,
     detector_task_event: threading.Event,
