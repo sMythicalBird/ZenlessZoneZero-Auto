@@ -146,7 +146,9 @@ def detector_task(
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
             if zero_cfg.carry["char"] != "默认":
-                while current_character() != zero_cfg.carry["char"]:
+                while (
+                    current_character() != zero_cfg.carry["char"] and run_flag.is_set()
+                ):
                     key_press(key="c", duration=0.1)
                     time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
@@ -178,13 +180,13 @@ def fight_login(
     execute_tactic_event: threading.Event,
     fighting_flag: threading.Event,
     detector_task_event: threading.Event,
-    technique_event: threading.Event,
 ):
     """
     进入战斗
     """
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
+        execute_tactic_event.wait()  # 等待光效检测结束
         mouse_press("middle", 0.05)
         threshold = 0.9
         # 检测在场角色
