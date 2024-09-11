@@ -1,4 +1,3 @@
-# 闪避两次
 - key: "w"
   type: "down"
   delay: 0.05

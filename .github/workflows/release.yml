@@ -1,0 +1,60 @@
+name: 打包并发布 📦
+run-name: ${{ github.event.inputs.VERSION}}
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: '请输入版本号'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: 下载 Python 3.10
+      run: |
+        # 最简版 Python 3.10
+        Start-BitsTransfer "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-amd64.zip"
+        Start-BitsTransfer "https://bootstrap.pypa.io/get-pip.py"
+        Start-BitsTransfer "https://aka.ms/vs/17/release/vc_redist.x64.exe" "(DLL)初始化例程失败时-点我.exe"
+        7z e python-3.10.11-embed-amd64.zip -opy310\
+        # 使 pip 可安装
+        (Get-Content ".\py310\python310._pth") -replace '#import site', 'import site' | Set-Content ".\py310\python310._pth"
+        .\py310\python.exe get-pip.py
+        Remove-Item python-3.10.11-embed-amd64.zip
+        Remove-Item get-pip.py
+    
+    - name: 安装CPU依赖
+      run: |
+        .\py310\python.exe -m pip install -r requirements-cpu.txt
+
+    - name: 预下载模型
+      run: |
+        # 下载模型，更新当前版本号
+        .\py310\python.exe release_prepare.py
+
+    - name: 打包
+      run: |
+        # 7z压缩
+        Start-BitsTransfer "http://pan.caiyun.fun/1655577/zzz/start.exe"
+        # 防止敏感信息泄露
+        Remove-Item .git\ -Force -Recurse
+        7z a -tzip zzzAuto-Onekey.zip ..
+    
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: ${{ github.event.inputs.VERSION}} CPU一键包
+        # tag_name: ${{ github.event.inputs.VERSION}}
+        body: "使用前务必阅读README！！国内[下载链接](https://pan.quark.cn/s/b33eaf2ffcfc)"
+        # 生成草稿，不会直接发布
+        draft: true
+        # 如果没有目标文件，则失败停止发布
+        fail_on_unmatched_files: true
+        files: |
+          zzzAuto-Onekey.zip
