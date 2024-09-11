@@ -21,7 +21,6 @@ from loguru import logger
 from schema import ImgPosition, Position
 from .init import Hwnd, RealWidth, RealHeight
 
-
 def find_all_template(
     img: np.ndarray,
     template_img: np.ndarray | str,
@@ -278,3 +277,4 @@ def retry(count: int = 3, interval: int = 1):
         return wrapper
 
     return decorator
+

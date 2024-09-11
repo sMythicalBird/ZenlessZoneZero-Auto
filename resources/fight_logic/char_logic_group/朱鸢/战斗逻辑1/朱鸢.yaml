@@ -1,64 +1,102 @@
-# 平A第1段
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.4
-# 平A第2段
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.4
-# 平A第3段连按延长时间
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.1
-    repeat: 5
+# 强化特殊技
+- key: "e"
+  type: "press"
+  duration: 0.1
+  delay: 1.2
 
-# 平A第1段
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.4
-# 平A第2段
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.4
-# 平A第3段连按延长时间
--   key: "left"
-    type: "press"
-    duration: 0.025
-    delay: 0.1
-    repeat: 5
+# 按下A-左侧闪重击
+- key: "a"
+  type: "down"
+  delay: 0.05
+# 重击连段
+- key: "left"
+  type: "press"
+  duration: 2.2
+  delay: 0
+# 松开A
+- key: "a"
+  type: "up"
+  delay: 0
 
-# 蓄力前e起手
--   key: "e"
-    type: "press"
-    duration: 0.025
-    delay: 0.1
-    repeat: 3
+## 平A第1段
+#- key: "left"
+#  type: "press"
+#  duration: 0.1
+#  delay: 0.2
+## 平A第2段
+#- key: "left"
+#  type: "press"
+#  duration: 0.1
+#  delay: 0.2
+## 平A第3段（飞膝接肘击）
+#- key: "left"
+#  type: "press"
+#  duration: 0.1
+#  delay: 0.8
+## 平A第4段（后空翻开枪横扫）
+#- key: "left"
+#  type: "press"
+#  duration: 0.1
+#  delay: 0.85
+## 平A第5段（正步上勾拳+零距离开火）
+#- key: "left"
+#  type: "press"
+#  duration: 0.1
+#  delay: 0.1
 
-# 蓄力平A
--   key: "left"
-    type: "down"
-    duration: 3
-    delay: 0.1
--   key: "a"
-    type: "press"
-    duration: 0.025
-    delay: 1
--   key: "d"
-    type: "press"
-    duration: 0.025
-    delay: 1
--   key: "a"
-    type: "press"
-    duration: 0.025
-    delay: 1
+## 终结技
+#- key: "q"
+#  type: "press"
+#  duration: 0.05
+#  delay: 0.05
+#- key: "q"
+#  type: "press"
+#  duration: 0.1
+#  delay: 3
 
-# q
--   key: "q"
-    type: "press"
-    duration: 0.1
-    delay: 0.1
+# 按键盘按键space
+- key: "space"        # 按键
+  type: "press"   # 点击
+  duration: 0.1  # 按住时间
+  delay: 0.05     # 延迟
+
+## 按下A-左侧闪重击
+#- key: "a"
+#  type: "down"
+#  delay: 0.05
+## 重击连段
+#- key: "left"
+#  type: "press"
+#  duration: 2.6
+#  delay: 0.05
+## 松开A
+#- key: "a"
+#  type: "up"
+#  delay: 0.05
+#
+## 按下w
+#- key: "w"
+#  type: "down"
+#  delay: 0.03
+#  repeat: 2
+## 踏步-全弹连射
+#- key: "e"
+#  type: "press"
+#  duration: 0.05
+#  delay: 0.05
+#- key: "e"
+#  type: "press"
+#  duration: 0.1
+#  delay: 1.2
+## 松开A
+#- key: "w"
+#  type: "up"
+#  delay: 0.05
+
+
+
+# 按键 left为鼠标左键，right为鼠标右键，middle为鼠标中键
+# 按住 press为按住， down为按下， up为松开
+# duration按住时间  duration为按住时间，press时有效
+# delay本次操作执行完毕后延迟时间 默认为0.1
+# repeat本次操作重复次数
