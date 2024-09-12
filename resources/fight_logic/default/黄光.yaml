@@ -1,6 +1,6 @@
 - key: "w"
   type: "down"
-  delay: 0.3
+  delay: 0.4
 # 按住space0.025s，间隔0.1s
 -   key: "space"        # 按键 space为空格键
     type: "press"       # 按住 press为按住， down为按下， up为松开
