@@ -8,7 +8,7 @@
     type: "press"
     duration: 0.025
     delay: 0.025
-    repeat: 33
+    repeat: 30
 # 长按三秒蓄力五棒
 -   key: "left"
     type: "press"
@@ -30,7 +30,7 @@
     type: "press"
     duration: 0.025
     delay: 0.025
-    repeat: 33
+    repeat: 36
 # 长按三秒蓄力五棒
 -   key: "left"
     type: "press"
