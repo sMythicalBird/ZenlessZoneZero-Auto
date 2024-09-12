@@ -1,0 +1,53 @@
+name: Bug反馈
+description: 在使用项目是遇到了bug
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - octocat
+body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 请确保您已经阅读并同意以下要求
+      options:
+        - label: 我已阅读项目使用说明，并且按照要求更改了游戏配置
+          required: true
+        - label: 我已经搜索过已有的[issue](https://github.com/sMythicalBird/ZenlessZoneZero-Auto/issues)，确认当前问题没有被提出过
+          required: true
+        - label: 我已经知晓并同意，若由于个人未按要求配置导致的问题，将不会被处理
+          required: true
+        - label: 我已经知晓并同意，若该问题与程序无关，将不会被处理
+          required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: 项目版本
+      description: 选择当前使用的代码版本号(v2.4之前版本的问题不再回复)
+      options:
+        - v2.4 (Default)
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: systems
+    attributes:
+      label: 系统版本
+      description: 选择当前使用的系统版本
+      multiple: true
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows 7
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: bug情况描述
+      placeholder: 具体详情
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 上传截图
+      description: 请上传相关截图
+      render: ![image](https://via.placeholder.com/150)

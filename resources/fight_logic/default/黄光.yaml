@@ -1,3 +1,6 @@
+- key: "w"
+  type: "down"
+  delay: 0.05
 # 按住space0.025s，间隔0.1s
 -   key: "space"        # 按键 space为空格键
     type: "press"       # 按住 press为按住， down为按下， up为松开
@@ -14,3 +17,6 @@
     type: "press"       # 按住 press为按住， down为按下， up为松开
     duration: 0.05      # 按住时间  duration为按住时间，press时有效
     delay: 1.2        # 本次操作执行完毕后延迟时间 默认为0.1
+- key: "w"
+  type: "up"
+  delay: 0

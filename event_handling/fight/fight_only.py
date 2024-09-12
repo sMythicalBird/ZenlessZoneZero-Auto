@@ -64,6 +64,7 @@ def technique_full(point="3000"):
     for ocr_result in ocr_Results:
         if text.search(ocr_result.text):
             return True
+    return False
 
 
 def mouse_press(key: str, duration: float):
@@ -135,12 +136,14 @@ def detector_task(
             # time.sleep(0.1)
             logger.debug(f"退出连携技模式")
             if zero_cfg.carry["char"] != "默认":
-                while current_character() != zero_cfg.carry["char"]:
+                while (
+                    current_character() != zero_cfg.carry["char"] and run_flag.is_set()
+                ):
                     key_press(key="c", duration=0.1)
                     time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         # 终结技检测优先于检测光效
-        if detector_task_event.is_set():
+        if not detector_task_event.is_set():
             if results["yellow"]["rect"]:
                 execute_tactic_event.clear()  # 阻塞战斗，如果有的话
                 logger.debug(f"进入黄光战斗模式")
@@ -167,13 +170,13 @@ def fight_login(
     execute_tactic_event: threading.Event,
     fighting_flag: threading.Event,
     detector_task_event: threading.Event,
-    technique_event: threading.Event,
 ):
     """
     进入战斗
     """
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
+        execute_tactic_event.wait()  # 等待光效检测结束
         mouse_press("middle", 0.05)
         threshold = 0.9
         # 检测在场角色
@@ -203,44 +206,45 @@ def fight_login(
                 # 执行逻辑
 
                 if tactic.endure:  # 霸体强制连招
-                    detector_task_event.clear()
-                    execute_tactic(tactic)
                     detector_task_event.set()
+                    execute_tactic(tactic)
+                    detector_task_event.clear()
                 else:
                     execute_tactic(tactic)
                 if tactic.delay:
                     time.sleep(tactic.delay)
-                if (
-                    cur_character == zero_cfg.carry["char"]  # 判断为指定角色
-                    or zero_cfg.carry["char"]
-                    not in fight_logic_daily.tactics  # 未正确配置指定角色(直接释放)
-                    and technique_event.is_set()  # 判断终结技充满
-                ):
-                    detector_task_event.clear()  # 无视受击，强制释放
-                    key_press("q", 0.1)
-                    time.sleep(3)
-                    detector_task_event.set()
 
-        while execute_tactic_event.is_set():  # while循环防止middle键中断连携技
-            # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
-            keyUp("w")
-            keyUp("a")
-            keyUp("s")
-            keyUp("d")
-            keyUp("shift")
-            mouseUp(button="left")
-            mouse_press("middle", 0.05)
-            break
+        execute_tactic_event.wait()  # 防止middle键中断连携技
+        # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
+        keyUp("w")
+        keyUp("a")
+        keyUp("s")
+        keyUp("d")
+        keyUp("shift")
+        mouseUp(button="left")
+        mouse_press("middle", 0.05)
 
 
 def technique_detection(
     run_flag: threading.Event,
-    technique_event: threading.Event,
 ):
     while run_flag.is_set():
-        technique_event.clear()
-        while technique_full(zero_cfg.carry["point"]):
-            technique_event.set()
+        threshold = 0.9
+        # 检测在场角色
+        cur_character = current_character(threshold)
+        while cur_character == "默认":  # 未找到角色头像(可能被其他动画挡住了),等待0.2s
+            time.sleep(0.2)
+            threshold = threshold - 0.1
+            cur_character = current_character(threshold)
+        # 判断终结技充满，并选人释放，默认直接释放
+        if (
+            cur_character == zero_cfg.carry["char"]  # 判断为指定角色
+            or zero_cfg.carry["char"]
+            not in fight_logic_daily.tactics  # 未正确配置指定角色(直接释放)
+            and technique_full(zero_cfg.carry["point"])  # 判断终结技充满
+        ):
+            key_press("q", 0.1)
+            time.sleep(3)
 
 
 def current_character(threshold=0.9):
@@ -277,21 +281,12 @@ def action():
     # 启动战斗逻辑
     fight_task = Thread(
         target=fight_login,
-        args=(
-            run_flag,
-            execute_tactic_event,
-            fighting_flag,
-            detector_task_event,
-            technique_event,
-        ),
+        args=(run_flag, execute_tactic_event, fighting_flag, detector_task_event),
     )
     fight_task.start()
 
     # 启动终结技检测逻辑
-    technique_task = Thread(
-        target=technique_detection,
-        args=(run_flag, detector_task_event, technique_event),
-    )
+    technique_task = Thread(target=technique_detection, args=(run_flag,))
     technique_task.start()
     # 开始战斗
     execute_tactic_event.set()
