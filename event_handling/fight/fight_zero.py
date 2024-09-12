@@ -153,7 +153,7 @@ def detector_task(
                     time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         # 终结技检测优先于检测光效
-        if not detector_task_event.is_set():
+        if detector_task_event.is_set():
             if results["yellow"]["rect"]:
                 execute_tactic_event.clear()  # 阻塞战斗，如果有的话
                 logger.debug(f"进入黄光战斗模式")
@@ -216,9 +216,9 @@ def fight_login(
                 # 执行逻辑
 
                 if tactic.endure:  # 霸体强制连招
-                    detector_task_event.set()
-                    execute_tactic(tactic)
                     detector_task_event.clear()
+                    execute_tactic(tactic)
+                    detector_task_event.set()
                 else:
                     execute_tactic(tactic)
                 if tactic.delay:
@@ -358,7 +358,7 @@ def action():
     run_flag.set()
 
     execute_tactic_event = threading.Event()  # 检测到光效后阻塞战斗逻辑
-    detector_task_event = threading.Event()  # 检测到终结技充满阻塞红黄光检测
+    detector_task_event = threading.Event()  # 阻塞红黄光检测
     fighting_flag = threading.Event()  # 是否继续战斗
     technique_event = threading.Event()  # 终结技充满事件
     # 启动弹反逻辑
@@ -386,7 +386,7 @@ def action():
     # 开始战斗
     execute_tactic_event.set()
     fighting_flag.set()
-
+    detector_task_event.set()
     while True:
         if not task.is_running():
             run_flag.clear()
