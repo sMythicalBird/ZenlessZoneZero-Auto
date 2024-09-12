@@ -143,9 +143,7 @@ def detector_task(
                 mouse_press("left", 0.05)
 
             logger.debug(f"退出连携技模式")
-            max_switch = (
-                len(fight_logic_zero.char_icons.keys()) - 1
-            )  # 最大切换次数，期望为2
+            max_switch = len(fight_logic_zero.char_icons) - 1  # 最大切换次数，期望为2
             if zero_cfg.carry["char"] != "默认":
                 while (
                     current_character() != zero_cfg.carry["char"]
@@ -254,7 +252,7 @@ def technique_detection(
         if (
             cur_character == zero_cfg.carry["char"]  # 判断为指定角色
             or zero_cfg.carry["char"]
-            not in fight_logic_zero.char_icons.keys()  # 未正确配置指定角色(直接释放)
+            not in fight_logic_zero.char_icons()  # 未正确配置指定角色(直接释放)
             and technique_full(zero_cfg.carry["point"])  # 判断终结技充满
         ):
             key_press("q", 0.1)
