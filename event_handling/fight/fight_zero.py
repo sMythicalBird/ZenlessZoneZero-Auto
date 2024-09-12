@@ -143,17 +143,14 @@ def detector_task(
                 mouse_press("left", 0.05)
             logger.debug(f"退出连携技模式")
 
-            if zero_cfg.carry["char"] != "默认":
-                max_switch = (
-                    len(fight_logic_zero.char_icons) - 1
-                )  # 最大切换次数，期望为2
+            if (
+                zero_cfg.carry["char"] != "默认"
+                and zero_cfg.carry["char"] in fight_logic_zero.char_icons
+            ):
                 while (
-                    current_character() != zero_cfg.carry["char"]
-                    and run_flag.is_set()
-                    and max_switch > 0
+                    run_flag.is_set() and current_character() != zero_cfg.carry["char"]
                 ):
                     key_press(key="c", duration=0.1)
-                    max_switch -= 1
                     time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         # 终结技检测优先于检测光效
