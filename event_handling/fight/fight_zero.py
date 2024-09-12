@@ -209,7 +209,7 @@ def fight_login(
                     continue_flag = True
                     execute_tactic_event.wait()
                     break
-                if False in (fighting_flag.is_set(),detector_task_event.is_set()):  # 是否继续战斗
+                if not fighting_flag.is_set():  # 是否继续战斗
                     continue_flag = True
                     fighting_flag.wait()
                     break
