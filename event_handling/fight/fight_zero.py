@@ -187,8 +187,7 @@ def fight_login(
     """
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
-        execute_tactic_event.wait()  # 等待光效检测结束
-        mouse_press("middle", 0.05)
+        execute_tactic_event.wait(), mouse_press("middle", 0.05)  # 等待光效检测结束
         threshold = 0.9
         # 检测在场角色
         cur_character = current_character(threshold)
@@ -210,7 +209,7 @@ def fight_login(
                     continue_flag = True
                     execute_tactic_event.wait()
                     break
-                if not fighting_flag.is_set():  # 是否继续战斗
+                if False in (fighting_flag.is_set(),detector_task_event.is_set()):  # 是否继续战斗
                     continue_flag = True
                     fighting_flag.wait()
                     break
@@ -225,7 +224,9 @@ def fight_login(
                 if tactic.delay:
                     time.sleep(tactic.delay)
 
-        execute_tactic_event.wait()  # 防止middle键中断连携技
+        execute_tactic_event.wait(), mouse_press(
+            "middle", 0.05
+        )  # 防止middle键中断连携技
         # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
         keyUp("w")
         keyUp("a")
@@ -233,7 +234,6 @@ def fight_login(
         keyUp("d")
         keyUp("shift")
         mouseUp(button="left")
-        mouse_press("middle", 0.05)
 
 
 def technique_detection(

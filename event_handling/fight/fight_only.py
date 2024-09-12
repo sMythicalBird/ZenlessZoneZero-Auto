@@ -177,8 +177,7 @@ def fight_login(
     """
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
-        execute_tactic_event.wait()  # 等待光效检测结束
-        mouse_press("middle", 0.05)
+        execute_tactic_event.wait(), mouse_press("middle", 0.05)  # 等待光效检测结束
         threshold = 0.9
         # 检测在场角色
         cur_character = current_character(threshold)
@@ -200,7 +199,7 @@ def fight_login(
                     continue_flag = True
                     execute_tactic_event.wait()
                     break
-                if not fighting_flag.is_set():  # 是否继续战斗
+                if False in (fighting_flag.is_set(),detector_task_event.is_set()):  # 是否继续战斗
                     continue_flag = True
                     fighting_flag.wait()
                     break
@@ -215,7 +214,9 @@ def fight_login(
                 if tactic.delay:
                     time.sleep(tactic.delay)
 
-        execute_tactic_event.wait()  # 防止middle键中断连携技
+        execute_tactic_event.wait(), mouse_press(
+            "middle", 0.05
+        )  # 防止middle键中断连携技
         # 每次循环结束时，重置一次案件，防止按键一直按下卡住程序
         keyUp("w")
         keyUp("a")
@@ -223,11 +224,10 @@ def fight_login(
         keyUp("d")
         keyUp("shift")
         mouseUp(button="left")
-        mouse_press("middle", 0.05)
 
 
 def technique_detection(
-    run_flag: threading.Event,
+    run_flag: threading.Event, detector_task_event: threading.Event
 ):
     while run_flag.is_set():
         threshold = 0.9
@@ -244,8 +244,10 @@ def technique_detection(
             not in fight_logic_daily.char_icons  # 未正确配置指定角色(直接释放)
             and technique_full(zero_cfg.carry["point"])  # 判断终结技充满
         ):
+            detector_task_event.clear()
             key_press("q", 0.1)
             time.sleep(3)
+            detector_task_event.set()
 
 
 def current_character(threshold=0.9):
@@ -287,7 +289,9 @@ def action():
     fight_task.start()
 
     # 启动终结技检测逻辑
-    technique_task = Thread(target=technique_detection, args=(run_flag,))
+    technique_task = Thread(
+        target=technique_detection, args=(run_flag, detector_task_event)
+    )
     technique_task.start()
     # 开始战斗
     execute_tactic_event.set()

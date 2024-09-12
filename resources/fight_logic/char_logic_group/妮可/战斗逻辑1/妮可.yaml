@@ -7,7 +7,7 @@
 - key: "space"
   type: "press"   # 点击
   duration: 0.1  # 按住时间
-  delay: 0.5     # 延迟
+  delay: 0.4     # 延迟
 # 平A第3段（飞膝接肘击）
 - key: "left"
   type: "press"
