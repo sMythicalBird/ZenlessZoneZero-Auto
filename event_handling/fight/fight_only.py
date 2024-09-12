@@ -131,10 +131,12 @@ def detector_task(
             while waiting_optimization(2):
                 mouse_press("left", 0.05)
                 mouse_press("left", 0.05)
-
             logger.debug(f"退出连携技模式")
-            max_switch = len(fight_logic_daily.char_icons) - 1  # 最大切换次数，期望为2
+
             if zero_cfg.carry["char"] != "默认":
+                max_switch = (
+                    len(fight_logic_daily.char_icons) - 1
+                )  # 最大切换次数，期望为2
                 while (
                     current_character() != zero_cfg.carry["char"]
                     and run_flag.is_set()
