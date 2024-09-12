@@ -141,20 +141,17 @@ def detector_task(
             while waiting_optimization(2):
                 mouse_press("left", 0.05)
                 mouse_press("left", 0.05)
-            logger.debug(f"退出连携技模式")
 
-            if (
-                zero_cfg.carry["char"] != "默认"
-                and zero_cfg.carry["char"] in fight_logic_zero.char_icons
-            ):
-                while (
-                    run_flag.is_set() and current_character() != zero_cfg.carry["char"]
-                ):
+            # mouse_press("left", 0.05)
+            # time.sleep(0.1)
+            logger.debug(f"退出连携技模式")
+            if zero_cfg.carry["char"] != "默认":
+                while current_character() != zero_cfg.carry["char"]:
                     key_press(key="c", duration=0.1)
                     time.sleep(0.3)
             execute_tactic_event.set()  # 释放战斗
         # 终结技检测优先于检测光效
-        if detector_task_event.is_set():
+        if not detector_task_event.is_set():
             if results["yellow"]["rect"]:
                 execute_tactic_event.clear()  # 阻塞战斗，如果有的话
                 logger.debug(f"进入黄光战斗模式")
@@ -181,13 +178,13 @@ def fight_login(
     execute_tactic_event: threading.Event,
     fighting_flag: threading.Event,
     detector_task_event: threading.Event,
+    technique_event: threading.Event,
 ):
     """
     进入战斗
     """
     while run_flag.is_set():
         fighting_flag.wait()  # 是否继续战斗
-        execute_tactic_event.wait()  # 等待光效检测结束
         mouse_press("middle", 0.05)
         threshold = 0.9
         # 检测在场角色
@@ -217,9 +214,9 @@ def fight_login(
                 # 执行逻辑
 
                 if tactic.endure:  # 霸体强制连招
-                    detector_task_event.clear()
-                    execute_tactic(tactic)
                     detector_task_event.set()
+                    execute_tactic(tactic)
+                    detector_task_event.clear()
                 else:
                     execute_tactic(tactic)
                 if tactic.delay:
@@ -251,7 +248,7 @@ def technique_detection(
         if (
             cur_character == zero_cfg.carry["char"]  # 判断为指定角色
             or zero_cfg.carry["char"]
-            not in fight_logic_zero.char_icons()  # 未正确配置指定角色(直接释放)
+            not in fight_logic_zero.tactics  # 未正确配置指定角色(直接释放)
             and technique_full(zero_cfg.carry["point"])  # 判断终结技充满
         ):
             key_press("q", 0.1)
@@ -359,7 +356,7 @@ def action():
     run_flag.set()
 
     execute_tactic_event = threading.Event()  # 检测到光效后阻塞战斗逻辑
-    detector_task_event = threading.Event()  # 阻塞红黄光检测
+    detector_task_event = threading.Event()  # 检测到终结技充满阻塞红黄光检测
     fighting_flag = threading.Event()  # 是否继续战斗
     technique_event = threading.Event()  # 终结技充满事件
     # 启动弹反逻辑
@@ -387,7 +384,7 @@ def action():
     # 开始战斗
     execute_tactic_event.set()
     fighting_flag.set()
-    detector_task_event.set()
+
     while True:
         if not task.is_running():
             run_flag.clear()
