@@ -1,6 +1,7 @@
 test/test.py
 *.log
 **/test
+**/report
 .idea
 # 数据集
 dataset
