@@ -24,3 +24,4 @@ tactics/
 schema/yaml
 gui/api/*json
 
+start_dev.bat

@@ -7,7 +7,7 @@
 from threading import Thread
 from pynput.keyboard import Key, Listener
 
-from utils.task import task_zero, task_money, task_code, task_fight
+from utils.task import task_zero, task_money, task_code, task_fight, task_daily
 
 
 # 测试更新情况
@@ -79,6 +79,32 @@ def redemption_code():
     # 任务开始
     task_code.run()
 
+# 自动化日常任务
+def daily():
+    # 监听运行状态
+    key_thread = Thread(target=key_event, args=(task_daily,))
+    key_thread.start()
+
+    # 导入任务
+    import event_handling.daily
+
+    # 任务开始
+    task_daily.run()
+
+
+def new_account():
+    # 监听运行状态
+    key_thread = Thread(target=key_event, args=(task_daily,))
+    key_thread.start()
+
+    # 导入任务
+    import event_handling.test
+
+    # 任务开始
+    task_daily.run()
+
+
+
 
 def start_task(action):
     if action == "zero":
@@ -90,3 +116,11 @@ def start_task(action):
     elif action == "fight":
         print("start fight task")
         fight_task()
+    elif action == "daily":
+        print("start daily task")
+        daily()
+
+
+if __name__ == '__main__':
+    start_task('daily')
+    # new_account()
