@@ -29,7 +29,11 @@ def action(positions: Dict[str, Position]):
 
 
 # 活跃度已满，退出
-@task.page(name="活跃度已满", target_texts=["活跃度已满", "·活跃度已满"], priority=6)
+@task.page(
+    name="活跃度已满",
+    target_texts=["活跃度已满", "·活跃度已满", "●活跃度已满"],
+    priority=6,
+)
 def action(positions: Dict[str, Position]):
     logger.info("活跃度已满，退出")
     task.stop()
@@ -74,6 +78,9 @@ def action():
 
 class DailyTask:
     def __init__(self) -> None:
+        # path = r'D:\ZZZ-Auto\dev\ZenlessZoneZero-Auto\test\screenshots\daily_task_20240908-110003.377.png'
+        # self.img_BGR = cv2.imread(path)
+        # self.screen = cv2.cvtColor(self.img_BGR, cv2.COLOR_BGR2RGB)
         self.tasks_titles = [
             "品尝1次咖啡",
             "去报刊亭刮卡签到",
@@ -82,15 +89,31 @@ class DailyTask:
         self.unfinished_text = "进度：0/1"
         self.goto_text = "前往"
 
+        self.ocr_targets = []
+        for i in self.tasks_titles:
+            self.ocr_targets.append(i)
+        self.ocr_targets.append(self.unfinished_text)
+        self.ocr_targets.append(self.goto_text)
+
         self.daily_tasks = {}
-        self.coffee_prefers = ["参汤黑咖", "新艾利都特调"]  # 咖啡偏好
+        self.coffee_prefers = ["汀曼特调", "参汤黑咖", "新艾利都特调"]  # 咖啡偏好
+
+        self.open_shop_charactors = ["简", "猫又"]  # 开启今日录像店经营角色名
 
     def gen_daily_task_list(
-        self, ocr_results = None
+        self, ocr_results=None
     ):  # 生成日常任务列表，返回包含任务名称、文字位置、点击位置的字典
         if ocr_results is None:
             ocr_results = task.ocr(screenshot())
-        if self.detect_text_in_ocr_results("活跃度已满", ocr_results):  # 检测日常是否完成
+        # print(f"----------------↓-ocr_results-↓----------------")
+        # for i in ocr_results:
+        #     if i.text in self.ocr_targets:
+        #         print(i.text, i.position)
+        # print(f"----------------↑-ocr_results-↑----------------\n")
+
+        if self.detect_text_in_ocr_results(
+            "活跃度已满", ocr_results
+        ):  # 检测日常是否完成
             logger.info("日常任务已完成")
             return None
         else:
@@ -99,45 +122,59 @@ class DailyTask:
                     for i in [x for x in ocr_results if task_name in x.text]:
                         self.daily_tasks[task_name] = {}
                         self.daily_tasks[task_name]["text_pos"] = i.position
-                    if task_name == self.tasks_titles[2]:  # 录像店经营日常单独判断
-                        self.daily_tasks[task_name]["finished"] = self.check_open_shop_finished(ocr_results)
+                    # if task_name == self.tasks_titles[2]:  # 录像店经营日常单独判断，1.2更新后无需单独处理
+                    #     self.daily_tasks[task_name]["finished"] = self.check_open_shop_finished(ocr_results)
 
-                    else:
-                        self.daily_tasks[task_name]["click_pos"] = self.get_click_position(task_name, ocr_results)
-                else:
-                    return None
-        
+                    # else:
+                    #     self.daily_tasks[task_name]["click_pos"] = self.get_click_position(task_name, ocr_results)
+
+                    self.daily_tasks[task_name]["click_pos"] = self.get_click_position(
+                        task_name, ocr_results
+                    )
+
         return self.daily_tasks
 
     def get_click_position(
         self, task_name, ocr_results
     ) -> Optional[Position]:  # 获取任务“前往”按钮点击位置
-        if task_name is not self.tasks_titles[2]:  # 录像店经营日常无前往按钮
-            for i in [x for x in ocr_results if self.goto_text in x.text]:
-                if (
-                    i.position.x >= self.daily_tasks[task_name]["text_pos"].x1
-                    and i.position.x <= self.daily_tasks[task_name]["text_pos"].x2
-                ):
-                    click_pos = i.position
-                    break
-                else:
-                    click_pos = None
-            return click_pos
+        # if task_name is not self.tasks_titles[2]:  # 录像店经营日常无前往按钮
+        #     for i in [x for x in ocr_results if self.goto_text in x.text]:
+        #         if (
+        #             i.position.x >= self.daily_tasks[task_name]["text_pos"].x1
+        #             and i.position.x <= self.daily_tasks[task_name]["text_pos"].x2
+        #         ):
+        #             click_pos = i.position
+        #             break
+        #         else:
+        #             click_pos = None
+        #     return click_pos
 
-    def check_open_shop_finished(self, ocr_results) -> bool|None:  # 检测开启今日录像店经营状态
-        if self.detect_text_in_ocr_results(self.tasks_titles[2], ocr_results):
-            for i in [x for x in ocr_results if self.unfinished_text in x.text]:
-                if (
-                    i.position.x >= self.daily_tasks[self.tasks_titles[2]]["text_pos"].x1
-                    and i.position.x <= self.daily_tasks[self.tasks_titles[2]]["text_pos"].x2
-                ):
-                    open_shop_finished = False
-                    break
-                else:
-                    open_shop_finished = True
-            return open_shop_finished
-        else:
-            return None
+        for i in [x for x in ocr_results if self.goto_text in x.text]:
+            if (
+                i.position.x >= self.daily_tasks[task_name]["text_pos"].x1
+                and i.position.x <= self.daily_tasks[task_name]["text_pos"].x2
+            ):
+                click_pos = i.position
+                break
+            else:
+                click_pos = None
+
+        return click_pos
+
+    # def check_open_shop_finished(self, ocr_results) -> bool|None:  # 检测开启今日录像店经营状态，1.2更新后无需单独处理
+    #     if self.detect_text_in_ocr_results(self.tasks_titles[2], ocr_results):
+    #         for i in [x for x in ocr_results if self.unfinished_text in x.text]:
+    #             if (
+    #                 i.position.x >= self.daily_tasks[self.tasks_titles[2]]["text_pos"].x1
+    #                 and i.position.x <= self.daily_tasks[self.tasks_titles[2]]["text_pos"].x2
+    #             ):
+    #                 open_shop_finished = False
+    #                 break
+    #             else:
+    #                 open_shop_finished = True
+    #         return open_shop_finished
+    #     else:
+    #         return None
 
     @staticmethod
     def detect_text_in_ocr_results(
@@ -152,6 +189,7 @@ class DailyTask:
     def to_daily_menu() -> None:  # 进入“快捷手册-日常”界面
         while True:
             ocr_results = task.ocr(screenshot())
+            # print(ocr_results)
             if "日常" not in [x.text for x in ocr_results]:  # 检测“日常”文本
                 if "快捷手册" not in [
                     x.text for x in ocr_results if x.position.y > 680
@@ -176,6 +214,7 @@ class DailyTask:
         times = 0
         while flag and times < 5:
             ocr_results = task.ocr(screenshot())
+            # print(times)
             if self.detect_text_in_ocr_results("星期", ocr_results):  # 检测星期文本
                 flag = False
                 logger.info("返回到普通界面")
@@ -184,9 +223,6 @@ class DailyTask:
                 control.press("esc", duration=0.1)
                 time.sleep(1.2)
                 times += 1
-                if times == 5:
-                    logger.error("返回到普通界面失败")
-                    break
 
     @staticmethod
     def click_to_pass() -> None:  # 点击"跳过"或"确认"或"确定"
@@ -205,8 +241,8 @@ class DailyTask:
         time.sleep(1)
         self.click_to_pass()  # 确认传送
         time.sleep(1.5)  # 画面切换加载时间较长
-        control.press("F", duration=0.1)
-        time.sleep(1)
+        # control.press("F", duration=0.1)  # 1.2更新后无需点击F键
+        # time.sleep(1)
 
         ocr_results = task.ocr(screenshot())
         coffee_list = [
@@ -243,10 +279,10 @@ class DailyTask:
         control.click(click_pos.x, click_pos.y)
         time.sleep(1)
 
-        for i in range(3):  # 点单后1次跳过，2次确认
+        for i in range(2):  # 点单后1次跳过，1次确认
             self.click_to_pass()
             time.sleep(1)
-        
+
         return
 
     def daily_task_scratch(self) -> None:  # 报刊亭刮卡签到
@@ -261,7 +297,8 @@ class DailyTask:
                 (750, 420),
                 (550, 440),
                 (750, 440),
-            ]  # 报刊亭刮卡位置
+            ]  # 报刊亭刮卡
+
             for i in range(len(points) - 1):
                 control.move_at(
                     points[i][0], points[i][1], points[i + 1][0], points[i + 1][1]
@@ -274,53 +311,59 @@ class DailyTask:
         self.click_to_pass()  # 确认传送
         time.sleep(1.5)  # 画面切换加载时间较长
 
-        control.press("W", duration=0.5)
-        time.sleep(1)
-        control.press("F", duration=0.1)
-        time.sleep(1.5)
+        # control.press("W", duration=0.5)
+        # time.sleep(1)
+        # control.press("F", duration=0.1)
+        # time.sleep(1.5)
 
         ocr_results = task.ocr(screenshot())
         click_pos = [x for x in ocr_results if x.text == "刮刮卡"][0].position
+        # print(click_pos.x, click_pos.y)
+
         control.click(click_pos.x, click_pos.y)
         time.sleep(1.5)
 
         scratch_card()  # 刮卡
         time.sleep(1.5)
-
         self.click_to_pass()  # 确认
         time.sleep(1)
         return
 
     def daily_task_open_shop(self) -> None:  # 开启今日录像店经营
-        # TODO 录像店经营日常待优化，角色选择可能有点击失误
-        time.sleep(1)
-        self.to_normal_screen()  # 返回到普通界面
-        time.sleep(1)
+        # time.sleep(1)
+        # self.to_normal_screen()  # 返回到普通界面
+        # time.sleep(1)
 
-        control.press("M", duration=0.1)  # 打开传送界面
-        time.sleep(0.5)
+        # control.press("M", duration=0.1)  # 打开传送界面
+        # time.sleep(0.5)
 
-        for i in range(9):  # 切换到录像店传送界面
-            ocr_results = task.ocr(screenshot()[400:480, 420:840, :])
-            if "Random Play" not in [x.text for x in ocr_results]:
-                control.click(360, 300)
-                time.sleep(1)
-            else:
-                break
+        # for i in range(9):  # 切换到录像店传送界面
+        #     ocr_results = task.ocr(screenshot()[400:480, 420:840, :])
+        #     if "Random Play" not in [x.text for x in ocr_results]:
+        #         control.click(360, 300)
+        #         time.sleep(1)
+        #     else:
+        #         break
 
-        ocr_results = task.ocr(screenshot())
-        click_pos = [x for x in ocr_results if x.text == "柜台"][0].position  # 点击柜台
+        # ocr_results = task.ocr(screenshot())
+        # click_pos = [x for x in ocr_results if x.text == "柜台"][0].position  # 点击柜台
+        # control.click(click_pos.x, click_pos.y)
+        # time.sleep(1)
+        # self.click_to_pass()
+        # time.sleep(1.5)  # 等待场景切换加载时间
+
+        # control.move_rel(120, 0)  # 旋转镜头，对准邦布
+        # time.sleep(0.5)
+        # control.press("W", duration=0.3)
+        # time.sleep(0.5)
+        # control.press("F", duration=0.1)
+        # time.sleep(2)
+
+        click_pos = self.daily_tasks["开启今日录像店经营"]["click_pos"]
         control.click(click_pos.x, click_pos.y)
         time.sleep(1)
-        self.click_to_pass()
-        time.sleep(1.5)  # 等待场景切换加载时间
-
-        control.move_rel(120, 0)  # 旋转镜头，对准邦布
-        time.sleep(0.5)
-        control.press("W", duration=0.3)
-        time.sleep(0.5)
-        control.press("F", duration=0.1)
-        time.sleep(2)
+        self.click_to_pass()  # 确认传送
+        time.sleep(1.5)  # 画面切换加载时间较长
 
         while True:
             time.sleep(0.5)
@@ -338,7 +381,7 @@ class DailyTask:
             control.click(600, 500)
         time.sleep(1)
 
-        characters = ["简", "猫又"]  # 每日使用角色
+        characters = self.open_shop_charactors
         today = datetime.date.today()
         ocr_results = task.ocr(screenshot())
         ocr_results = [
@@ -385,13 +428,16 @@ class DailyTask:
             time.sleep(1)
         control.press("esc", duration=0.1)
 
+
 dailytask = DailyTask()
+
 
 def test():
     daily_task_finished = False
     while daily_task_finished is False:
         dailytask.to_daily_menu()
         tasklist = dailytask.gen_daily_task_list()
+        print(tasklist)
 
         for task_name, task_info in tasklist.items():
             if task_name == "品尝1次咖啡" and task_info["click_pos"] is not None:
@@ -400,10 +446,14 @@ def test():
             elif task_name == "去报刊亭刮卡签到" and task_info["click_pos"] is not None:
                 dailytask.daily_task_scratch()
                 continue
-            elif task_name == "开启今日录像店经营" and task_info["finished"] is False:
+            # elif task_name == "开启今日录像店经营" and task_info["finished"] is False:
+            elif (
+                task_name == "开启今日录像店经营" and task_info["click_pos"] is not None
+            ):
                 dailytask.daily_task_open_shop()
             else:
                 daily_task_finished = True
                 logger.info(f"日常任务已完成")
+
 
 test()
