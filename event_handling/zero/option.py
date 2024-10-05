@@ -37,6 +37,7 @@ def action(positions: Dict[str, Position]):
     name="选项_紫色风险",
     priority=2,
     target_image=opt_img_path / "option_purple_risk.png",
+    exclude_texts=["进入商店"],
 )
 def action(positions: Dict[str, Position]):
     pos = positions.get("option_purple_risk")

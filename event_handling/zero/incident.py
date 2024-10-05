@@ -98,9 +98,9 @@ def action(positions: Dict[str, Position]):
     control.click(pos.x, pos.y)
 
 
-@task.page(name="目标位置", target_texts=["关键进展", "^确认继续$"])
+@task.page(name="目标位置", target_texts=["进入后无法返回"])
 def action(positions: Dict[str, Position]):
-    pos = positions.get("^确认继续$")
+    pos = positions.get("进入后无法返回")
     control.click(pos.x, pos.y)
     # 进入战斗
     if zero_cfg.modeSelect == 1:  # 全通模式(无业绩)
@@ -270,11 +270,9 @@ def action():
 # 现在仅在刚进入的时候进行判断，后续不再判断
 @task.page(name="进入特殊区域", target_texts=["进入特殊区域"])
 def action(screen: np.ndarray):
-    special_areas = ["0044"]
     special_areas = []
     special_areas = list(map(lambda x: template(x), special_areas))
     ocr_results = task.ocr(screen)
-    need_exit = False
     for ocr_result in ocr_results:
         for special_area in special_areas:
             if special_area.search(ocr_result.text):

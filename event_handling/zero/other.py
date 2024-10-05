@@ -129,6 +129,13 @@ def grid_map(screen: np.ndarray):
     # 终点类:传送点，暂时离开，boss站,红色路由，将偏移量置0，在boss站之后赋值，控制旧都列车在零号业绩和银行的视角拖拽，当传送之后再还原
     if mc.name == "终点":
         state_zero.currentStage = 0  # 重置偏移量
+    if mc.name == "邦布商店":
+        if (
+            k.x2 > 650 and k.y2 > 550 and dirct.value == "d"
+        ):  # 当商店在右下且向右走，则容易挡到终点，加一次判断
+            control.press("d", duration=0.1)
+            time.sleep(0.5)
+
     control.press(str(dirct), duration=0.1)
     # 进战斗时需要计时，未防止战斗多次重置时间，不写在战斗函数中
     state_zero.lastMoveTime = datetime.now()
@@ -138,6 +145,13 @@ def grid_map(screen: np.ndarray):
 @task.page(name="炸弹", target_texts=["^交叉爆破$", "^使用$"])
 def select_map(positions: Dict[str, Position]):
     pos = positions.get("^使用$")
+    control.click(pos.x, pos.y)
+    time.sleep(1)
+
+
+@task.page(name="boss关", target_texts=["^完成本次探索最终挑战$"])
+def select_map(positions: Dict[str, Position]):
+    pos = positions.get("^完成本次探索最终挑战$")
     control.click(pos.x, pos.y)
     time.sleep(1)
 
