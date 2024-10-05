@@ -33,7 +33,7 @@ class BannerWidget(QWidget):
         super().__init__(parent=parent)
         self.setFixedHeight(372)  # 初始高度，后续会调整
         self.vBoxLayout = QVBoxLayout(self)
-        self.galleryLabel = TitleLabel(f"绝区零自动化v2.4.0", self)
+        self.galleryLabel = TitleLabel(f"绝区零自动化v2.4.1", self)
         self.galleryLabel.setStyleSheet("color: #FFFFFF;")
         font = QFont("MiSans", 24, QFont.Weight.Bold)
         self.galleryLabel.setFont(font)
