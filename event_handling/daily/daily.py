@@ -34,7 +34,7 @@ def action(positions: Dict[str, Position]):
     target_texts=["活跃度已满", "·活跃度已满", "●活跃度已满"],
     priority=6,
 )
-def action(positions: Dict[str, Position]):
+def action():
     logger.info("活跃度已满，退出")
     task.stop()
     # TODO 如何保证识别到活跃度已满后退出脚本执行？
@@ -50,7 +50,11 @@ def action(positions: Dict[str, Position]):
 
 
 # 点击日常
-@task.page(name="点击日常", target_texts=["目标", "日常", "训练", "挑战"])
+@task.page(
+    name="点击日常",
+    target_texts=["目标", "日常", "训练", "挑战"],
+    exclude_texts=["活跃度已满", "·活跃度已满", "●活跃度已满"],
+)
 def action(positions: Dict[str, Position]):
     pos = positions.get("日常")
     # logger.debug(f"坐标: {pos}")
@@ -67,7 +71,7 @@ def action():
 
 @task.page(
     name="日常任务执行",
-    target_texts=["前往", "进行中"],
+    target_texts=["前往", "进度：0/1"],
     exclude_texts=["活跃度已满", "·活跃度已满", "●活跃度已满"],
     priority=6,
 )
@@ -78,65 +82,28 @@ def action():
 
 class DailyTask:
     def __init__(self) -> None:
-        # path = r'D:\ZZZ-Auto\dev\ZenlessZoneZero-Auto\test\screenshots\daily_task_20240908-110003.377.png'
-        # self.img_BGR = cv2.imread(path)
-        # self.screen = cv2.cvtColor(self.img_BGR, cv2.COLOR_BGR2RGB)
         self.tasks_titles = [
             "品尝1次咖啡",
             "去报刊亭刮卡签到",
             "开启今日录像店经营",
         ]  # 日常任务名称
-        self.unfinished_text = "进度：0/1"
         self.goto_text = "前往"
 
-        self.ocr_targets = []
-        for i in self.tasks_titles:
-            self.ocr_targets.append(i)
-        self.ocr_targets.append(self.unfinished_text)
-        self.ocr_targets.append(self.goto_text)
-
-        self.daily_tasks = {}
-        self.coffee_prefers = ["汀曼特调", "参汤黑咖", "新艾利都特调"]  # 咖啡偏好
-
+        self.coffee_prefers = ["参汤黑咖", "汀曼特调", "新艾利都特调"]  # 咖啡偏好
         self.open_shop_charactors = [
+            "露西",
+            "11号",
+            "本",
             "简",
             "派派",
             "猫又",
         ]  # 开启今日录像店经营角色，第一个、第二个角色奇偶数日轮换
-
-    def gen_daily_task_list(
-        self, ocr_results=None
-    ) -> (
-        Dict[str, Dict[str, Position]] | None
-    ):  # 生成日常任务列表，返回包含任务名称、文字位置、点击位置的字典
-        if ocr_results is None:
-            ocr_results = task.ocr(screenshot())
-
-        if self.detect_text_in_ocr_results(
-            "活跃度已满", ocr_results
-        ):  # 检测日常是否完成
-            logger.info("日常任务已完成")
-            return None
-        else:
-            for task_name in self.tasks_titles:
-                if self.detect_text_in_ocr_results(task_name, ocr_results):
-
-                    for i in [x for x in ocr_results if task_name in x.text]:
-                        self.daily_tasks[task_name] = {}
-                        self.daily_tasks[task_name]["text_pos"] = i.position
-
-                    self.daily_tasks[task_name]["click_pos"] = self.get_click_position(
-                        task_name, ocr_results
-                    )
-
-        return self.daily_tasks
 
     def gen_daily_task(
         self, ocr_results=None
     ) -> Optional[Union[str, Position]]:  # 生成日常任务，返回任务名称、点击位置
         if ocr_results is None:
             ocr_results = task.ocr(screenshot())
-
         if self.detect_text_in_ocr_results(
             "活跃度已满", ocr_results
         ):  # 检测日常是否完成
@@ -146,21 +113,20 @@ class DailyTask:
             for task_name in self.tasks_titles:
                 if self.detect_text_in_ocr_results(task_name, ocr_results):
                     task_name_pos = self.get_text_position(task_name, ocr_results)
-                    click_pos = self.get_click_position_V2(task_name_pos, ocr_results)
+                    click_pos = self.get_click_position(task_name_pos, ocr_results)
                     logger.info(f"执行{task_name}点击前往@{click_pos.x},{click_pos.y}")
                     return task_name, click_pos
 
     def get_text_position(
-        self, task_name, ocr_results
+        self, text, ocr_results
     ) -> Optional[Position]:  # 获取任务文字位置
-        if self.detect_text_in_ocr_results(task_name, ocr_results):
-            for i in [x for x in ocr_results if task_name in x.text]:
-                # print(i.text, i.position)
+        if self.detect_text_in_ocr_results(text, ocr_results):
+            for i in [x for x in ocr_results if text in x.text]:
                 return i.position
         else:
             return None
 
-    def get_click_position_V2(
+    def get_click_position(
         self, task_name_pos, ocr_results
     ) -> Optional[Position]:  # 获取任务“前往”按钮点击位置
         for i in [x for x in ocr_results if self.goto_text in x.text]:
@@ -169,25 +135,6 @@ class DailyTask:
                 break
             else:
                 click_pos = None
-
-        # print(click_pos)
-
-        return click_pos
-
-    def get_click_position(
-        self, task_name, ocr_results
-    ) -> Optional[Position]:  # 获取任务“前往”按钮点击位置
-
-        for i in [x for x in ocr_results if self.goto_text in x.text]:
-            if (
-                i.position.x >= self.daily_tasks[task_name]["text_pos"].x1
-                and i.position.x <= self.daily_tasks[task_name]["text_pos"].x2
-            ):
-                click_pos = i.position
-                break
-            else:
-                click_pos = None
-
         return click_pos
 
     @staticmethod
@@ -245,6 +192,7 @@ class DailyTask:
         for i in pass_list:
             if i in [x.text for x in ocr_results]:
                 click_pos = [x for x in ocr_results if x.text == i][0].position
+                # logger.info(f"点击{i}@{click_pos.x},{click_pos.y}")
                 control.click(click_pos.x, click_pos.y)
                 time.sleep(1)
                 break
@@ -255,13 +203,12 @@ class DailyTask:
         time.sleep(1)
         self.click_to_pass()  # 确认传送
         time.sleep(3)  # 画面切换加载时间较长
-
         ocr_results = task.ocr(screenshot())
         coffee_list = [
             x for x in ocr_results if x.position.x < 750 and x.position.y > 420
         ]
 
-        def selete_coffee():  # 根据self.coffee_prefers选择咖啡
+        def select_coffee():  # 根据self.coffee_prefers选择咖啡
             default_click_pos = Position(
                 x1=125, y1=557, x2=179, y2=572
             )  # 默认选择第一个咖啡
@@ -275,30 +222,26 @@ class DailyTask:
                         break
                 if click_pos is not None:
                     break
-
             if click_pos is None:
                 return default_click_pos
             else:
                 return click_pos
 
-        click_pos = selete_coffee()
+        click_pos = select_coffee()
         control.click(click_pos.x, click_pos.y)
         time.sleep(2)
-
         click_pos = [x for x in ocr_results if x.text == "点单"][
             0
         ].position  # 点单按钮位置（点单后无确认按钮）
+        logger.info(f"点击点单@{click_pos.x},{click_pos.y}")
         control.click(click_pos.x, click_pos.y)
         time.sleep(1)
-
         for i in range(2):  # 点单后1次跳过，1次确认
             self.click_to_pass()
             time.sleep(1)
-
         return
 
     def daily_task_scratch(self, click_pos=None) -> None:  # 报刊亭刮卡签到
-
         def scratch_card():
             points = [
                 (550, 380),
@@ -309,7 +252,6 @@ class DailyTask:
                 (750, 420),
                 (550, 440),
             ]  # 报刊亭刮卡
-
             for i in range(len(points) - 1):
                 control.move_at(
                     points[i][0], points[i][1], points[i + 1][0], points[i + 1][1]
@@ -321,47 +263,40 @@ class DailyTask:
         time.sleep(1)
         self.click_to_pass()  # 确认传送
         time.sleep(5)  # 画面切换加载时间较长
-
         ocr_results = task.ocr(screenshot())
         click_pos = [x for x in ocr_results if x.text == "刮刮卡"][0].position
-        # print(click_pos.x, click_pos.y)
-
+        logger.info(f"点击刮刮卡@{click_pos.x},{click_pos.y}")
         control.click(click_pos.x, click_pos.y)
         time.sleep(1.5)
-
         scratch_card()  # 刮卡
         time.sleep(1.5)
         self.click_to_pass()  # 确认
         time.sleep(1)
-
         return
 
     def daily_task_open_shop(self, click_pos=None) -> None:  # 开启今日录像店经营
-
         # click_pos = self.daily_tasks["开启今日录像店经营"]["click_pos"]
         control.click(click_pos.x, click_pos.y)
         time.sleep(1)
         self.click_to_pass()  # 确认传送
         time.sleep(5)  # 画面切换加载时间较长
-
-        while True:  # TODO 昨日账本界面还需优化！！
+        try_times = 3
+        while try_times > 0:
             time.sleep(0.5)
             ocr_results = task.ocr(screenshot())
             if "昨日账本" in [x.text for x in ocr_results]:
                 control.click(900, 160, duration=0.1)  # 点击红色关闭按钮
                 break
-            else:
-                break
+            try_times -= 1
         time.sleep(1)
-
         ocr_results = task.ocr(screenshot())
         if "选择宣传员" in [x.text for x in ocr_results]:
             click_pos = [x for x in ocr_results if x.text == "选择宣传员"][0].position
+            # logger.info(f"点击选择宣传员@{click_pos.x},{click_pos.y}")
             control.click(click_pos.x, click_pos.y + 110)
         else:
             control.click(600, 500)
         time.sleep(1)
-
         characters = self.open_shop_charactors
         today = datetime.date.today()
         ocr_results = task.ocr(screenshot())
@@ -373,25 +308,27 @@ class DailyTask:
                 click_pos = [x for x in ocr_results if x.text == characters[0]][
                     0
                 ].position
+                logger.info(f"选择{characters[0]}@{click_pos.x},{click_pos.y}")
                 control.click(click_pos.x, click_pos.y)
             else:
+                logger.info(f"{characters[0]}未出现在列表中，选择第一个角色@(420,180)")
                 control.click(420, 180)  # 点击第一个角色
         else:
             if characters[1] in [x.text for x in ocr_results]:
                 click_pos = [x for x in ocr_results if x.text == characters[1]][
                     0
                 ].position
+                logger.info(f"选择{characters[1]}@{click_pos.x},{click_pos.y}")
                 control.click(click_pos.x, click_pos.y)
             else:
+                logger.info(f"{characters[1]}未出现在列表中，选择第二个角色@(560,180)")
                 control.click(560, 180)  # 点击第二个角色
         self.click_to_pass()
         time.sleep(1)
-
         ocr_results = task.ocr(screenshot())
         click_pos_start = [x for x in ocr_results if x.text == "开始营业"][0].position
         control.click(click_pos_start.x, click_pos_start.y - 100)
         time.sleep(1)
-
         ocr_results = task.ocr(screenshot())
         click_pos_recommend = [x for x in ocr_results if x.text == "推荐上架"][
             0
@@ -403,12 +340,10 @@ class DailyTask:
         time.sleep(1)
         control.click(click_pos_start.x, click_pos_start.y)
         time.sleep(1)
-
         for i in range(2):
             self.click_to_pass()
             time.sleep(1)
         control.press("esc", duration=0.1)
-
         return
 
 
@@ -416,9 +351,7 @@ dailytask = DailyTask()
 
 
 def test():
-
     times = 3
-
     while times > 0:
         dailytask.to_daily_menu()
         taskname, click_pos = dailytask.gen_daily_task()
@@ -431,6 +364,3 @@ def test():
         elif taskname == dailytask.tasks_titles[2]:
             dailytask.daily_task_open_shop(click_pos)
         times -= 1
-
-
-test()
