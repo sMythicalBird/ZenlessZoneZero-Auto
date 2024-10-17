@@ -92,7 +92,6 @@ class DailyTask:
         self.coffee_prefers = ["参汤黑咖", "汀曼特调", "新艾利都特调"]  # 咖啡偏好
         self.open_shop_charactors = [
             "露西",
-            "11号",
             "本",
             "简",
             "派派",
@@ -114,7 +113,7 @@ class DailyTask:
                 if self.detect_text_in_ocr_results(task_name, ocr_results):
                     task_name_pos = self.get_text_position(task_name, ocr_results)
                     click_pos = self.get_click_position(task_name_pos, ocr_results)
-                    logger.info(f"执行{task_name}点击前往@{click_pos.x},{click_pos.y}")
+                    logger.info(f"执行{task_name}点击前往@({click_pos.x},{click_pos.y})")
                     return task_name, click_pos
 
     def get_text_position(
@@ -202,7 +201,7 @@ class DailyTask:
         control.click(click_pos.x, click_pos.y)
         time.sleep(1)
         self.click_to_pass()  # 确认传送
-        time.sleep(3)  # 画面切换加载时间较长
+        time.sleep(5)  # 画面切换加载时间较长
         ocr_results = task.ocr(screenshot())
         coffee_list = [
             x for x in ocr_results if x.position.x < 750 and x.position.y > 420
@@ -355,7 +354,7 @@ def test():
     while times > 0:
         dailytask.to_daily_menu()
         taskname, click_pos = dailytask.gen_daily_task()
-        if taskname is None:
+        if taskname is None or click_pos is None:
             return
         elif taskname == dailytask.tasks_titles[0]:
             dailytask.daily_task_coffee(click_pos)
