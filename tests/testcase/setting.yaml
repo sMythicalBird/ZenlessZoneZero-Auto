@@ -1,0 +1,14 @@
+testcase:
+  - des: "测试设置页面，跳转更新"
+    steps: 
+    - 
+      - page_redirection
+      - dst_page=dom.navagation.setting.0
+      - window=dom.window    
+    -
+      - widget_click
+      - widget=dom.setting.widgets.update.obj_
+    assert_: 
+    - get_cur_widge_name
+    - obj=dom.setting.obj_
+    - dom.setting.widgets.update.name

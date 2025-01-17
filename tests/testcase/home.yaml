@@ -1,0 +1,28 @@
+testcase:
+  - des: "测试主页面，跳转github"
+    steps: 
+    - 
+      - widget_click
+      - widget=dom.home.widgets.github.obj_
+    assert_: 
+    - screenshot_and_compare
+    - s=github.com/sMythicalBird/ZenlessZoneZero-Auto
+    - 
+  - des: "测试主页面，跳转site"
+    steps: 
+    - 
+      - widget_click
+      - widget=dom.home.widgets.site.obj_
+    assert_: 
+    - screenshot_and_compare
+    - s=fairy.autoscript.site/zh/
+    - 
+  - des: "测试主页面，zero_task"
+    steps: 
+    - 
+      - widget_click
+      - widget=dom.home.widgets.zero_task.obj_
+    assert_: 
+    - screenshot_and_compare
+    - s=旧都列车·外围MISSIONCOMPLETE
+    -

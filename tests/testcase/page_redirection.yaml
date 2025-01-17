@@ -1,0 +1,41 @@
+testcase:
+  - des: "测试页面跳转,首页->战斗设计"
+    steps: 
+    -
+      - page_redirection
+      - dst_page=dom.navagation.fightedit.0
+      - window=dom.window
+    assert_: 
+    - get_cur_widge_name
+    - obj=dom.window
+    - dom.navagation.fightedit.0
+  - des: "测试页面跳转,首页->兑换码"
+    steps: 
+    -
+      - page_redirection
+      - dst_page=dom.navagation.code.0
+      - window=dom.window
+    assert_: 
+    - get_cur_widge_name
+    - obj=dom.window
+    - dom.navagation.code.0
+  - des: "测试页面跳转,首页->配置"
+    steps:
+    - 
+      - page_redirection
+      - dst_page=dom.navagation.config.0
+      - window=dom.window
+    assert_: 
+    - get_cur_widge_name
+    - obj=dom.window
+    - dom.navagation.config.0
+  - des: "测试页面跳转,首页->设置"
+    steps: 
+    - 
+      - page_redirection
+      - dst_page=dom.navagation.setting.0
+      - window=dom.window
+    assert_: 
+    - get_cur_widge_name
+    - obj=dom.window
+    - dom.navagation.setting.0 
